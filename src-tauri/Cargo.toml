@@ -25,6 +25,11 @@ tokio = { version = "1", features = ["full"] }
 
 rusqlite = { version = "0.34.0", features = ["bundled"] } # 自动编译 SQLite
 claxon = "0.4"
+
+symphonia = "0.5"
+cpal = "0.15.3"
+
+
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]

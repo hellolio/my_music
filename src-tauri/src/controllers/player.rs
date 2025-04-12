@@ -1,10 +1,9 @@
-use std::{fs::File, io::BufReader};
+use std::fs::File;
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
-use std::path::Path;
 use tauri::Window;
-use rodio::{ source, Decoder, OutputStream, Sink, Source};
+use rodio::{ Decoder, OutputStream, Sink, Source};
 
 #[derive(Debug)]
 pub enum PlayControl {
@@ -68,16 +67,12 @@ impl AudioPlayer {
 
             // 创建 Sink 用于控制音频播放
             let sink = Sink::try_new(&stream_handle).unwrap();
-            // 打开音频文件
-            let file = File::open(&file_path).unwrap();
             // 解码音频文件,从指定位置播放
             let seek_position = Duration::from_secs(skip_secs);
 
             // let reader = BufReader::new(file);
             let reader = File::open(file_path).unwrap();
-
             let source = Decoder::new(reader).unwrap();
-
             sink.append(source.skip_duration(seek_position));
 
             let mut msg = Some(PlayControl::Play);

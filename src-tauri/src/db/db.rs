@@ -53,12 +53,11 @@ pub fn insert_song(conn: &mut Connection, song: &Song) -> i64 {
             song.is_playing,
         ],
     );
-    let mut id = -1;
+    // let mut id = -1;
     match result {
-        Ok(u) => {id = conn.last_insert_rowid()}
-        Err(e) => {id = -1}
+        Ok(_) => {conn.last_insert_rowid()}
+        Err(_) => {-1}
     }
-    id // 返回新插入的 ID
 }
 
 pub fn update_lyrics(conn: &mut Connection, lyrics_file: &str, id: i64) -> i64{

@@ -72,9 +72,9 @@ pub fn get_audio_lyrics(lyrics_file: &str) -> io::Result<Vec<Lyric>>{
     let timestamp_re = Regex::new(r"\[(\d{2}):(\d{2})\.(\d{3})\]").unwrap();
     let metadata_re = Regex::new(r"\[(\w+):(.+)\]").unwrap();  // 匹配元数据格式 [key:value]
 
+    let mut is_metadata = true;
     for line in reader.lines() {
         let line = line.unwrap();
-        let mut is_metadata = true;
 
         // 如果是时间戳和歌词，解析并存储
         if let Some(captures) = timestamp_re.captures(&line) {
@@ -85,7 +85,6 @@ pub fn get_audio_lyrics(lyrics_file: &str) -> io::Result<Vec<Lyric>>{
             // let text = captures[4].to_string();
 
             // 将时间戳转换为秒
-            // let time_in_seconds = seconds;
             lyrics.push(Lyric {
                 time: (minutes * 60 + seconds) as f64,
                 text,
