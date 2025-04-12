@@ -1,17 +1,11 @@
-
-/* 最外层的父容器 */
-.parent {
-    display: flex;                   /* 启用 Flexbox 布局 */
-    justify-content: center;         /* 水平居中对齐 */
-    align-items: center;             /* 垂直居中对齐 */
-  }
   
-.container {
+.container.bar.progress {
     display: flex;                   /* 启用 Flexbox 布局 */
-    width: 50%;                      /* 父容器宽度占满可用空间 */
+    width: 80%;                      /* 父容器宽度占满可用空间 */
     justify-content: center;      /* 左对齐 */
     align-items: center;             /* 垂直居中对齐 */
     height: 100%;
+    margin-bottom: 40px;
 }
 
 .left-bar {
@@ -32,6 +26,7 @@
     text-align: center;              /* 内容居中 */
     align-items: center;             /* 垂直居中对齐 */
     height: 25px;
+    cursor: pointer;
 }
 .center-bar {
     display: flex;                   /* 启用 Flexbox 布局 */
@@ -87,3 +82,24 @@ left: 100%;                        /* 将小圆球放置到进度条的右侧 */
     transform: scale(1.5); /* 放大一点 */
 }
   
+/* .tracker-container {
+    width: 400px;
+    height: 200px;
+    border: 1px dashed #aaa;
+    margin: 50px auto;
+    position: relative;
+    padding: 10px;
+    background-color: #fafafa;
+} */
+  
+.tooltip {
+    /* position: absolute; */
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    pointer-events: none; /* 不挡鼠标 */
+    white-space: nowrap;
+}

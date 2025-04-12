@@ -9,7 +9,7 @@ html, body {
     bottom: 40px;
     right: 0;
     width: 250px;    /* 固定宽度 */
-    height: 600%;
+    height: 300%;
     background-color: rgba(43, 46, 43, 0.906);
     box-shadow: -2px 0 5px rgba(0,0,0,0.1);
     padding: 20px;
@@ -41,6 +41,21 @@ html, body {
     padding: 3px 1px;
     border-bottom: 1px solid #eee;
     text-align: left
+}
+.song-panel li:hover {
+    /* background-color: #323736; 高亮整行背景色 */
+    color: #ff5500;
+    transform: scale(1.05);
+    /* transition: all 0.1s; */
+    padding-left: 5px;
+}
+.song-panel li:active {
+    transform: scale(0.99); /* 点击时缩小 */
+}
+
+.song-panel li.active {
+    color: #555252;
+
 }
 
 .song-panel .title {
@@ -88,13 +103,12 @@ html, body {
     box-shadow: 0 0 20px rgba(94, 2, 2, 0.3); /* 阴影效果 */
 }
 
-
 .add-songlist:active {
-    transform: scale(0.95); /* 点击时缩小 */
+    transform: scale(0.99); /* 点击时缩小 */
 }
 
 .delete-songlist:active {
-    transform: scale(0.95); /* 点击时缩小 */
+    transform: scale(0.99); /* 点击时缩小 */
 }
 
 

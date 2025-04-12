@@ -30,10 +30,10 @@
     "windows": [
       {
         "title": "my-music",
-        "width": 300,
-        "height": 500,
-        "minWidth": 300,  
-        "minHeight": 500
+        "width": 700,
+        "height": 700,
+        "minWidth": 500,  
+        "minHeight": 700
       }
     ],
     "security": {

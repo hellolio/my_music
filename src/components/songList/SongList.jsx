@@ -31,7 +31,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
 
   // 初次加载的时候从数据库获取歌曲列表
   useEffect(() => {
-    getMusicListFormDB(setSongs, setData);
+    getMusicListFormDB(setSongs, data, setData);
   }, []);
 
   return (
@@ -46,12 +46,15 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
       </ul>
       <ul>
         {songs.map((song, index) => (
-          <li className='song-list' key={index} onDoubleClick={() => playMusicFromList(song.id, song.audio_src, song.title, song.total_duration, data, setData)} >
-            <input
+          <li key={index}
+            className={selectedItems.includes(song) ? "song-list active" : "song-list"}
+            onClick={(e) => handleCheckboxChange(e, song, selectedItems, setSelectedItems)}
+            onDoubleClick={() => playMusicFromList(song.id, song.audio_src, song.title, song.total_duration, data, setData)} >
+            {/* <input
               type="checkbox"
               checked={selectedItems.includes(song)}
               onChange={(e) => handleCheckboxChange(e, song, setSelectedItems)}
-            />
+            /> */}
 
             <span>{index + 1}.</span>
             <span className="title">{song.title}</span>

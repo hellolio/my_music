@@ -9,7 +9,7 @@ function TitlePlayer(props) {
     return (
         <div className="container title">
           <div className="center-title">
-          <h3>{data.title}
+          <h4>{data.title}
             {data.title ? (
               <span 
                 onClick={() => collectClick(data, setData)} 
@@ -19,7 +19,7 @@ function TitlePlayer(props) {
               </span>
             ):(<button>导入歌单</button>)
             }
-          </h3>
+          </h4>
 
 
           {data.author 

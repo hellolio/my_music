@@ -39,31 +39,37 @@ export const importMusic = async (songs, setSongs) =>{
     setSongs(songs.concat(songs_new));
 }
 
-export const getMusicListFormDB = async (setMusicListImportState, setData) => {
+export const getMusicListFormDB = async (setMusicListImportState, data, setData) => {
     let musicList = await invoke('get_song_all');
+    let index = musicList.findIndex((e) => e.title === data.title);
 
+    if (index === -1) {
+        index = 0;
+    }
+    
     // 应用启动时，取第一首歌为当前歌曲
     setData(prevData => ({
-      ...prevData,
-      id: musicList[0].id,
-      title: musicList[0].title,
-      author: musicList[0].author,
-      isCollect: musicList[0].is_collect,
-      isFollow: musicList[0].is_follow,
-      lyrics: musicList[0].lyrics,
-      lyricsPath: musicList[0].lyrics_path,
-      audioSrc: musicList[0].audio_src,
-      totalDuration: musicList[0].total_duration,
-      barCurrentProgressSec: 0,
-      isPlaying: false,
-      playerAlive: false
+        ...prevData,
+        id: musicList[index].id,
+        title: musicList[index].title,
+        author: musicList[index].author,
+        isCollect: musicList[index].is_collect,
+        isFollow: musicList[index].is_follow,
+        lyrics: musicList[index].lyrics,
+        lyricsPath: musicList[index].lyrics_path,
+        audioSrc: musicList[index].audio_src,
+        totalDuration: musicList[index].total_duration,
+        barCurrentProgressSec: 0,
+        isPlaying: false,
+        playerAlive: false
     }));
+
     setMusicListImportState(musicList);
   }
 
 // 处理复选框的变化
-export const handleCheckboxChange = (e, song, setSelectedItems) => {
-    if (e.target.checked) {
+export const handleCheckboxChange = (e, song, selectedItems, setSelectedItems) => {
+    if (!selectedItems.includes(song)) {
         setSelectedItems((prevSelected) => [...prevSelected, song]);
     } else {
         setSelectedItems((prevSelected) =>

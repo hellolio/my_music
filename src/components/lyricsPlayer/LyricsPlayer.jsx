@@ -51,15 +51,17 @@ function LyricsPlayer(props) {
             <div 
             ref={containerRef}
             className="center-lyrics">
-                <ul className="center-lyrics-line">
-                    {data.lyrics.length === 0 && <button onClick={()=>addLyrics(data, setData)}>添加歌词</button>}
-                    {data.lyrics.map((line, index) => (
-                        <li 
-                        ref={(el) => (listRef.current[index] = el)}
-                        className={activeIndex === index ? "active" : ""}
-                            key={index}>{line.text}
-                        </li>
-                    ))}
+                {<button onClick={()=>addLyrics(data, setData)}>重载歌词</button>}
+                <ul className="center-lyrics-line"
+                onDoubleClick={()=>addLyrics(data, setData)}
+                >
+                {data.lyrics.map((line, index) => (
+                    <li 
+                    ref={(el) => (listRef.current[index] = el)}
+                    className={activeIndex === index ? "active" : ""}
+                        key={index}>{line.text}
+                    </li>
+                ))}
                 </ul>
             </div>
         </div>

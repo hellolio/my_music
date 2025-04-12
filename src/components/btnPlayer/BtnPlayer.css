@@ -1,16 +1,12 @@
-/* 最外层的父容器 */
-.parent {
-    display: flex;                   /* 启用 Flexbox 布局 */
-    justify-content: center;         /* 水平居中对齐 */
-    align-items: center;             /* 垂直居中对齐 */
-  }
   
-.container {
+.container.btnPlayer {
   display: flex;                   /* 启用 Flexbox 布局 */
   width: 50%;                      /* 父容器宽度占满可用空间 */
   justify-content: center;      /* 左对齐 */
   align-items: center;             /* 垂直居中对齐 */
   height: 100%;
+  margin-bottom: 100px;  
+  margin-top: 30px;
 }
 
 .center-block {
@@ -77,21 +73,21 @@
 
 
 .cycle-btnPlayer:active {
-  transform: scale(0.95); /* 点击时缩小 */
+  transform: scale(0.99); /* 点击时缩小 */
 }
 
 .left-btnPlayer:active {
-  transform: scale(0.95); /* 点击时缩小 */
+  transform: scale(0.99); /* 点击时缩小 */
 }
 
 .center-btnPlayer:active {
-  transform: scale(0.95); /* 点击时缩小 */
+  transform: scale(0.99); /* 点击时缩小 */
 }
 
 .right-btnPlayer:active {
-  transform: scale(0.95); /* 点击时缩小 */
+  transform: scale(0.99); /* 点击时缩小 */
 }
 
 .list-btnPlayer:active {
-  transform: scale(0.95); /* 点击时缩小 */
+  transform: scale(0.99); /* 点击时缩小 */
 }

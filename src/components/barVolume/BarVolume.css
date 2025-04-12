@@ -1,26 +1,21 @@
-
-/* 最外层的父容器 */
-.parent {
-    display: flex;                   /* 启用 Flexbox 布局 */
-    justify-content: center;         /* 水平居中对齐 */
-    align-items: center;             /* 垂直居中对齐 */
-  }
   
-.container {
+.container.bar.volume {
     display: flex;                   /* 启用 Flexbox 布局 */
-    width: 50%;                      /* 父容器宽度占满可用空间 */
-    justify-content: center;      /* 左对齐 */
+    width: 80%;                      /* 父容器宽度占满可用空间 */
+    justify-content: center;         /* 左对齐 */
     align-items: center;             /* 垂直居中对齐 */
     height: 100%;
+    /* margin-top: 50px; */
+    margin-bottom: 50px;
 }
 
-.left-bar {
+.left-bar-volume {
     flex: 0 0 25px;                  /* 左侧元素宽度由内容决定 */
     text-align: center;              /* 内容居中 */
     height: 25px;
 }
 
-.right-bar {
+.right-bar-volume {
     flex: 0 0 25px;                  /* 右侧元素宽度由内容决定 */
     text-align: center;              /* 内容居中 */
     height: 25px;
@@ -32,6 +27,7 @@
     text-align: center;              /* 内容居中 */
     align-items: center;             /* 垂直居中对齐 */
     height: 25px;
+    cursor: pointer;
 }
 .center-bar {
     display: flex;                   /* 启用 Flexbox 布局 */
@@ -87,18 +83,29 @@ left: 100%;                        /* 将小圆球放置到进度条的右侧 */
 }
 
 
-.right-bar:hover{
-    transform: scale(1.2); /* 放大一点 */
-}
-  
-
-.left-bar:hover{
+.right-bar-volume:hover{
     transform: scale(1.2); /* 放大一点 */
 }
 
-.left-bar:active {
-    transform: scale(0.95); /* 点击时缩小 */
+.left-bar-volume:hover{
+    transform: scale(1.2); /* 放大一点 */
 }
-.right-bar:active {
-    transform: scale(0.95); /* 点击时缩小 */
+
+.left-bar-volume:active {
+    transform: scale(0.99); /* 点击时缩小 */
+}
+.right-bar-volume:active {
+    transform: scale(0.99); /* 点击时缩小 */
+}
+
+.tooltip-volume {
+    /* position: absolute; */
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    pointer-events: none; /* 不挡鼠标 */
+    white-space: nowrap;
 }

@@ -1,0 +1,20 @@
+.tracker-container {
+    width: 400px;
+    height: 200px;
+    border: 1px dashed #aaa;
+    margin: 50px auto;
+    position: relative;
+    padding: 10px;
+    background-color: #fafafa;
+  }
+  
+.tooltip {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    pointer-events: none; /* 不挡鼠标 */
+    white-space: nowrap;
+}

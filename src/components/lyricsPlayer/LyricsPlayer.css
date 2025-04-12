@@ -5,12 +5,14 @@
     align-items: center;             /* 垂直居中对齐 */
   }
   
-.container {
+.container.lyrics {
   display: flex;                   /* 启用 Flexbox 布局 */
   width: 50%;                      /* 父容器宽度占满可用空间 */
   justify-content: center;      /* 左对齐 */
   align-items: center;             /* 垂直居中对齐 */
   height: 100%;
+  margin-bottom: 200px;
+  margin-top: 100px;
 }
 
 .center-block {
@@ -69,6 +71,14 @@
   list-style: none;
   transition: all 0.5s;
 }
+
+.center-lyrics ul li:hover {
+  color: #ff5500;
+  font-weight: bold;
+  transform: scale(1.2);
+  transition: all 0.1s;
+}
+
 .center-lyrics ul li.active {
   color: #ff5500;
   font-weight: bold;
