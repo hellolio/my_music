@@ -1,0 +1,89 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* 禁止横向滚动条 */
+}
+
+.song-panel {
+    position: fixed;
+    bottom: 40px;
+    right: 0;
+    width: 250px;    /* 固定宽度 */
+    height: 1000%;
+    background-color: #272525;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    padding: 20px;
+    overflow-y: hidden;
+    z-index: 999;
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%); /* 隐藏面板 */
+}
+
+.song-panel.visible {
+    transform: translateX(0); /* 面板滑动进来 */
+}
+
+
+.song-panel h2 {
+    margin-top: -20px;
+}
+
+.song-panel ul {
+    list-style: none;
+    padding: 0;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.song-panel li {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 1px;
+    border-bottom: 1px solid #eee;
+    text-align: left
+}
+
+.song-panel .title {
+    flex: 1;
+    display: inline-block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+/* 
+.song-list span {
+    color: #666;
+} */
+
+
+.add-delete {
+    display: flex;  /* 启用 Flexbox 布局 */
+    gap: 10px;      /* 设置元素之间的间距 */
+}
+
+.add-songlist img,.delete-songlist img {
+    margin-left: 2px;  /* 图片与文字之间的间距 */
+    width: 20px; /* 控制图片的大小 */
+    height: 20px; /* 控制图片的大小 */
+}
+
+.add-songlist,.delete-songlist {
+    display: flex;  /* 使每个子元素内部的文字和图片横向排列 */
+    align-items: center;  /* 让文字和图片垂直居中 */
+	margin: 10px;
+	width: 30px;
+	height: 10px;
+    white-space: nowrap;
+	/* vertical-align: middle; */
+    transition: width 1s ease;
+}
+
+.add-songlist:hover {
+    transform: scale(1.2); /* 放大一点 */
+    box-shadow: 0 0 20px rgba(94, 2, 2, 0.3); /* 阴影效果 */
+}
+.delete-songlist:hover {
+    transform: scale(1.2); /* 放大一点 */
+    box-shadow: 0 0 20px rgba(94, 2, 2, 0.3); /* 阴影效果 */
+}

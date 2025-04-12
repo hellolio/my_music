@@ -1,0 +1,30 @@
+[package]
+name = "my-music"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
+
+[profile.release]
+debug = true
+
+
+[build-dependencies]
+tauri-build = { version = "1", features = [] }
+
+[dependencies]
+tauri = { version = "1.8.2", features = [ "fs-write-file", "dialog-open", "dialog-message", "dialog-save", "fs-read-file", "shell-open"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rodio = "0.20.1"
+hound = "3.5.1"
+# 获取mp3的播放时长
+mp3-duration = "0.1.10"
+id3 = "1.13.1"
+tokio = { version = "1", features = ["full"] }
+
+rusqlite = { version = "0.34.0", features = ["bundled"] } # 自动编译 SQLite
+claxon = "0.4"
+[features]
+# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
