@@ -2,7 +2,7 @@
 body {
   /* background: url(../img/background.png) no-repeat center 10px; */
   background-size: cover;  /* 使背景图像覆盖整个块 */
-  background-color: rgb(37, 35, 35);
+  background-color: rgba(23, 26, 23, 0.906);
   color: white;  /* 设置文本为白色，确保在黑色背景下可读 */
   margin: 0;
   padding: 0;
@@ -25,33 +25,6 @@ html, body, #app {
   flex-direction: column;       /* 垂直排列子元素 */
   position: relative;   /* 设置父容器为相对定位 */
   height: 100vh;         /* 设定父容器的高度为视口高度 */
-}
-
-
-.center-title {
-	text-align: center;
-}
-.container.title {
-  width: 80%;
-}
-
-.center-title h3 {
-	font-size: 24px;
-	padding: 10px;
-}
-
-.center-title span {
-	display: inline-block;
-	padding: 0px 2px;
-	border-radius: 5px;
-	margin-left: 8px;
-	font-size: 12px;
-	border: 1px solid #fff;
-	position: relative;
-}
-.center-title span.active{
-	border: 1px solid #851a28;
-	background:#851a28;
 }
 
 
@@ -95,8 +68,12 @@ html, body, #app {
   position: absolute;    /* 元素相对于父容器定位 */
   left: 50%;                 /* 距离左边 50%（元素的左边缘会到达视口的中点） */
   transform: translateX(-50%); /* 向左偏移自身宽度的 50%，实现水平居中 */
-  bottom: 10%;            /* 距离父容器底部的 20% */
-  height: 5vh;
+  bottom: 15%;            /* 距离父容器底部的 20% */
+  height: 10vh;
   width: 100%;
 }
 
+
+.volumeBar {
+  margin-top: 3%;
+}

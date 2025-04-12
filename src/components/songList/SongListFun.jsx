@@ -3,10 +3,10 @@ import { open } from "@tauri-apps/api/dialog";
 
 
 // 双击列表的某首歌播放
-export const playMusicFromList = async (id, audio_src, title, total_duration, setData) => {
+export const playMusicFromList = async (id, audio_src, title, total_duration, data, setData) => {
 
     await invoke('stop_music');
-    let song = await invoke('play_music', { filePath: audio_src, duration: total_duration, skipSecs: 0 });
+    let song = await invoke('play_music', { filePath: audio_src, duration: total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
   
     setData(prevData => ({
       ...prevData,

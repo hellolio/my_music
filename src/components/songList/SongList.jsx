@@ -3,7 +3,7 @@ import './SongList.css';
 import utils from "../../common/utils"
 import {importMusic, deleteMusic, handleCheckboxChange, playMusicFromList, getMusicListFormDB} from './SongListFun';
 
-const SongList = ({ setData, visible, onClose, songs, setSongs, listBtnPlayerRef }) => {
+const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPlayerRef }) => {
   const panelRef = useRef(null);
 
   // 点击组件外自动收起
@@ -46,7 +46,7 @@ const SongList = ({ setData, visible, onClose, songs, setSongs, listBtnPlayerRef
       </ul>
       <ul>
         {songs.map((song, index) => (
-          <li className='song-list' key={index} onDoubleClick={() => playMusicFromList(song.id, song.audio_src, song.title, song.total_duration, setData)} >
+          <li className='song-list' key={index} onDoubleClick={() => playMusicFromList(song.id, song.audio_src, song.title, song.total_duration, data, setData)} >
             <input
               type="checkbox"
               checked={selectedItems.includes(song)}

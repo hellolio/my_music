@@ -57,7 +57,17 @@ export const handleMouseMove = (e, progressBarRef, isDragging, data, setData) =>
 export const handleMouseUp = async (e, progressBarRef, setIsDragging, data, setData) => {
   setIsDragging(false);
   let barCurrentProgressSec = updateProgress(e, progressBarRef, data, setData); // 拖动时更新进度
-  await invoke('seek_music', { skipSecs: barCurrentProgressSec });
+  const extension = getFileExtension(data.title);
+  // 根据文件后缀判断音频格式
+  switch (extension) {
+    case "flac":
+      await invoke('stop_music');
+      let song = await invoke('play_music', { filePath: data.audioSrc, duration: data.totalDuration, skipSecs: barCurrentProgressSec, volume: data.barCurrentVolume/100 });
+      break;
+    default:
+      await invoke('seek_music', { skipSecs: barCurrentProgressSec });
+  }
+
 
   setData(prevData => ({
     ...prevData,
@@ -71,7 +81,19 @@ export const handleMouseLeave = async (e, progressBarRef, isDragging, setIsDragg
   if (isDragging) {
     setIsDragging(false);
     let barCurrentProgressSec = updateProgress(e, progressBarRef, data, setData); // 拖动时更新进度
-    await invoke('seek_music', { skipSecs: barCurrentProgressSec });
+
+    const extension = getFileExtension(data.title);
+    console.log("extension:",extension);
+    // 根据文件后缀判断音频格式
+    switch (extension) {
+      case "flac":
+        await invoke('stop_music');
+        let song = await invoke('play_music', { filePath: data.audioSrc, duration: data.totalDuration, skipSecs: barCurrentProgressSec, volume: data.barCurrentVolume/100 });
+        break;
+      default:
+        await invoke('seek_music', { skipSecs: barCurrentProgressSec });
+    }
+
 
     setData(prevData => ({
         ...prevData,
@@ -79,4 +101,9 @@ export const handleMouseLeave = async (e, progressBarRef, isDragging, setIsDragg
         barCurrentProgressSec: barCurrentProgressSec
     }));
 }
+};
+
+// 通过文件名获取后缀
+const getFileExtension = (fileName) => {
+  return fileName.split('.').pop().toLowerCase();
 };

@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 
 import "./App.css";
 import BtnPlayer from "./components/btnPlayer/BtnPlayer/";
-import BarPlayer from "./components/barPlayer/barPlayer";
+import BarPlayer from "./components/barPlayer/BarPlayer";
+import BarVolume from "./components/barVolume/BarVolume";
 import LyricsPlayer from "./components/lyricsPlayer/LyricsPlayer";
 import TitlePlayer from "./components/titlePlayer/TitlePlayer";
 
@@ -34,6 +35,8 @@ function App() {
       };
     }, []);
 
+  const barCurrentVolume = localStorage.getItem('barCurrentVolume');
+  const isSingleLoop = localStorage.getItem('isSingleLoop');
   const [data, setData] = useState(
     {
       id: 1,
@@ -46,9 +49,10 @@ function App() {
       audioSrc: null,
       totalDuration: 100,
       barCurrentProgressSec: 0,
+      barCurrentVolume: barCurrentVolume ? JSON.parse(barCurrentVolume) : 10,
       isPlaying: true,
       playState: -1,   // -1是当前没有播放或者播放线程结束，0是播放结束，但线程未结束，1是正在播放
-      isSingleLoop: false,
+      isSingleLoop: isSingleLoop ? JSON.parse(isSingleLoop) : true,
       playerAlive: false
     }
   );
@@ -77,7 +81,10 @@ function App() {
         <div className="parent btnPlayer">
           <BtnPlayer data={data} setData={setData}/>
         </div>
-        
+        {/* 播放音量设置 */}
+        <div className="parent volumeBar">
+          <BarVolume data={data} setData={setData}/>
+        </div>
       </div>
     </div>
   );

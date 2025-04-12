@@ -33,7 +33,7 @@
 	width: 30px;
 	height: 30px;
 	vertical-align: middle;
-  transition: width 1s ease;
+  transition: width 0.5s ease;
 }
 
 .center-block{
@@ -48,7 +48,7 @@
 	width: 30px;
 	height: 30px;
 	vertical-align: middle;
-  transition: width 1s ease;
+  transition: width 0.5s ease;
 }
 
 
@@ -73,4 +73,25 @@
 .list-btnPlayer:hover {
   transform: scale(1.2); /* 放大一点 */
   box-shadow: 0 0 20px rgba(94, 2, 2, 0.3); /* 阴影效果 */
+}
+
+
+.cycle-btnPlayer:active {
+  transform: scale(0.95); /* 点击时缩小 */
+}
+
+.left-btnPlayer:active {
+  transform: scale(0.95); /* 点击时缩小 */
+}
+
+.center-btnPlayer:active {
+  transform: scale(0.95); /* 点击时缩小 */
+}
+
+.right-btnPlayer:active {
+  transform: scale(0.95); /* 点击时缩小 */
+}
+
+.list-btnPlayer:active {
+  transform: scale(0.95); /* 点击时缩小 */
 }

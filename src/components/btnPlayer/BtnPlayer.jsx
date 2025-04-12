@@ -51,6 +51,7 @@ function BtnPlayer(props) {
           <img className="right-btnPlayer" src="/img/下一曲.ico" alt="Reduce" onClick={() => rightClick(musicListAllState, data, setData)} />
           <img className="list-btnPlayer" ref={listBtnPlayerRef} src="/img/播放列表.ico" alt="Reduce" onClick={() => handleTogglePanel(setShowPanel)} />
           <SongList 
+            data={data}
             setData={setData}
             visible={showPanel}
             onClose={handleClosePanel}
@@ -58,9 +59,6 @@ function BtnPlayer(props) {
             setSongs={setMusicListAllState}
             listBtnPlayerRef={listBtnPlayerRef}
           />
-          {/* <Dropdown overlay={<Menu items={musicListDisplay} />} placement="topRight" arrow={{ pointAtCenter: true }}>
-            <UnorderedListOutlined />
-          </Dropdown> */}
         </div>
       </div>
     </div>

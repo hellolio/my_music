@@ -72,10 +72,10 @@ fn import_music_to_db(state: State<'_, Arc<AppState>>, file_names: Vec<&str>) ->
 
 
 #[tauri::command]
-fn play_music(state: State<'_, Arc<AppState>>, window: Window, file_path: &str, duration: u64, skip_secs: u64) -> Song {
+fn play_music(state: State<'_, Arc<AppState>>, window: Window, file_path: &str, duration: u64, skip_secs: u64, volume: f32) -> Song {
     
     let mut p = state.player.lock().unwrap();
-    p.play_audio(window, file_path.to_string(), duration, skip_secs);
+    p.play_audio(window, file_path.to_string(), duration, skip_secs, volume);
 
     let conn = state.db.lock().unwrap();
     let mut song_meta = db::db::get_song_by_path(&*conn, file_path.to_string()).unwrap();
@@ -98,6 +98,12 @@ fn pause_music(state: State<'_, Arc<AppState>>) {
 }
 
 #[tauri::command]
+fn control_volume(state: State<'_, Arc<AppState>>, volume: f32) {
+    let p = state.player.lock().unwrap();
+    p.control_volume(volume);
+}
+
+#[tauri::command]
 fn resume_music(state: State<'_, Arc<AppState>>) {
     let p = state.player.lock().unwrap();
     p.resume_audio();
@@ -114,12 +120,6 @@ fn seek_music(state: State<'_, Arc<AppState>>, skip_secs: u64) {
     let mut p = state.player.lock().unwrap();
     p.seek_audio(skip_secs);
 }
-
-// #[tauri::command]
-// fn update_song(state: State<'_, Arc<AppState>>, song: Song) {
-//     let mut conn = state.db.lock().unwrap();
-//     db::db::update_song(&mut *conn, song);
-// }
 
 #[tauri::command]
 fn get_song_all(state: State<'_, Arc<AppState>>) -> Vec<Song> {
@@ -159,6 +159,7 @@ fn main() {
             resume_music,
             stop_music,
             seek_music,
+            control_volume,
             import_music_to_db,
             delete_music_from_db,
             add_lyrics,

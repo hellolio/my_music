@@ -1,4 +1,5 @@
 use std::{fs::File, io::{self, BufRead, BufReader}, path::Path};
+use hound::WavReader;
 use mp3_duration;
 use tauri::regex::Regex;
 use claxon::FlacReader;
@@ -19,20 +20,27 @@ pub fn get_audio_metadata(path_str: &str) -> Song {
                     // 打开 FLAC 文件
                     let file = File::open(path_str).unwrap();
                     let reader = BufReader::new(file);
-
                     // 创建 FLAC 读取器
                     let flac_reader = FlacReader::new(reader).unwrap();
-
                     // 获取音频流信息（采样率、通道数等）
                     let stream_info = flac_reader.streaminfo();
-
                     // 获取总样本数
                     let total_samples = stream_info.samples.unwrap();
-
                     // 计算时长（秒）
                     duration = (total_samples as f64 / stream_info.sample_rate as f64) as u64;
 
                 },
+                Some("wav") => {
+                        // 打开 WAV 文件
+                        let mut reader = WavReader::open(path).expect("无法打开 WAV 文件");
+                        // 获取 WAV 文件的基本信息
+                        let spec = reader.spec();
+                        let num_samples = reader.samples::<i16>().count(); // 获取样本总数
+                        let sample_rate = spec.sample_rate; // 获取采样率
+                        let num_channels = spec.channels;
+                        // 计算音频时长
+                        duration = num_samples as u64 / (sample_rate as u64 * num_channels as u64);
+                }
                 _ => {duration = 999},
             }
         }

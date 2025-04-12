@@ -9,8 +9,8 @@ html, body {
     bottom: 40px;
     right: 0;
     width: 250px;    /* 固定宽度 */
-    height: 1000%;
-    background-color: #272525;
+    height: 600%;
+    background-color: rgba(43, 46, 43, 0.906);
     box-shadow: -2px 0 5px rgba(0,0,0,0.1);
     padding: 20px;
     overflow-y: hidden;
@@ -87,3 +87,19 @@ html, body {
     transform: scale(1.2); /* 放大一点 */
     box-shadow: 0 0 20px rgba(94, 2, 2, 0.3); /* 阴影效果 */
 }
+
+
+.add-songlist:active {
+    transform: scale(0.95); /* 点击时缩小 */
+}
+
+.delete-songlist:active {
+    transform: scale(0.95); /* 点击时缩小 */
+}
+
+
+/* 设置滚动条的宽度 */
+::-webkit-scrollbar {
+    width: 0px;
+    display: none;
+  }

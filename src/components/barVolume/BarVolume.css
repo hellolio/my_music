@@ -15,18 +15,18 @@
 }
 
 .left-bar {
-    flex: 0 0 50px;                  /* 左侧元素宽度由内容决定 */
+    flex: 0 0 25px;                  /* 左侧元素宽度由内容决定 */
     text-align: center;              /* 内容居中 */
     height: 25px;
 }
 
 .right-bar {
-    flex: 0 0 50px;                  /* 右侧元素宽度由内容决定 */
+    flex: 0 0 25px;                  /* 右侧元素宽度由内容决定 */
     text-align: center;              /* 内容居中 */
     height: 25px;
 }
 
-.center-block {
+.center-block-volume {
     display: flex;                   /* 启用 Flexbox 布局 */
     flex: 0 0 50%;                 /* 固定中间元素宽度为 200px */
     text-align: center;              /* 内容居中 */
@@ -82,8 +82,23 @@ left: 100%;                        /* 将小圆球放置到进度条的右侧 */
     height: 8px; /* 鼠标悬停时放大1.2倍 */
 }
 
-
 .center-bar-ball:hover{
     transform: scale(1.5); /* 放大一点 */
 }
+
+
+.right-bar:hover{
+    transform: scale(1.2); /* 放大一点 */
+}
   
+
+.left-bar:hover{
+    transform: scale(1.2); /* 放大一点 */
+}
+
+.left-bar:active {
+    transform: scale(0.95); /* 点击时缩小 */
+}
+.right-bar:active {
+    transform: scale(0.95); /* 点击时缩小 */
+}
