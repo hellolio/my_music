@@ -96,11 +96,11 @@ html, body {
 
 .add-songlist:hover {
     transform: scale(1.2); /* 放大一点 */
-    box-shadow: 0 0 20px rgba(94, 2, 2, 0.3); /* 阴影效果 */
+    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
 }
 .delete-songlist:hover {
     transform: scale(1.2); /* 放大一点 */
-    box-shadow: 0 0 20px rgba(94, 2, 2, 0.3); /* 阴影效果 */
+    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
 }
 
 .add-songlist:active {

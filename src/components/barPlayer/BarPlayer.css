@@ -71,15 +71,18 @@ left: 100%;                        /* 将小圆球放置到进度条的右侧 */
 
 .center-bar-rate:hover{
     height: 8px; /* 鼠标悬停时放大1.2倍 */
+    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
 }
 
 .center-bar-rate-end:hover{
     height: 8px; /* 鼠标悬停时放大1.2倍 */
+    box-shadow: 0 0 5px rgba(155, 152, 152, 0.566); /* 阴影效果 */
 }
 
 
 .center-bar-ball:hover{
-    transform: scale(1.5); /* 放大一点 */
+    /* transform: scale(1.5); 放大一点 */
+    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
 }
   
 /* .tracker-container {

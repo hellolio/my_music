@@ -85,10 +85,12 @@ left: 100%;                        /* 将小圆球放置到进度条的右侧 */
 
 .right-bar-volume:hover{
     transform: scale(1.2); /* 放大一点 */
+    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
 }
 
 .left-bar-volume:hover{
     transform: scale(1.2); /* 放大一点 */
+    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
 }
 
 .left-bar-volume:active {

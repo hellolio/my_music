@@ -41,28 +41,30 @@ export const importMusic = async (songs, setSongs) =>{
 
 export const getMusicListFormDB = async (setMusicListImportState, data, setData) => {
     let musicList = await invoke('get_song_all');
-    let index = musicList.findIndex((e) => e.title === data.title);
 
-    if (index === -1) {
-        index = 0;
+    if (musicList.length > 0) {
+        let index = musicList.findIndex((e) => e.title === data.title);
+
+        if (index === -1) {
+            index = 0;
+        }
+        // 应用启动时，取第一首歌为当前歌曲
+        setData(prevData => ({
+            ...prevData,
+            id: musicList[index].id,
+            title: musicList[index].title,
+            author: musicList[index].author,
+            isCollect: musicList[index].is_collect,
+            isFollow: musicList[index].is_follow,
+            lyrics: musicList[index].lyrics,
+            lyricsPath: musicList[index].lyrics_path,
+            audioSrc: musicList[index].audio_src,
+            totalDuration: musicList[index].total_duration,
+            barCurrentProgressSec: 0,
+            isPlaying: false,
+            playerAlive: false
+        }));
     }
-    
-    // 应用启动时，取第一首歌为当前歌曲
-    setData(prevData => ({
-        ...prevData,
-        id: musicList[index].id,
-        title: musicList[index].title,
-        author: musicList[index].author,
-        isCollect: musicList[index].is_collect,
-        isFollow: musicList[index].is_follow,
-        lyrics: musicList[index].lyrics,
-        lyricsPath: musicList[index].lyrics_path,
-        audioSrc: musicList[index].audio_src,
-        totalDuration: musicList[index].total_duration,
-        barCurrentProgressSec: 0,
-        isPlaying: false,
-        playerAlive: false
-    }));
 
     setMusicListImportState(musicList);
   }
