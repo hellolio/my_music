@@ -6,7 +6,7 @@ use tauri::{State, Window};
 use rusqlite::Connection;
 
 
-use controllers::player::AudioPlayer;
+use controllers::audio_player::AudioPlayer;
 use modles::{db_song::Song, music_lyrics::Lyric};
 
 mod modles;
@@ -46,15 +46,7 @@ fn import_music_to_db(state: State<'_, Arc<AppState>>, file_names: Vec<&str>) ->
         let song_meta = db::db::get_song_by_path(&*conn, file.to_string());
         match song_meta {
             Ok(song) => {
-                // let mut lyrics = (vec![], vec![]);
-                // match song.lyrics_path.clone() {
-                //     Some(path) => {
-                //     lyrics = common::utils::get_audio_lyrics(path.to_str().unwrap()).unwrap();
-                //     }
-                //     None=> {}
-                // }
                 println!("歌曲已经存在了:{:?}", song);
-
             }
             _ => {
                 let mut song = common::utils::get_audio_metadata(file);
@@ -75,7 +67,7 @@ fn import_music_to_db(state: State<'_, Arc<AppState>>, file_names: Vec<&str>) ->
 fn play_music(state: State<'_, Arc<AppState>>, window: Window, file_path: &str, duration: u64, skip_secs: u64, volume: f32) -> Song {
     
     let mut p = state.player.lock().unwrap();
-    p.play_audio(window, file_path.to_string(), duration, skip_secs, volume);
+    p.music_play(window, file_path.to_string(), duration, skip_secs, volume);
 
     let conn = state.db.lock().unwrap();
     let mut song_meta = db::db::get_song_by_path(&*conn, file_path.to_string()).unwrap();
@@ -94,31 +86,31 @@ fn play_music(state: State<'_, Arc<AppState>>, window: Window, file_path: &str, 
 #[tauri::command]
 fn pause_music(state: State<'_, Arc<AppState>>) {
     let p = state.player.lock().unwrap();
-    p.pause_audio();
+    p.music_pause();
 }
 
 #[tauri::command]
 fn control_volume(state: State<'_, Arc<AppState>>, volume: f32) {
     let p = state.player.lock().unwrap();
-    p.control_volume(volume);
+    p.music_volume(volume);
 }
 
 #[tauri::command]
 fn resume_music(state: State<'_, Arc<AppState>>) {
     let p = state.player.lock().unwrap();
-    p.resume_audio();
+    p.music_resume();
 }
 
 #[tauri::command]
 fn stop_music(state: State<'_, Arc<AppState>>) {
     let p = state.player.lock().unwrap();
-    p.stop_audio();
+    p.music_stop();
 }
 
 #[tauri::command]
 fn seek_music(state: State<'_, Arc<AppState>>, skip_secs: u64) {
-    let mut p = state.player.lock().unwrap();
-    p.seek_audio(skip_secs);
+    let p = state.player.lock().unwrap();
+    p.music_seek(skip_secs);
 }
 
 #[tauri::command]

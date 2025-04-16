@@ -61,16 +61,7 @@ export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragg
 
   setCoords((prev) => ({ ...prev, visible: false }));
   if (isDragging){
-    const extension = getFileExtension(data.title);
-    // 根据文件后缀判断音频格式
-    switch (extension) {
-      case "flac":
-        await invoke('stop_music');
-        await invoke('play_music', { filePath: data.audioSrc, duration: data.totalDuration, skipSecs: barCurrentProgressSec, volume: data.barCurrentVolume/100 });
-        break;
-      default:
-        await invoke('seek_music', { skipSecs: barCurrentProgressSec });
-    }
+    await invoke('seek_music', { skipSecs: barCurrentProgressSec });
 
     setData(prevData => ({
       ...prevData,

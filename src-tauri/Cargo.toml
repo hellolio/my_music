@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "A Tauri App"
 authors = ["you"]
 edition = "2021"
+build = "build.rs"
 
 [profile.release]
 debug = true
@@ -28,6 +29,10 @@ claxon = "0.4"
 
 symphonia = { version = "0.5.4", features = ["flac"] }
 cpal = "0.15.3"
+
+ffmpeg-next = "7.0.4"
+anyhow = "1.0.98"
+crossbeam-channel = "0.5.15"
 
 [features]
 # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

@@ -19,7 +19,8 @@ function BarPlayer(props) {
       if (!isDragging) {
         // console.log("启动监听:", data);
         const listenProgress = listen("player_progress", (event) => {
-          const newProgress = event.payload;  // 获取进度（这里假设是一个数字）
+          const newProgress = event.payload / 1000;  // 获取进度（这里假设是一个数字）
+
           if (newProgress === -1) {
             // 更新进度
             setData(prevData => ({
@@ -29,7 +30,7 @@ function BarPlayer(props) {
               playState: -1,
               barCurrentProgressSec: 0
             }));
-          } else if (newProgress>=data.totalDuration*10){
+          } else if (newProgress>=data.totalDuration){
             // 更新进度
             setData(prevData => ({
               ...prevData,
@@ -39,13 +40,13 @@ function BarPlayer(props) {
             }));
           } else {
             // 计算百分比
-            const newProgressP = (newProgress / data.totalDuration) * 10;
+            const newProgressP = newProgress / data.totalDuration;
             // 更新进度
               setData(prevData => ({
                 ...prevData,
                 isPlaying: true,
                 playState: 1,
-                barCurrentProgressSec: Math.round((newProgressP * data.totalDuration)/100)
+                barCurrentProgressSec: Math.round(newProgressP * data.totalDuration)
               }));
           }
         });

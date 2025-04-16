@@ -1,59 +1,22 @@
-use std::{fs::File, io::{self, BufRead, BufReader}, path::Path};
-use hound::WavReader;
-use mp3_duration;
+use std::{fs::File, io::{self, BufRead}, path::Path};
 use tauri::regex::Regex;
-use claxon::FlacReader;
-
+use ffmpeg_next as ffmpeg;
 
 use crate::modles::{db_song::Song, music_lyrics::Lyric};
 
 
 pub fn get_audio_metadata(path_str: &str) -> Song {
 
-    let path = Path::new(path_str);
-    let mut duration: u64 = 0;
-    match path.extension() {
-        Some(ext) => {
-            match ext.to_str() {
-                Some("mp3") => {duration = mp3_duration::from_path(path_str).unwrap().as_secs()},
-                Some("flac") => {
-                    // 打开 FLAC 文件
-                    let file = File::open(path_str).unwrap();
-                    let reader = BufReader::new(file);
-                    // 创建 FLAC 读取器
-                    let flac_reader = FlacReader::new(reader).unwrap();
-                    // 获取音频流信息（采样率、通道数等）
-                    let stream_info = flac_reader.streaminfo();
-                    // 获取总样本数
-                    let total_samples = stream_info.samples.unwrap();
-                    // 计算时长（秒）
-                    duration = (total_samples as f64 / stream_info.sample_rate as f64) as u64;
-
-                },
-                Some("wav") => {
-                        // 打开 WAV 文件
-                        let mut reader = WavReader::open(path).expect("无法打开 WAV 文件");
-                        // 获取 WAV 文件的基本信息
-                        let spec = reader.spec();
-                        let num_samples = reader.samples::<i16>().count(); // 获取样本总数
-                        let sample_rate = spec.sample_rate; // 获取采样率
-                        let num_channels = spec.channels;
-                        // 计算音频时长
-                        duration = num_samples as u64 / (sample_rate as u64 * num_channels as u64);
-                }
-                _ => {duration = 999},
-            }
-        }
-        None => {},
-    };
-
+    let ictx = ffmpeg::format::input(path_str).unwrap();
+    let duration_us = ictx.duration(); // 单位是微秒（i64）
+    let duration = duration_us as u64 / 1_000_000; // 转成秒
 
     let path = Path::new(path_str);
     // 使用 file_name 方法提取文件名
     let title = path.file_name().map(|name| name.to_string_lossy().into_owned()).unwrap_or("Unknown".to_string());
 
     println!("title:{title}");
-    println!("duration:{:?}",duration);
+    println!("音频总时长: {:.2} 秒", duration);
     return Song{
         id: None,
         title: title,
