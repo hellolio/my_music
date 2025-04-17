@@ -5,6 +5,13 @@ use std::{
 };
 
 fn main() {
+    copy_dll();
+    tauri_build::build()
+}
+
+
+/// 拷贝必要的dll文件到target/debug路径
+fn copy_dll(){
     // 要拷贝的 DLL 列表
     let files = [
         "avcodec-61.dll",
@@ -32,6 +39,4 @@ fn main() {
         println!("cargo:warning=Copying {:?} to {:?}", src, dest);
         fs::copy(src, &dest).expect(&format!("Failed to copy {:?}", file));
     }
-
-    tauri_build::build()
 }
