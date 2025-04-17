@@ -153,7 +153,16 @@ impl AudioPlayer {
 
                     while decoder.receive_frame(&mut decoded).is_ok() {
                         let mut converted = ffmpeg::frame::Audio::empty();
-                        resampler.run(&decoded, &mut converted).unwrap();
+                        // resampler.run(&decoded, &mut converted).unwrap();
+
+                        // 检查是否需要重采样
+                        if decoder.format() != ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed) {
+                            resampler.run(&decoded, &mut converted).unwrap();
+                            // 使用 converted
+                        } else {
+                            // 直接使用 decoded
+                            converted = decoded.clone();
+                        }
 
                         let samples: Vec<i16> = converted
                             .data(0)

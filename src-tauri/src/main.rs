@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::sync::{Arc, Mutex};
+use std::{env, sync::{Arc, Mutex}};
 use tauri::{State, Window};
 use rusqlite::Connection;
 
@@ -139,6 +139,7 @@ fn get_song_all(state: State<'_, Arc<AppState>>) -> Vec<Song> {
 }
 
 fn main() {
+    add_bin_to_path();
     let state = AppState{
         db: Mutex::new(db::db::init_db().expect("数据库初始化失败")),
         player: Arc::new(Mutex::new(AudioPlayer::new()))
@@ -159,4 +160,29 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+}
+
+fn add_bin_to_path() {
+    // 获取当前可执行文件的路径
+    let exe_path = env::current_exe().unwrap();
+    
+    // 获取当前目录
+    let current_dir = exe_path.parent().unwrap();
+    
+    // 构造 bin 目录的路径
+    let bin_dir = current_dir.join("bin");
+    
+    // 将 bin 目录路径转换为字符串
+    let bin_dir_str = bin_dir.to_string_lossy().to_string();
+
+    // 获取当前的 PATH 环境变量
+    let mut path = env::var("PATH").unwrap_or_default();
+    
+    // 检查 bin 目录是否已在 PATH 中
+    if !path.contains(&bin_dir_str) {
+        // 如果 bin 目录不在 PATH 中，将其添加到 PATH 环境变量中
+        path.push_str(&format!(";{}", bin_dir_str));
+        env::set_var("PATH", path);
+    }
+
 }
