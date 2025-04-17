@@ -18,23 +18,11 @@ tauri = { version = "1.8.2", features = [ "fs-write-file", "dialog-open", "dialo
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 rodio = "0.20.1"
-hound = "3.5.1"
-# 获取mp3的播放时长
-mp3-duration = "0.1.10"
-id3 = "1.13.1"
-tokio = { version = "1", features = ["full"] }
-
 rusqlite = { version = "0.34.0", features = ["bundled"] } # 自动编译 SQLite
-claxon = "0.4"
-
-symphonia = { version = "0.5.4", features = ["flac"] }
-cpal = "0.15.3"
-
 ffmpeg-next = { version = "7.1.0", features = ["static"] }
-
-anyhow = "1.0.98"
-crossbeam-channel = "0.5.15"
+# anyhow = "1.0.98"  # 简化错误传递和处理，提供Result<T>
 
 [features]
-# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+# # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+# 开发时必须
 custom-protocol = ["tauri/custom-protocol"]
