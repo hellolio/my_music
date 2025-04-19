@@ -8,6 +8,7 @@ use std::{
 use ffmpeg_next as ffmpeg;
 use rodio::{OutputStream, Sink};
 use tauri::Window;
+use anyhow::{Error, Ok, Result};
 
 #[derive(Debug)]
 enum Command {
@@ -37,9 +38,9 @@ impl AudioPlayer {
                 loop {
                     let ok = tx.send(Command::Stop);
                     match ok {
-                        Ok(()) => {}
+                        std::result::Result::Ok(()) => {}
                         _ => {
-                            self.create_music_player(window, file_path, duration, skip_secs, volume);
+                            let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
                             println!("重新打开一个播放线程");
                             break;
                         }
@@ -47,19 +48,19 @@ impl AudioPlayer {
                 }
             }
             None => {
-                self.create_music_player(window, file_path, duration, skip_secs, volume);
+                let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
             }
         }
     }
-    pub fn create_music_player(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32) {
-        ffmpeg::init().unwrap();
+    pub fn create_music_player(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32)-> Result<(), Error> {
+        ffmpeg::init()?;
 
         let (tx, rx) = mpsc::channel::<Command>();
 
         self.tx = Some(tx);
 
         thread::spawn(move || {
-            let mut ictx = ffmpeg::format::input(&file_path).unwrap();
+            let mut ictx = ffmpeg::format::input(&file_path)?;
             let input = ictx
                 .streams()
                 .best(ffmpeg::media::Type::Audio)
@@ -73,7 +74,7 @@ impl AudioPlayer {
                 .unwrap()
                 .decoder()
                 .audio()
-                .unwrap();
+                ?;
             let mut resampler = ffmpeg::software::resampling::Context::get(
                 decoder.format(),       // 源格式
                 decoder.channel_layout(),
@@ -81,13 +82,13 @@ impl AudioPlayer {
                 ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed), // 目标格式: i16
                 decoder.channel_layout(),
                 decoder.rate(),
-            ).unwrap();
+            )?;
 
             let skip_secs_tmp = skip_secs as i64 * 1_000_000;
-            ictx.seek(skip_secs_tmp, 0..skip_secs_tmp).unwrap();
+            ictx.seek(skip_secs_tmp, 0..skip_secs_tmp)?;
 
-            let (_stream, stream_handle) = OutputStream::try_default().unwrap();
-            let sink = Arc::new(Mutex::new(Sink::try_new(&stream_handle).unwrap()));
+            let (_stream, stream_handle) = OutputStream::try_default()?;
+            let sink = Arc::new(Mutex::new(Sink::try_new(&stream_handle)?));
             let mut current_ts: u64 = 0;
             let sleep_time = 10;
             let mut msg = Some(Command::Play);
@@ -121,11 +122,11 @@ impl AudioPlayer {
                         println!("跳转播放到:{target_secs}");
 
                         // 执行seek操作
-                        ictx.seek(seek_ts, 0..seek_ts).unwrap();
+                        ictx.seek(seek_ts, 0..seek_ts)?;
 
                         decoder.flush(); // 清除缓冲
                         sink.lock().unwrap().stop(); // 清除播放
-                        *sink.lock().unwrap() = Sink::try_new(&stream_handle).unwrap();
+                        *sink.lock().unwrap() = Sink::try_new(&stream_handle)?;
                         current_ts = target_secs * 1000;
                         msg = Some(Command::Play);
                     }
@@ -148,7 +149,7 @@ impl AudioPlayer {
                         continue;
                     }
 
-                    decoder.send_packet(&packet).unwrap();
+                    decoder.send_packet(&packet)?;
                     let mut decoded = ffmpeg::frame::Audio::empty();
 
                     while decoder.receive_frame(&mut decoded).is_ok() {
@@ -157,7 +158,7 @@ impl AudioPlayer {
 
                         // 检查是否需要重采样
                         if decoder.format() != ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed) {
-                            resampler.run(&decoded, &mut converted).unwrap();
+                            resampler.run(&decoded, &mut converted)?;
                             // 使用 converted
                         } else {
                             // 直接使用 decoded
@@ -183,7 +184,7 @@ impl AudioPlayer {
                 thread::sleep(Duration::from_millis(sleep_time as u64));
                 if duration*1000 - current_ts >= 20 {
                     if current_ts % 1000 == 0 {
-                        window.emit("player_progress", current_ts).unwrap();
+                        window.emit("player_progress", current_ts)?;
                         is_playing = true;
                     }
                 } else {
@@ -193,7 +194,7 @@ impl AudioPlayer {
                         is_playing = false;
                         thread::sleep(Duration::from_millis(500));
                         println!("播放结束");
-                        window.emit("player_progress", duration*1000).unwrap();
+                        window.emit("player_progress", duration*1000)?;
                         continue;
                     }
                 }
@@ -204,8 +205,10 @@ impl AudioPlayer {
                 //     break;
                 // }
             }
+            Ok(())
         });
 
+        Ok(())
     }
 
     pub fn music_resume(&self) {

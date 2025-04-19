@@ -1,93 +1,36 @@
   
 .container.btnPlayer {
-  display: flex;                   /* 启用 Flexbox 布局 */
-  width: 50%;                      /* 父容器宽度占满可用空间 */
-  justify-content: center;      /* 左对齐 */
-  align-items: center;             /* 垂直居中对齐 */
-  height: 100%;
-  margin-bottom: 100px;  
-  margin-top: 30px;
-}
-
-.center-block {
-  display: flex;                   /* 启用 Flexbox 布局 */
-  flex: 0 0 50%;                 /* 固定中间元素宽度为 200px */
-  text-align: center;              /* 内容居中 */
-  align-items: center;             /* 垂直居中对齐 */
-  height: 25px;
-}
-
-.btnPlayer {
-	width: 300px;
-	margin: 0px auto;
-	text-align: center;
-	height: 40px;
-}
-
-.right-btnPlayer,.left-btnPlayer,.cycle-btnPlayer,.list-btnPlayer {
-	margin: 8px;
-	width: 30px;
-	height: 30px;
-	vertical-align: middle;
-  transition: width 0.5s ease;
-}
-
-.center-block{
-  display: flex;                   /* 启用 Flexbox 布局 */
-  flex: 0 0 50%;
-  justify-content: center;        /* 内容水平居中 */
-  text-align: center;              /* 内容居中 */
-  align-items: center;             /* 垂直居中对齐 */
-}
-.center-btnPlayer {
-	margin: 8px;
-	width: 30px;
-	height: 30px;
-	vertical-align: middle;
-  transition: width 0.5s ease;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 40px;
+  width: 100%;
+  max-width: 700px;
+  margin-bottom: 30px;  
 }
 
 
-.left-btnPlayer:hover {
-    transform: scale(1.2); /* 放大一点 */
-    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
-  }
-  
-.center-btnPlayer:hover {
-  transform: scale(1.2); /* 放大一点 */
-  box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
+.right-btnPlayer,.center-btnPlayer,.left-btnPlayer,.cycle-btnPlayer,.list-btnPlayer {
+  width: 30px;
+  height: 30px;
+  gap: 50px;
+  vertical-align: middle;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.right-btnPlayer:hover {
-  transform: scale(1.2); /* 放大一点 */
-  box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
-}
-.cycle-btnPlayer:hover {
-  transform: scale(1.2); /* 放大一点 */
-  box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
-}
+.left-btnPlayer:hover,
+.center-btnPlayer:hover,
+.right-btnPlayer:hover,
+.cycle-btnPlayer:hover,
 .list-btnPlayer:hover {
   transform: scale(1.2); /* 放大一点 */
-  box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697); /*阴影效果*/
 }
 
-
-.cycle-btnPlayer:active {
-  transform: scale(0.99); /* 点击时缩小 */
-}
-
-.left-btnPlayer:active {
-  transform: scale(0.99); /* 点击时缩小 */
-}
-
-.center-btnPlayer:active {
-  transform: scale(0.99); /* 点击时缩小 */
-}
-
-.right-btnPlayer:active {
-  transform: scale(0.99); /* 点击时缩小 */
-}
-
+.cycle-btnPlayer:active,
+.left-btnPlayer:active,
+.center-btnPlayer:active,
+.right-btnPlayer:active,
 .list-btnPlayer:active {
   transform: scale(0.99); /* 点击时缩小 */
 }

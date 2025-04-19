@@ -32,22 +32,17 @@ function BtnPlayer(props) {
   };
 
   return (
-    <div>
-      <div className="parent btnPlayer">
         <div className="container btnPlayer">
           <img className="cycle-btnPlayer"
            src={data.isSingleLoop? "/img/单曲循环.ico" : "/img/列表循环.ico"}
            alt="cycle" onClick={() => cycleClick(data, setData)} />
           <img className="left-btnPlayer" src="/img/上一曲.ico" alt="Add" onClick={() => leftClick(musicListAllState, data, setData)} />
-          <div className="center-block">
-            <img 
-              className="center-btnPlayer"
-              src={data.isPlaying ? "/img/暂停.ico" : "/img/播放.ico"} 
-              alt="Change"
-              onClick={() => togglePlayPause(data, setData)} 
-            />
-          </div>
-
+          <img 
+            className="center-btnPlayer"
+            src={data.isPlaying ? "/img/暂停.ico" : "/img/播放.ico"} 
+            alt="Change"
+            onClick={() => togglePlayPause(data, setData)} 
+          />
           <img className="right-btnPlayer" src="/img/下一曲.ico" alt="Reduce" onClick={() => rightClick(musicListAllState, data, setData)} />
           <img className="list-btnPlayer" ref={listBtnPlayerRef} src="/img/播放列表.ico" alt="Reduce" onClick={() => handleTogglePanel(setShowPanel)} />
           <SongList 
@@ -60,8 +55,6 @@ function BtnPlayer(props) {
             listBtnPlayerRef={listBtnPlayerRef}
           />
         </div>
-      </div>
-    </div>
   );
 };
 

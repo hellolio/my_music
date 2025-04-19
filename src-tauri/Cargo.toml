@@ -20,7 +20,10 @@ serde_json = "1"
 rodio = "0.20.1"
 rusqlite = { version = "0.34.0", features = ["bundled"] } # 自动编译 SQLite
 ffmpeg-next = { version = "7.1.0", features = ["static"] }
-# anyhow = "1.0.98"  # 简化错误传递和处理，提供Result<T>
+anyhow = "1.0.98"  # 简化错误传递和处理，提供Result<T>
+encoding_rs = "0.8"
+chardetng = "0.1"
+id3 = "1.5"
 
 [features]
 # # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

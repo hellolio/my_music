@@ -1,33 +1,33 @@
-  
 .container.bar.progress {
-    display: flex;                   /* 启用 Flexbox 布局 */
-    width: 80%;                      /* 父容器宽度占满可用空间 */
-    justify-content: center;      /* 左对齐 */
-    align-items: center;             /* 垂直居中对齐 */
-    height: 100%;
-    margin-bottom: 40px;
-}
-
-.left-bar {
-    flex: 0 0 50px;                  /* 左侧元素宽度由内容决定 */
-    text-align: center;              /* 内容居中 */
+    display: flex;
+    justify-content: start;        /* 靠左排列，避免多余的间隙 */
+    align-items: center;
+    height: 40px;
+    width: 100%;
+    max-width: 700px;
+    margin-left: 50px;
+    margin-right: 50px;
+    gap: 10;                        /* 元素之间没有间隔 */
+  }
+  
+  .left-bar-progress, .right-bar-progress {
+    flex: 0 0 25px;                /* 左右元素宽度固定为 25px */
+    text-align: center;            /* 内容居中 */
     height: 25px;
-}
-
-.right-bar {
-    flex: 0 0 50px;                  /* 右侧元素宽度由内容决定 */
-    text-align: center;              /* 内容居中 */
+    margin: 5px;
+  }
+  
+  .center-block-progress {
+    display: flex;                 /* 启用 Flexbox 布局 */
+    flex: 1;                        /* 让中间元素自适应宽度 */
+    text-align: center;            /* 内容居中 */
+    align-items: center;           /* 垂直居中对齐 */
     height: 25px;
-}
-
-.center-block {
-    display: flex;                   /* 启用 Flexbox 布局 */
-    flex: 0 0 50%;                 /* 固定中间元素宽度为 200px */
-    text-align: center;              /* 内容居中 */
-    align-items: center;             /* 垂直居中对齐 */
-    height: 25px;
+    width: 80%;
     cursor: pointer;
-}
+  }
+
+/* bar================================== */
 .center-bar {
     display: flex;                   /* 启用 Flexbox 布局 */
     flex: 0 0 100%;                 /* 固定中间元素宽度为 200px */
@@ -59,7 +59,7 @@
 }
 
 .center-bar-ball {
-left: 100%;                        /* 将小圆球放置到进度条的右侧 */
+    left: 100%;                        /* 将小圆球放置到进度条的右侧 */
     position: absolute;
     width: 10px;
     height: 10px;
@@ -67,35 +67,9 @@ left: 100%;                        /* 将小圆球放置到进度条的右侧 */
     background: #fff;
     transition: width 0.1s ease;
 }
+/* bar================================== */
 
-
-.center-bar-rate:hover{
-    height: 8px; /* 鼠标悬停时放大1.2倍 */
-    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
-}
-
-.center-bar-rate-end:hover{
-    height: 8px; /* 鼠标悬停时放大1.2倍 */
-    box-shadow: 0 0 5px rgba(155, 152, 152, 0.566); /* 阴影效果 */
-}
-
-
-.center-bar-ball:hover{
-    /* transform: scale(1.5); 放大一点 */
-    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
-}
-  
-/* .tracker-container {
-    width: 400px;
-    height: 200px;
-    border: 1px dashed #aaa;
-    margin: 50px auto;
-    position: relative;
-    padding: 10px;
-    background-color: #fafafa;
-} */
-  
-.tooltip {
+.tooltip-progress {
     /* position: absolute; */
     position: fixed;
     background-color: rgba(0, 0, 0, 0.75);
@@ -105,4 +79,29 @@ left: 100%;                        /* 将小圆球放置到进度条的右侧 */
     border-radius: 4px;
     pointer-events: none; /* 不挡鼠标 */
     white-space: nowrap;
+}
+
+
+/* 鼠标悬停时放大高度 */
+.center-bar-rate:hover,
+.center-bar-rate-end:hover {
+  height: 8px;
+}
+
+/* 鼠标悬停时球体放大 */
+.center-bar-ball:hover {
+  transform: scale(1.5);
+}
+
+/* 鼠标悬停时音量按钮放大并带阴影 */
+.left-bar-progress:hover,
+.right-bar-progress:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
+}
+
+/* 鼠标按下时音量按钮缩小 */
+.left-bar-progress:active,
+.right-bar-progress:active {
+  transform: scale(0.99);
 }

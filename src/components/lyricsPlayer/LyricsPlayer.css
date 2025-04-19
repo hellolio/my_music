@@ -1,9 +1,3 @@
-/* 最外层的父容器 */
-.parent {
-    display: flex;                   /* 启用 Flexbox 布局 */
-    justify-content: center;         /* 水平居中对齐 */
-    align-items: center;             /* 垂直居中对齐 */
-  }
   
 .container.lyrics {
   display: flex;                   /* 启用 Flexbox 布局 */

@@ -41,6 +41,7 @@ function App() {
   const [data, setData] = useState(
     {
       id: 1,
+      playlistId: dataTmp ? JSON.parse(dataTmp).playlistId : 1,
       title: dataTmp ? JSON.parse(dataTmp).title : null,
       author: null,
       isCollect: false,
@@ -62,7 +63,7 @@ function App() {
     localStorage.setItem('data', JSON.stringify(data));
     const dataTmp = localStorage.getItem('data');
     console.log("dataTmp:", dataTmp);
-  }, [data.title]);
+  }, [data]);
 
   return (
     <div className="my-music">

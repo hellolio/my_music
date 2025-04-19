@@ -59,8 +59,8 @@ function BarPlayer(props) {
     
     return (
     <div className="container bar progress">
-        <div className="left-bar">{utils.formatTime(data.barCurrentProgressSec)}</div>
-        <div className="center-block"
+        <div className="left-bar-progress">{utils.formatTime(data.barCurrentProgressSec)}</div>
+        <div className="center-block-progress"
         ref={progressBarRef}
         onClick={(e) => updateProgress(e, data, setData)}  // 点击时更新进度
         onMouseDown={(e) => {handleMouseDown(e, setIsDragging)}}
@@ -70,8 +70,8 @@ function BarPlayer(props) {
         >
           {coords.visible && (
             <div
-              className="tooltip"
-              style={{ left: coords.x + 10, top: coords.y + 10 }}
+              className="tooltip-progress"
+              style={{ left: coords.x + 10, top: coords.y - 35 }}
             >
               进度：{utils.formatTime(coords.sec)}
             </div>
@@ -87,7 +87,7 @@ function BarPlayer(props) {
             </div>
         </div>
 
-        <div className="right-bar">{utils.formatTime(data.totalDuration)}</div>
+        <div className="right-bar-progress">{utils.formatTime(data.totalDuration)}</div>
     </div>
   )
 }

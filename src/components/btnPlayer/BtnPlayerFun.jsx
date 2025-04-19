@@ -45,7 +45,7 @@ export const leftClick = async (musicListImportState, data, setData) => {
   var audioMeta = musicListImportState[index];
 
   await invoke('stop_music');
-  let song = await invoke('play_music', { filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
+  let song = await invoke('play_music', { id: data.playlistId, filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
 
   setData(prevData => ({
     ...prevData,
@@ -72,7 +72,7 @@ export const togglePlayPause = async (data, setData) => {
 
     // 进度条马上播放就结束了
     if (data.totalDuration-data.barCurrentProgressSec<=1 || data.playState===-1) {
-      let song = await invoke('play_music', { filePath: data.audioSrc, duration: data.totalDuration, skipSecs: 0, volume: data.barCurrentVolume/100 });
+      let song = await invoke('play_music', { id: data.playlistId, filePath: data.audioSrc, duration: data.totalDuration, skipSecs: 0, volume: data.barCurrentVolume/100 });
 
       setData(prevData => ({
         ...prevData,
@@ -115,7 +115,7 @@ export const rightClick = async (musicListImportState, data, setData) => {
   var audioMeta = musicListImportState[index];
 
   await invoke('stop_music');
-  let song = await invoke('play_music', { filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
+  let song = await invoke('play_music', { id: data.playlistId, filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
   setData(prevData => ({
     ...prevData,
     id: song.id,

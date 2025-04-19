@@ -8,21 +8,35 @@ html, body {
     position: fixed;
     bottom: 40px;
     right: 0;
-    width: 250px;    /* 固定宽度 */
-    height: 300%;
-    background-color: rgba(43, 46, 43, 0.906);
+    width: 80%;    /* 固定宽度 */
+    height: 70vh;
+    max-width: 700px;
+    max-height: 1000px;
+    margin-bottom: 100px;
+    border-radius: 15px;
+    background-color: rgba(121, 121, 121, 0.188);
     box-shadow: -2px 0 5px rgba(0,0,0,0.1);
     padding: 20px;
     overflow-y: hidden;
     z-index: 999;
     transition: transform 0.3s ease-in-out;
     transform: translateX(100%); /* 隐藏面板 */
+    backdrop-filter: blur(5px); /* 毛玻璃效果 */
+    padding-bottom: 30px;
 }
 
 .song-panel.visible {
     transform: translateX(0); /* 面板滑动进来 */
 }
 
+.song-panel .title {
+    flex: 1;
+    display: inline-block;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
 
 .song-panel h2 {
     margin-top: -20px;
@@ -37,80 +51,119 @@ html, body {
 
 .song-panel li {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     padding: 3px 1px;
-    border-bottom: 1px solid #eee;
-    text-align: left
-}
-.song-panel li:hover {
-    /* background-color: #323736; 高亮整行背景色 */
-    color: #ff5500;
-    transform: scale(1.05);
-    /* transition: all 0.1s; */
-    padding-left: 5px;
-}
-.song-panel li:active {
-    transform: scale(0.99); /* 点击时缩小 */
+    border-bottom: 1px solid #c0b9b9;
+    text-align: left;
+    color: #dbcdcd;
 }
 
-.song-panel li.active {
-    color: #555252;
-
-}
-
-.song-panel .title {
-    flex: 1;
-    display: inline-block;
-    max-width: 200px;
+.song-panel li span {
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap
+    white-space: nowrap;
 }
-/* 
-.song-list span {
-    color: #666;
-} */
 
+.song-panel li .index {
+    flex: 0 0 40px;        /* 固定宽度，左对齐 */
+    text-align: left;
+}
+
+.song-panel li .title {
+    flex: 1;               /* 占据剩余空间，左对齐 */
+    padding: 0 10px;
+    text-align: left;
+}
+
+.song-panel li .duration {
+    flex: 0 0 60px;        /* 固定宽度，右对齐 */
+    text-align: right;
+    margin-left: auto;
+}
 
 .add-delete {
-    display: flex;  /* 启用 Flexbox 布局 */
-    gap: 10px;      /* 设置元素之间的间距 */
+    display: flex;
+    justify-content: space-evenly;  /* 均匀分布子元素 */
+    align-items: center;
 }
 
-.add-songlist img,.delete-songlist img {
-    margin-left: 2px;  /* 图片与文字之间的间距 */
-    width: 20px; /* 控制图片的大小 */
-    height: 20px; /* 控制图片的大小 */
-}
-
-.add-songlist,.delete-songlist {
-    display: flex;  /* 使每个子元素内部的文字和图片横向排列 */
-    align-items: center;  /* 让文字和图片垂直居中 */
-	margin: 10px;
-	width: 30px;
-	height: 10px;
+.add-songlist,
+.delete-songlist,
+.all-songlist {
+    flex: 1;                        /* 每个子元素均分父容器宽度 */
+    display: flex;
+    justify-content: center;       /* 内容居中 */
+    align-items: center;
+    margin: 10px;
     white-space: nowrap;
-	/* vertical-align: middle; */
     transition: width 1s ease;
+    min-width: 80px;               /* 避免太小 */
 }
 
-.add-songlist:hover {
-    transform: scale(1.2); /* 放大一点 */
-    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
-}
-.delete-songlist:hover {
-    transform: scale(1.2); /* 放大一点 */
-    box-shadow: 0 0 20px rgba(155, 152, 152, 0.566); /* 阴影效果 */
+.add-songlist img,
+.delete-songlist img,
+.all-songlist img {
+    margin-left: 5px;
+    width: 20px;
+    height: 20px;
 }
 
-.add-songlist:active {
+/* 这个是滑动区域容器，限定显示大小 */
+.slider-container {
+    width: 100%;
+    height: 80%;         /* 控制滑动内容的垂直高度 */
+    overflow: hidden;    /* 超出隐藏，只显示一个 list */
+    position: relative;
+  }
+  
+  /* wrapper 用于滑动切换，flex 横向排列 list */
+  .slider-wrapper {
+    display: flex;
+    transition: transform 0.8s ease-in-out;
+    width: 100%; /* 3个 list，100% * 3 */
+    height: 120%;
+  }
+  
+  /* 每个列表占据 slider-container 一整屏 */
+  .slider-wrapper .list {
+    min-width: 100%;
+    max-width: 100%;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .switch-songlist  {
+    display: inline-flex; /* 保证子项是可横排的，适合带图标和文字的按钮 */
+    align-items: center;
+    padding: 5px 10px;
+    margin: 5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+.switch-songlist.active {
+    color: #ff5500;
+}
+
+
+  .add-songlist:hover,.delete-songlist:hover,.all-songlist:hover,.switch-songlist:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
+}
+
+.add-songlist:active,.delete-songlist:active,.all-songlist:active,.switch-songlist:active {
     transform: scale(0.99); /* 点击时缩小 */
 }
 
-.delete-songlist:active {
+.song-panel li.song-list:hover {
+    color: #ff5500;
+}
+.song-panel li.song-list:active {
     transform: scale(0.99); /* 点击时缩小 */
 }
 
+.song-panel li.song-list.active {
+    text-decoration: line-through;
+    color: #9c8383;
+}
 
 /* 设置滚动条的宽度 */
 ::-webkit-scrollbar {

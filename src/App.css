@@ -21,6 +21,7 @@ html, body, #app {
   flex-direction: column;       /* 垂直排列子元素 */
   position: relative;   /* 设置父容器为相对定位 */
   height: 100vh;         /* 设定父容器的高度为视口高度 */
+  width: 100%;
 }
 
 /* 最外层的父容器 */
