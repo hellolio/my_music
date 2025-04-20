@@ -17,3 +17,12 @@ Windows 下载：[my-music_latest](https://github.com/hellolio/my_music/releases
 log：
 - 换用ffmpeg，以支持更多格式
 - 多歌单创建
+
+
+界面效果：
+
+![1](markdown/mobile1.png)
+![2](markdown/mobile2.png)
+![3](markdown/mobile3.png)
+![4](markdown/pc1.png)
+![5](markdown/pc2.png)
