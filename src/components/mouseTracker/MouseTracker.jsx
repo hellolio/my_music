@@ -25,7 +25,6 @@ function MouseTracker() {
       onMouseLeave={handleMouseLeave}
       ref={containerRef}
     >
-      把鼠标移进来看看效果 👇
       {coords.visible && (
         <div
           className="tooltip"

@@ -1,0 +1,111 @@
+/* 遮罩层 */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(62, 61, 61, 0.5);
+    z-index: 999;
+  }
+  
+  /* 弹窗样式 */
+  .dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(104, 101, 101);
+
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgb(75, 73, 73);
+    z-index: 1000;
+    width: 80%;
+    max-width: 280px;
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  /* 动画 */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+  .dialog h2 {
+    margin-bottom: 16px;
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .dialog input {
+    width: 80%;
+    padding: 8px 12px;
+    display: block;
+    margin: 0 auto 16px auto; /* 上为0，下为16px，左右auto */
+    border: 1px solid #444744;
+    background-color: #444744;
+    color: #cbc3c3;
+    border-radius: 6px;
+    font-size: 16px;
+    text-align: center; 
+  }
+  
+  .dialog input:focus {
+    outline: none;
+    border-color: #4caf50; /* 聚焦时绿色边框 */
+    box-shadow: 0 0 4px rgba(76, 175, 80, 0.6); /* 绿色光晕 */
+  }
+
+  .dialog-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .dialog-buttons button {
+    padding: 8px 14px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.5s;
+  }
+  
+  .dialog-buttons button.ok {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .dialog-buttons button.ok:hover {
+    background-color: #45a045;
+  }
+  
+  .dialog-buttons button.cancle {
+    background-color: #e0e0e0;
+  }
+  
+  .dialog-buttons button.cancle:hover {
+    background-color: #9c8f8f;
+  }
+  
+  .open-btn {
+    padding: 10px 16px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .open-btn:hover {
+    background-color: #1976d2;
+  }
+  

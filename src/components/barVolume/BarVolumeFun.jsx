@@ -37,7 +37,6 @@ export const handleMouseDown = (e, setIsDraggingVolume) => {
 export const handleMouseMove = (e, volumeBarRef, data, setData, setCoordsVolume, isDraggingVolume) => {
   let barCurrentVolume = updateProgress(e, volumeBarRef, data, setData); // 拖动时更新进度
   const rect = volumeBarRef.current.getBoundingClientRect();
-  console.log("rect:", rect);
   setCoordsVolume({
     x: e.clientX,
     y: e.clientY - rect.top,

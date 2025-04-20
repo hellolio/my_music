@@ -1,45 +1,36 @@
 import React, { useState } from 'react';
-import { invoke } from '@tauri-apps/api/tauri';
+import './ShowMsg.css';
 
-export default function CreatePlaylistButton() {
-  const [showDialog, setShowDialog] = useState(false);
-  const [playlistName, setPlaylistName] = useState('');
 
-  const handleCreate = async () => {
-    if (playlistName.trim() === '') {
-      alert('歌单名不能为空');
-      return;
-    }
-
-    try {
-      await invoke('create_playlist', { name: playlistName });
-      setShowDialog(false);
-      setPlaylistName('');
-      alert('歌单创建成功！');
-    } catch (error) {
-      console.error('创建失败', error);
-      alert('创建失败');
-    }
-  };
+export default function ShowMsg({showMsgParam, inputValue, setInputValue, setShowDialog, callFun, callFunParam}) {
 
   return (
-    <div>
-      <button onClick={() => setShowDialog(true)}>新建歌单</button>
-
-      {showDialog && (
+      <div>
+        <div className="dialog-overlay" onClick={() => setShowDialog(false)} />
         <div className="dialog">
-          <h3>请输入歌单名称</h3>
-          <input
-            type="text"
-            value={playlistName}
-            onChange={(e) => setPlaylistName(e.target.value)}
-            placeholder="歌单名"
-          />
-          <br />
-          <button onClick={handleCreate}>确认</button>
-          <button onClick={() => setShowDialog(false)}>取消</button>
+          <h2>{showMsgParam.title}</h2>
+          {showMsgParam.isInput && (
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder={showMsgParam.placeholder}
+            />
+          )}
+          {showMsgParam.isInput ?  
+              <div className="dialog-buttons">
+                <button className='ok' onClick={() => callFun(callFunParam)}>确认</button>
+                <button className='cancle' onClick={() => setShowDialog(false)}>取消</button>
+              </div>
+            :
+              <div className="dialog-buttons">
+                <button 
+                  className='ok'
+                  // style={{textAlign: 'center'}}
+                  onClick={() => setShowDialog(false)}>确认</button>
+              </div>
+            }
         </div>
-      )}
-    </div>
+      </div>
   );
 }

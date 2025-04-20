@@ -22,7 +22,7 @@ html, body {
     transition: transform 0.3s ease-in-out;
     transform: translateX(100%); /* 隐藏面板 */
     backdrop-filter: blur(5px); /* 毛玻璃效果 */
-    padding-bottom: 30px;
+    padding-bottom: 40px;
 }
 
 .song-panel.visible {
@@ -97,16 +97,17 @@ html, body {
     margin: 10px;
     white-space: nowrap;
     transition: width 1s ease;
+    border-radius: 6px;
+    padding: 3px 6px;
     min-width: 80px;               /* 避免太小 */
 }
 
-.add-songlist img,
-.delete-songlist img,
-.all-songlist img {
+img {
     margin-left: 5px;
     width: 20px;
     height: 20px;
 }
+
 
 /* 这个是滑动区域容器，限定显示大小 */
 .slider-container {
@@ -128,41 +129,90 @@ html, body {
   .slider-wrapper .list {
     min-width: 100%;
     max-width: 100%;
-    overflow-y: auto;
     flex-shrink: 0;
   }
 
-  .switch-songlist  {
-    display: inline-flex; /* 保证子项是可横排的，适合带图标和文字的按钮 */
+
+  .play-list {
+    display: flex;
     align-items: center;
-    padding: 5px 10px;
-    margin: 5px;
-    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+    gap: 8px;
+    box-sizing: border-box;
+  }
+  
+  /* 外层加一个 wrapper 来限制滚动区域 */
+  .left-scroll-wrapper {
+    flex: 1;
+    min-width: 0; /* 关键！阻止撑开父容器 */
+    max-width: 100%;
+    overflow-x: auto;       /* 横向可滚动 */
+    /* overflow-y: hidden; */
     flex-shrink: 0;
   }
-.switch-songlist.active {
+  
+  .left-buttons {
+    display: flex;
+    gap: 6px;
+    width: fit-content; /* 让内部内容撑开 */
+  }
+  
+  /* 每个按钮 */
+  .switch-songlist {
+    flex-shrink: 0;
+    padding: 3px 6px;
+    white-space: nowrap;
+    /* background: #f0f0f0; */
+    border-radius: 6px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  /* 右侧按钮固定宽度 */
+  .right-buttons {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  
+  .switch-button {
+    width: 28px;
+    height: 28px;
+    /* background: #ddd; */
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  .song-panel li.song-list.active, .switch-songlist.active {
+    border-radius: 6px;
+    animation: pop 0.3s ease;
+    font-size: 15px;
+    background-color: rgba(51, 60, 52, 0.608);
+    font-weight: bold;
     color: #ff5500;
 }
 
 
-  .add-songlist:hover,.delete-songlist:hover,.all-songlist:hover,.switch-songlist:hover {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
+  .add-songlist:hover,.delete-songlist:hover,.all-songlist:hover,.switch-songlist:hover, .song-panel li.song-list:hover {
+    /* background-color: rgba(51, 60, 52, 0.608); */
+    color: #ff5500;
 }
 
 .add-songlist:active,.delete-songlist:active,.all-songlist:active,.switch-songlist:active {
-    transform: scale(0.99); /* 点击时缩小 */
+    animation: pop 0.3s ease;
 }
 
-.song-panel li.song-list:hover {
-    color: #ff5500;
-}
 .song-panel li.song-list:active {
-    transform: scale(0.99); /* 点击时缩小 */
-}
-
-.song-panel li.song-list.active {
-    text-decoration: line-through;
-    color: #9c8383;
+    transform: scale(0.99);
 }
 
 /* 设置滚动条的宽度 */

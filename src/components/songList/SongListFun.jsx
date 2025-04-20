@@ -133,34 +133,6 @@ export const switchTo = (index, id, setCurrentIndex, setData, setSongs, allSongL
     setSongs(allSongList[i].songs);
 };
 
-export const handleCreate = async (playlistName, musicLists, setShowDialog, setPlaylistName, setCreatePlaylistFlg) => {
-    if (musicLists.length >= 3) {
-        alert('最多只能创建3个歌单');
-        setShowDialog(false);
-        setPlaylistName('');
-        return;
-    }
-    if (playlistName.trim() === '') {
-        alert('歌单名不能为空');
-        return;
-    }
-    if (playlistName.length > 10) {
-        alert('歌单名长度不能超过10字符');
-        return;
-      }
-
-    let index = musicLists.findIndex((e) => e.name === playlistName);
-    if (index === -1) {
-        await invoke('create_playlist', { name: playlistName });
-        setShowDialog(false);
-        setPlaylistName('');
-        setCreatePlaylistFlg(true);
-    } else {
-        alert('歌单名不能重复');
-        return;
-    }
-  };
-
 export const deletePlayList = async (allSongList, playlistId, setCreatePlaylistFlg) => {
     if (allSongList.length <= 1) {
         alert('至少需要保留一个歌单');
@@ -169,6 +141,33 @@ export const deletePlayList = async (allSongList, playlistId, setCreatePlaylistF
         await invoke('delete_playlist', { playlistId: playlistId });
         setCreatePlaylistFlg(true);
     }
-
-
 }
+
+
+export const handleCreate = async (param) => {
+    if (param.musicLists.length >= 3) {
+        alert('最多只能创建3个歌单');
+        param.setShowDialog(false);
+        param.setPlaylistName('');
+        return;
+    }
+    if (param.playlistName.trim() === '') {
+        alert('歌单名不能为空');
+        return;
+    }
+    if (param.playlistName.length > 10) {
+        alert('歌单名长度不能超过10字符');
+        return;
+      }
+
+    let index = param.musicLists.findIndex((e) => e.name === param.playlistName);
+    if (index === -1) {
+        await invoke('create_playlist', { name: param.playlistName });
+        param.setShowDialog(false);
+        param.setPlaylistName('');
+        param.setCreatePlaylistFlg(true);
+    } else {
+        alert('歌单名不能重复');
+        return;
+    }
+  };
