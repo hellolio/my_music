@@ -15,7 +15,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgb(104, 101, 101);
+    background-color: rgb(72, 71, 71);
 
     padding: 24px;
     border-radius: 12px;
@@ -50,7 +50,7 @@
     display: block;
     margin: 0 auto 16px auto; /* 上为0，下为16px，左右auto */
     border: 1px solid #444744;
-    background-color: #444744;
+    background-color: #2d302d;
     color: #cbc3c3;
     border-radius: 6px;
     font-size: 16px;

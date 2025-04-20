@@ -14,7 +14,11 @@ html, body, #app {
 * {
 	margin: 0px;
 	padding: 0px;
+  user-select: none;
+  /* overflow-x: hidden; */
+  /* overflow: hidden; */
 }
+
 
 .my-music {
   display: flex;                /* 使用 Flexbox 布局 */

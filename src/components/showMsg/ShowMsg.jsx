@@ -8,7 +8,7 @@ export default function ShowMsg({showMsgParam, inputValue, setInputValue, setSho
       <div>
         <div className="dialog-overlay" onClick={() => setShowDialog(false)} />
         <div className="dialog">
-          <h2>{showMsgParam.title}</h2>
+          <h3>{showMsgParam.title}</h3>
           {showMsgParam.isInput && (
             <input
               type="text"
@@ -24,10 +24,7 @@ export default function ShowMsg({showMsgParam, inputValue, setInputValue, setSho
               </div>
             :
               <div className="dialog-buttons">
-                <button 
-                  className='ok'
-                  // style={{textAlign: 'center'}}
-                  onClick={() => setShowDialog(false)}>确认</button>
+                <button className='ok' onClick={() => callFun(callFunParam)}>确认</button>
               </div>
             }
         </div>

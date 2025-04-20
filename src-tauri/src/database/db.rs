@@ -147,7 +147,6 @@ pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlists>, rusqlite::Erro
         name
     FROM playlists
     ORDER BY id
-    limit 5
     ";
 
     let mut stmt = conn.prepare(sql)?;

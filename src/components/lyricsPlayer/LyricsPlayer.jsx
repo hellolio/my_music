@@ -51,7 +51,7 @@ function LyricsPlayer(props) {
             <div 
             ref={containerRef}
             className="center-lyrics">
-                {<button onClick={()=>addLyrics(data, setData)}>重载歌词</button>}
+                {<button className="overLoad-lyrics" onClick={()=>addLyrics(data, setData)}>重载歌词</button>}
                 <ul className="center-lyrics-line"
                 onDoubleClick={()=>addLyrics(data, setData)}
                 >

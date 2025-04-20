@@ -27,7 +27,7 @@ export const playMusicFromList = async (id, audio_src, title, total_duration, da
 }
 
 // 点击添加 导入音乐到数据库
-export const importMusic = async (songs, setSongs, playlistId, setCreatePlaylistFlg) =>{
+export const importMusic = async (songs, setSongs, playlistId, setUpdatePlayListFlg) =>{
     console.log("开始导入歌曲");
     console.log("songs:",songs);
   
@@ -37,10 +37,10 @@ export const importMusic = async (songs, setSongs, playlistId, setCreatePlaylist
   
     let songs_new = await invoke('import_music_to_db', { fileNames: selectedFiles, id: playlistId });
     setSongs(songs.concat(songs_new));
-    setCreatePlaylistFlg(true);
+    setUpdatePlayListFlg(true);
 }
 
-export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, setSongs, data, setData, setCreatePlaylistFlg) => {
+export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, setSongs, data, setData, setUpdatePlayListFlg) => {
     let musicLists = await invoke('get_song_all');
     console.log("musicLists:", musicLists);
 
@@ -82,7 +82,7 @@ export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, setSon
     
         setSongs(musicList.songs);
         setAllSongList(musicLists);
-        setCreatePlaylistFlg(false);
+        setUpdatePlayListFlg(false);
     }
 
 
@@ -112,13 +112,14 @@ export const handleAllCheckboxChange = (allCheck, setAllCheck, songs, setSelecte
 
 
 // 删除选中的项
-export const deleteMusic = async (setSongs, selectedItems, setSelectedItems) => {
+export const deleteMusic = async (setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg) => {
     console.log("selectedItems:", selectedItems);
     await invoke('delete_music_from_db', { songs: selectedItems });
 
     setSongs((prevItems) => prevItems.filter((song) => !selectedItems.includes(song)));
     getMusicListFormDB(setSongs)
     setSelectedItems([]);  // 删除后清空选中的项
+    setUpdatePlayListFlg(true);
 };
 
 
@@ -133,19 +134,21 @@ export const switchTo = (index, id, setCurrentIndex, setData, setSongs, allSongL
     setSongs(allSongList[i].songs);
 };
 
-export const deletePlayList = async (allSongList, playlistId, setCreatePlaylistFlg) => {
-    if (allSongList.length <= 1) {
+export const deletePlayList = async (param) => {
+    if (param.allSongList.length <= 1) {
         alert('至少需要保留一个歌单');
+        param.setShowConfirmDialog(false);
         return;
     }else {
-        await invoke('delete_playlist', { playlistId: playlistId });
-        setCreatePlaylistFlg(true);
+        await invoke('delete_playlist', { playlistId: param.playlistId });
+        param.setShowConfirmDialog(false);
+        param.setUpdatePlayListFlg(true);
     }
 }
 
 
 export const handleCreate = async (param) => {
-    if (param.musicLists.length >= 3) {
+    if (param.allSongList.length >= 10) {
         alert('最多只能创建3个歌单');
         param.setShowDialog(false);
         param.setPlaylistName('');
@@ -160,12 +163,12 @@ export const handleCreate = async (param) => {
         return;
       }
 
-    let index = param.musicLists.findIndex((e) => e.name === param.playlistName);
+    let index = param.allSongList.findIndex((e) => e.name === param.playlistName);
     if (index === -1) {
         await invoke('create_playlist', { name: param.playlistName });
         param.setShowDialog(false);
         param.setPlaylistName('');
-        param.setCreatePlaylistFlg(true);
+        param.setUpdatePlayListFlg(true);
     } else {
         alert('歌单名不能重复');
         return;

@@ -1,18 +1,12 @@
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; /* 禁止横向滚动条 */
-}
-
 .song-panel {
     position: fixed;
     bottom: 40px;
     right: 0;
     width: 80%;    /* 固定宽度 */
     height: 70vh;
-    max-width: 700px;
+    max-width: 500px;
     max-height: 1000px;
-    margin-bottom: 100px;
+    margin-bottom: 70px;
     border-radius: 15px;
     background-color: rgba(121, 121, 121, 0.188);
     box-shadow: -2px 0 5px rgba(0,0,0,0.1);
@@ -22,7 +16,7 @@ html, body {
     transition: transform 0.3s ease-in-out;
     transform: translateX(100%); /* 隐藏面板 */
     backdrop-filter: blur(5px); /* 毛玻璃效果 */
-    padding-bottom: 40px;
+    padding-bottom: 50px;
 }
 
 .song-panel.visible {
@@ -81,26 +75,38 @@ html, body {
     margin-left: auto;
 }
 
+.play-list-title *{
+    /* background-color: #58b7ce; */
+    color: #58b7ce;
+}
+
 .add-delete {
     display: flex;
     justify-content: space-evenly;  /* 均匀分布子元素 */
     align-items: center;
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 
 .add-songlist,
 .delete-songlist,
-.all-songlist {
-    flex: 1;                        /* 每个子元素均分父容器宽度 */
-    display: flex;
-    justify-content: center;       /* 内容居中 */
-    align-items: center;
-    margin: 10px;
-    white-space: nowrap;
-    transition: width 1s ease;
+.all-songlist{
+    padding: 8px;
+    font-size: 12px;
+    border: none;
     border-radius: 6px;
-    padding: 3px 6px;
-    min-width: 80px;               /* 避免太小 */
+    cursor: pointer;
+    transition: background-color 0.5s;
+    background-color: rgba(61, 66, 61, 0.166);
+    color: #dbcdcd;
 }
+
+hr {
+    border: none;
+    border-top: 2px solid #58b7ce;
+    margin-bottom: 10px;
+  }
+  
 
 img {
     margin-left: 5px;
@@ -134,12 +140,15 @@ img {
 
 
   .play-list {
+    position: absolute;
+    bottom: 20px;
     display: flex;
     align-items: center;
-    width: 100%;
+    width: 90%;
     overflow: hidden;
     gap: 8px;
     box-sizing: border-box;
+    padding-top: 10px;
   }
   
   /* 外层加一个 wrapper 来限制滚动区域 */
@@ -163,11 +172,27 @@ img {
     flex-shrink: 0;
     padding: 3px 6px;
     white-space: nowrap;
-    /* background: #f0f0f0; */
     border-radius: 6px;
+    border: none;
+    cursor: pointer;
     font-size: 14px;
-    color: #333;
+    transition: background-color 0.5s;
+    background-color: rgba(61, 66, 61, 0.166);
+    color: #dbcdcd;
   }
+
+  /* .switch-songlist {
+    padding: 8px;
+    font-size: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.5s;
+    background-color: rgba(61, 66, 61, 0.166);
+    color: #dbcdcd;
+} */
+
+
   
   /* 右侧按钮固定宽度 */
   .right-buttons {
@@ -203,9 +228,16 @@ img {
 
 
   .add-songlist:hover,.delete-songlist:hover,.all-songlist:hover,.switch-songlist:hover, .song-panel li.song-list:hover {
-    /* background-color: rgba(51, 60, 52, 0.608); */
     color: #ff5500;
 }
+
+.switch-button:hover {
+    transform: scale(1.2); /* 放大一点 */
+}
+.switch-button:active {
+    transform: scale(0.99); /* 点击时缩小 */
+  }
+
 
 .add-songlist:active,.delete-songlist:active,.all-songlist:active,.switch-songlist:active {
     animation: pop 0.3s ease;

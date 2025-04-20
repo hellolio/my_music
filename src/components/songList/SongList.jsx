@@ -40,21 +40,22 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [showDialog, setShowDialog] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
-  const [createPlaylistFlg, setCreatePlaylistFlg] = useState(false);
+  const [updatePlayListFlg, setUpdatePlayListFlg] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
 
   // 初次加载的时候从数据库获取歌曲列表
   useEffect(() => {
-    getMusicListFormDB(setCurrentIndex, setAllSongList, setSongs, data, setData, setCreatePlaylistFlg);
-  }, [createPlaylistFlg]);
+    getMusicListFormDB(setCurrentIndex, setAllSongList, setSongs, data, setData, setUpdatePlayListFlg);
+  }, [updatePlayListFlg]);
 
 
   return (
     <div className={`song-panel ${visible ? 'visible' : ''}`} ref={panelRef}>
 
       <ul>
-        <li>
+        <li className='play-list-title'>
           <span className="index"><h3>序号</h3></span>
           <span className="title"><h3>歌名</h3></span>
           <span className="duration"><h3>时长</h3></span>
@@ -88,12 +89,24 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
         })}
         </div>
       </div>
+      <div className='add-delete'>
+          <button className="all-songlist" onClick={() => handleAllCheckboxChange(allCheck, setAllCheck, songs, setSelectedItems)} >
+            {allCheck ? '全选歌曲': '取消全选'}
+          </button>
+          <button className="add-songlist" onClick={() => importMusic(songs, setSongs, data.playlistId, setUpdatePlayListFlg)} >
+            添加歌曲
+          </button>
+          <button className="delete-songlist" onClick={() => deleteMusic(setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg)}>
+            删除歌曲
+          </button>
+        </div>
+        <hr />
         <div className='play-list'>
           <div className="left-scroll-wrapper">
             <div className='left-buttons'>
               {allSongList.map((listObj, index) => {
                 return (
-                  <div
+                  <button
                     key={index}
                     id={`songlist-${index}`}
                     className={listObj.id===data.playlistId ? "switch-songlist active": "switch-songlist"}
@@ -107,14 +120,15 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                     }}
                   >
                     {listObj.name}
-                  </div>
+                  </button>
                 );
               })}
             </div>
           </div>
           <div className='right-buttons'>
+              <div>|</div>
               <div key={9998} className="switch-button" onClick={() => setShowDialog(true)}><img src="/img/添加.ico" alt="add"/></div>
-              <div key={9999} className="switch-button" onClick={() => deletePlayList(allSongList, data.playlistId, setCreatePlaylistFlg)}><img src="/img/删除.ico" alt="del"/></div>
+              <div key={9999} className="switch-button" onClick={() => setShowConfirmDialog(true)}><img src="/img/删除.ico" alt="del"/></div>
             </div>
             {showDialog && (
               <ShowMsg
@@ -123,23 +137,20 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                 setInputValue = {setPlaylistName}
                 setShowDialog = {setShowDialog}
                 callFun={handleCreate}
-                callFunParam={{playlistName: playlistName, setPlaylistName: setPlaylistName, musicLists: allSongList, setShowDialog: setShowDialog, setCreatePlaylistFlg: setCreatePlaylistFlg}}
+                callFunParam={{playlistName: playlistName, setPlaylistName: setPlaylistName, allSongList: allSongList, setShowDialog: setShowDialog, setUpdatePlayListFlg: setUpdatePlayListFlg}}
               />
             )}
-        </div>
-      <div className='add-delete'>
-          <div className="all-songlist" onClick={() => handleAllCheckboxChange(allCheck, setAllCheck, songs, setSelectedItems)} >
-            <img src="/img/全选.ico" alt="allcheck"/>
-            <span>{allCheck ? '全选歌曲': '取消全选'}</span>
-          </div>
-          <div className="add-songlist" onClick={() => importMusic(songs, setSongs, data.playlistId, setCreatePlaylistFlg)} >
-            <img src="/img/添加.ico" alt="add"/>
-            <span>添加歌曲</span>
-          </div>
-          <div className="delete-songlist" onClick={() => deleteMusic(setSongs, selectedItems, setSelectedItems)}>
-            <img src="/img/删除.ico" alt="delete" />
-            <span>删除歌曲</span>
-          </div>
+
+            {showConfirmDialog && (
+              <ShowMsg
+                showMsgParam = {{title: `确认删除歌单: "${allSongList[currentIndex].name}" 吗?`, isInput: false}}
+                inputValue = {playlistName}
+                setInputValue = {setPlaylistName}
+                setShowDialog = {setShowConfirmDialog}
+                callFun={deletePlayList}
+                callFunParam={{allSongList: allSongList, playlistId: data.playlistId, setUpdatePlayListFlg: setUpdatePlayListFlg, setShowConfirmDialog: setShowConfirmDialog}}
+              />
+            )}
         </div>
     </div>
   );

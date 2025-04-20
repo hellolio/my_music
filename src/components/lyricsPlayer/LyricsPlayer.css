@@ -79,3 +79,14 @@
   transform: scale(1.2);
   transition: all 0.5s;
 }
+
+.overLoad-lyrics{
+    padding: 8px 14px;
+    font-size: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.5s;
+    background-color: rgba(61, 66, 61, 0.166);
+    color: #dbcdcd;
+}
