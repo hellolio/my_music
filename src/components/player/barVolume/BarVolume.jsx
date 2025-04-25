@@ -1,4 +1,4 @@
-import utils from "../../common/utils"
+import * as utils from "@/common/utils"
 import "./BarVolume.css"
 import { useState, useRef } from "react";
 

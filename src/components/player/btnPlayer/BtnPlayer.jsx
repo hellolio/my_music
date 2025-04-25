@@ -2,9 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import "./BtnPlayer.css";
 
-import SongList from "../songList/SongList";
+import SongList from "../../songList/SongList";
 
-import {leftClick, togglePlayPause, rightClick, cycleClick, handleTogglePanel} from "./BtnPlayerFun/"
+import {leftClick, togglePlayPause, rightClick, cycleClick, handleTogglePanel} from "./BtnPlayerFun"
 
 function BtnPlayer(props) {
   const {data, setData} = props;

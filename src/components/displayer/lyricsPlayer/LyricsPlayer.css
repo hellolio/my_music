@@ -86,7 +86,7 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.5s;
+    transition: background-color 0.3s;
     background-color: rgba(61, 66, 61, 0.166);
     color: #dbcdcd;
 }

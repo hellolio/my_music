@@ -1,6 +1,7 @@
-import { invoke } from "@tauri-apps/api/tauri";
+// import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
 
+import * as utils from "../../../common/utils"
 
 export const importMusic = async (musicListImportState, setMusicListImportState) =>{
   console.log("开始导入歌曲");
@@ -15,24 +16,11 @@ export const importMusic = async (musicListImportState, setMusicListImportState)
   console.log("musicListImportState :",musicListImportState);
 }
 
-const findMinMaxId = (list) => {
-  // 初始化minId和maxId，假设list非空
-  const { minId, maxId } = list.reduce((acc, item) => {
-    if (item.id < acc.minId) {
-      acc.minId = item.id;
-    }
-    if (item.id > acc.maxId) {
-      acc.maxId = item.id;
-    }
-    return acc;
-  }, { minId: Infinity, maxId: -Infinity }); // 初始值设置为Infinity和- Infinity
-
-  return { minId, maxId };
-};
 
 // 处理按钮点击事件
 export const leftClick = async (musicListImportState, data, setData) => {
   let index = musicListImportState.findIndex((song) => song.id === data.id);
+
 
   // const result = findMinMaxId(musicListImportState);
   const len = musicListImportState.length;
@@ -44,8 +32,23 @@ export const leftClick = async (musicListImportState, data, setData) => {
   }
   var audioMeta = musicListImportState[index];
 
-  await invoke('stop_music');
-  let song = await invoke('play_music', { id: data.playlistId, filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
+
+  const isMusic = utils.isMusic(audioMeta.audio_src);
+  let playFun = undefined;
+  if (isMusic){
+    playFun = data.music.current
+  }else {
+    playFun = data.video.current
+  }
+  
+  if (data.isMusic) {
+    await data.music.current.stop()
+  }else {
+    await data.video.current.stop()
+  }
+
+  let song = await playFun.play(data.playlistId, audioMeta.audio_src, audioMeta.total_duration, 0, data.barCurrentVolume)
+  // let song = await invoke('play_music', { id: data.playlistId, filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
 
   setData(prevData => ({
     ...prevData,
@@ -60,19 +63,27 @@ export const leftClick = async (musicListImportState, data, setData) => {
     totalDuration: song.total_duration,
     barCurrentProgressSec: 0,
     isPlaying: true,
-    playerAlive: true
+    playerAlive: true,
+    isMusic: isMusic
   }));
 };
 
 
 export const togglePlayPause = async (data, setData) => {
-
+  const isMusic = utils.isMusic(data.audioSrc);
+  let playFun = undefined;
+  if (isMusic){
+    playFun = data.music.current
+  }else {
+    playFun = data.video.current
+  }
   // 当前没有播放
   if (!data.isPlaying){
 
     // 进度条马上播放就结束了
     if (data.totalDuration-data.barCurrentProgressSec<=1 || data.playState===-1) {
-      let song = await invoke('play_music', { id: data.playlistId, filePath: data.audioSrc, duration: data.totalDuration, skipSecs: 0, volume: data.barCurrentVolume/100 });
+      let song = await playFun.play(data.playlistId, data.audioSrc, data.totalDuration, 0, data.barCurrentVolume)
+      // let song = await invoke('play_music', { id: data.playlistId, filePath: data.audioSrc, duration: data.totalDuration, skipSecs: 0, volume: data.barCurrentVolume/100 });
 
       setData(prevData => ({
         ...prevData,
@@ -88,13 +99,16 @@ export const togglePlayPause = async (data, setData) => {
         barCurrentProgressSec: 0,
         playState: 1,
         isPlaying: data.isPlaying,
-        playerAlive: true
+        playerAlive: true,
+        isMusic: isMusic
       }));
     } else {
-      await invoke('resume_music');
+      // await invoke('resume_music');
+      await playFun.resume()
     }
   }else{
-    await invoke('pause_music');
+      await playFun.pause()
+      // await invoke('pause_music');
   }
   setData(prevData => ({
     ...prevData,
@@ -113,9 +127,27 @@ export const rightClick = async (musicListImportState, data, setData) => {
   }
 
   var audioMeta = musicListImportState[index];
+  
+  const isMusic = utils.isMusic(audioMeta.audio_src);
+  console.log("这是什么：", audioMeta.audio_src);
+  console.log("这是什么aa：", isMusic);
+  let playFun = undefined;
+  if (isMusic){
+    playFun = data.music.current
+  }else {
+    playFun = data.video.current
+  }
+  
+  if (data.isMusic) {
+    await data.music.current.stop()
+  }else {
+    await data.video.current.stop()
+  }
 
-  await invoke('stop_music');
-  let song = await invoke('play_music', { id: data.playlistId, filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
+  let song = await playFun.play(data.playlistId, audioMeta.audio_src, audioMeta.total_duration, 0, data.barCurrentVolume)
+
+  // await invoke('stop_music');
+  // let song = await invoke('play_music', { id: data.playlistId, filePath: audioMeta.audio_src, duration: audioMeta.total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
   setData(prevData => ({
     ...prevData,
     id: song.id,
@@ -125,11 +157,12 @@ export const rightClick = async (musicListImportState, data, setData) => {
     isFollow: song.is_follow,
     lyrics: song.lyrics,
     lyricsPath: song.lyrics_path,
-    audioSrc: song.audio_src,
-    totalDuration: song.total_duration,
+    audioSrc: audioMeta.audio_src,
+    totalDuration: audioMeta.total_duration,
     barCurrentProgressSec: 0,
     isPlaying: true,
-    playerAlive: true
+    playerAlive: true,
+    isMusic: isMusic
   }));
 
 };

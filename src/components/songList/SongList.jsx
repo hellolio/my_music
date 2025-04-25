@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './SongList.css';
-import utils from "../../common/utils"
+import * as utils from "../../common/utils"
 import ShowMsg from '../showMsg/ShowMsg';
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, playMusicFromList, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
@@ -75,8 +75,11 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                   key={index}
                   className={selectedItems.includes(song) ? "song-list active" : "song-list"}
                   onClick={(e) => handleCheckboxChange(e, song, selectedItems, setSelectedItems)}
-                  onDoubleClick={() =>
+                  onDoubleClick={() =>{
+                    console.log("sssssssssss:====", song);
                     playMusicFromList(song.id, song.audio_src, song.title, song.total_duration, data, setData)
+
+                  }
                   }
                 >
                   <span className="index">{index + 1}.</span>
@@ -135,6 +138,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                 showMsgParam = {{title: "创建歌单", placeholder:"请输入歌单名", isInput: true}}
                 inputValue = {playlistName}
                 setInputValue = {setPlaylistName}
+                showDialog = {showDialog}
                 setShowDialog = {setShowDialog}
                 callFun={handleCreate}
                 callFunParam={{playlistName: playlistName, setPlaylistName: setPlaylistName, allSongList: allSongList, setShowDialog: setShowDialog, setUpdatePlayListFlg: setUpdatePlayListFlg}}
@@ -146,6 +150,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                 showMsgParam = {{title: `确认删除歌单: "${allSongList[currentIndex].name}" 吗?`, isInput: false}}
                 inputValue = {playlistName}
                 setInputValue = {setPlaylistName}
+                showDialog = {showConfirmDialog}
                 setShowDialog = {setShowConfirmDialog}
                 callFun={deletePlayList}
                 callFunParam={{allSongList: allSongList, playlistId: data.playlistId, setUpdatePlayListFlg: setUpdatePlayListFlg, setShowConfirmDialog: setShowConfirmDialog}}

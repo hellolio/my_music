@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{env, sync::{Arc, Mutex}};
+use std::{env, path::Path, sync::{Arc, Mutex}};
 use tauri::{State, Window};
 use rusqlite::Connection;
 
@@ -176,6 +176,11 @@ fn get_song_all(state: State<'_, Arc<AppState>>) -> Vec<PlaylistSong> {
     // }
 }
 
+#[tauri::command]
+fn get_video_path(path: String) -> String {
+    format!("file://{}", path)
+}
+
 fn main() {
     add_bin_to_path();
     let state = AppState{
@@ -196,7 +201,8 @@ fn main() {
             import_music_to_db,
             delete_music_from_db,
             add_lyrics,
-            get_song_all
+            get_song_all,
+            get_video_path
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

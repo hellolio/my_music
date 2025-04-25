@@ -6,7 +6,7 @@
   height: 40px;
   width: 100%;
   max-width: 700px;
-  margin-bottom: 30px;  
+  /* margin-bottom: 30px;   */
 }
 
 
@@ -15,7 +15,7 @@
   height: 30px;
   gap: 50px;
   vertical-align: middle;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .left-btnPlayer:hover,

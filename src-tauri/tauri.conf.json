@@ -17,6 +17,13 @@
         "all": false,
         "open": true
       },
+      "protocol": {
+        "asset": true,
+        "assetScope": ["**"]
+      },
+      "path": {
+        "all": true
+      },
       "dialog": {
         "open": true,
         "save": true,
@@ -30,14 +37,14 @@
     "windows": [
       {
         "title": "my-music",
-        "width": 400,
-        "height": 700,
-        "minWidth": 400,  
+        "width": 800,
+        "height": 500,
+        "minWidth": 300,  
         "minHeight": 700
       }
     ],
     "security": {
-      "csp": null
+       "csp": "default-src 'self'; media-src 'self' asset: tauri://* file://* https://asset.localhost/*"
     },
     "bundle": {
       "active": true,

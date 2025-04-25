@@ -8,24 +8,60 @@ html, body, #app {
   color: white;  /* 设置文本为白色，确保在黑色背景下可读 */
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
+
 
 
 * {
 	margin: 0px;
 	padding: 0px;
   user-select: none;
-  /* overflow-x: hidden; */
+    /* overflow-x: hidden; */
   /* overflow: hidden; */
 }
 
 
-.my-music {
+.my-player {
   display: flex;                /* 使用 Flexbox 布局 */
   flex-direction: column;       /* 垂直排列子元素 */
   position: relative;   /* 设置父容器为相对定位 */
   height: 100vh;         /* 设定父容器的高度为视口高度 */
   width: 100%;
+}
+
+.display {
+  height: 70vh;
+  width: 100%;
+  flex: 1; /* 占满剩余高度 */
+  min-height: 0;         /* 必须有这句！否则 flexbox 不允许它真正缩小 */
+  overflow: auto;
+}
+
+
+/* 滑动容器（视口） */
+.play-slider-container {
+  width: 100%;
+  height: 100%;         /* 控制滑动内容的垂直高度 */
+  overflow: hidden;
+  position: relative;
+}
+
+/* 滑动轨道（横向排列子组件） */
+.play-slider-wrapper {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+  width: 100%;
+  height: 100%;
+}
+
+/* 每个子组件占满容器 */
+.music, .video {
+  min-width: 100%;
+  max-width: 100%;
+  flex-shrink: 0;
+  height: 100%;
 }
 
 /* 最外层的父容器 */
@@ -45,11 +81,9 @@ html, body, #app {
 }
 
 .player {
-  position: fixed;    /* 元素相对于父容器定位 */
+  position: relative;    /* 元素相对于父容器定位 */
   left: 50%;                 /* 距离左边 50%（元素的左边缘会到达视口的中点） */
   transform: translateX(-50%); /* 向左偏移自身宽度的 50%，实现水平居中 */
   bottom: 10px;
-  /* height: 50vh; */
   width: 100%;
-  /* margin-bottom: 10px; */
 }

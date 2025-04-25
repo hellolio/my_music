@@ -1,12 +1,11 @@
-import { useState, useEffect } from "react";
-
+import { useState, useEffect, useRef } from "react";
 
 import "./App.css";
-import BtnPlayer from "./components/btnPlayer/BtnPlayer/";
-import BarPlayer from "./components/barPlayer/BarPlayer";
-import BarVolume from "./components/barVolume/BarVolume";
-import LyricsPlayer from "./components/lyricsPlayer/LyricsPlayer";
-import TitlePlayer from "./components/titlePlayer/TitlePlayer";
+import BtnPlayer from "./components/player/btnPlayer/BtnPlayer";
+import BarPlayer from "./components/player/barPlayer/BarPlayer";
+import BarVolume from "./components/player/barVolume/BarVolume";
+import Video from "./components/displayer/video/Video";
+import Music from "./components/displayer/music/Music";
 
 
 function App() {
@@ -38,43 +37,67 @@ function App() {
   const dataTmp = localStorage.getItem('data');
   const barCurrentVolume = localStorage.getItem('barCurrentVolume');
   const isSingleLoop = localStorage.getItem('isSingleLoop');
+
+  const dataTmpParse = JSON.parse(dataTmp);
+  const musicRef = useRef();
+  const videoRef = useRef();
+
   const [data, setData] = useState(
     {
       id: 1,
-      playlistId: dataTmp ? JSON.parse(dataTmp).playlistId : 1,
-      title: dataTmp ? JSON.parse(dataTmp).title : null,
+      playlistId: dataTmp ? dataTmpParse.playlistId : 1,
+      title: dataTmp ? dataTmpParse.title : null,
       author: null,
       isCollect: false,
       isFollow: false,
-      lyrics: dataTmp ? JSON.parse(dataTmp).lyrics : [],
-      lyricsPath: dataTmp ? JSON.parse(dataTmp).lyricsPath : null,
-      audioSrc: dataTmp ? JSON.parse(dataTmp).audioSrc : null,
-      totalDuration: dataTmp ? JSON.parse(dataTmp).totalDuration : 100,
+      lyrics: dataTmp ? dataTmpParse.lyrics : [],
+      lyricsPath: dataTmp ? dataTmpParse.lyricsPath : null,
+      audioSrc: dataTmp ? dataTmpParse.audioSrc : null,
+      totalDuration: dataTmp ? dataTmpParse.totalDuration : 100,
       barCurrentProgressSec: 0,
       barCurrentVolume: barCurrentVolume ? JSON.parse(barCurrentVolume) : 30,
       isPlaying: true,
       playState: -1,   // -1是当前没有播放或者播放线程结束，0是播放结束，但线程未结束，1是正在播放
       isSingleLoop: isSingleLoop ? JSON.parse(isSingleLoop) : true,
-      playerAlive: false
+      playerAlive: false,
+      video: videoRef,
+      music: musicRef,
+      isMusic: false
     }
   );
-
+  
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(data));
-    const dataTmp = localStorage.getItem('data');
-    console.log("dataTmp:", dataTmp);
   }, [data]);
 
+  // 切换到某个歌单
+  const [currentIndex, setCurrentIndex] = useState(0);
+  useEffect(() => {
+    if (data.isMusic) {
+      setCurrentIndex(0)
+    } else {
+      setCurrentIndex(1)
+    }
+  }, [data.isMusic]);
+
+
   return (
-    <div className="my-music">
-      {/* 歌曲抬头设置 */}
-      <div className="parent title">
-        <TitlePlayer data={data} setData={setData}/>
+    <div className="my-player">
+      <div className="display">
+      <div className="play-slider-container">
+        <div
+          className="play-slider-wrapper"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          <div className="music">
+            <Music ref={musicRef}  data={data} setData={setData} />
+          </div>
+          <div className="video">
+            <Video  ref={videoRef} data={data} setData={setData} />
+          </div>
+        </div>
       </div>
 
-      {/* 歌词区设置 */}
-      <div className="parent lyrics">
-        <LyricsPlayer data={data} setData={setData}/>
       </div>
 
       <div className="player">

@@ -14,6 +14,7 @@
     overflow-y: hidden;
     z-index: 999;
     transition: transform 0.3s ease-in-out;
+    will-change: transform;
     transform: translateX(100%); /* 隐藏面板 */
     backdrop-filter: blur(5px); /* 毛玻璃效果 */
     padding-bottom: 50px;
@@ -96,7 +97,7 @@
     border: none;
     border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.5s;
+    transition: background-color 0.3s;
     background-color: rgba(61, 66, 61, 0.166);
     color: #dbcdcd;
 }
@@ -126,7 +127,8 @@ img {
   /* wrapper 用于滑动切换，flex 横向排列 list */
   .slider-wrapper {
     display: flex;
-    transition: transform 0.8s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    will-change: transform;
     width: 100%; /* 3个 list，100% * 3 */
     height: 120%;
   }
@@ -176,7 +178,7 @@ img {
     border: none;
     cursor: pointer;
     font-size: 14px;
-    transition: background-color 0.5s;
+    transition: background-color 0.3s;
     background-color: rgba(61, 66, 61, 0.166);
     color: #dbcdcd;
   }

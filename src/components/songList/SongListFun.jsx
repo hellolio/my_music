@@ -1,28 +1,56 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
 
+import * as utils from "../../common/utils"
+
 
 // 双击列表的某首歌播放
 export const playMusicFromList = async (id, audio_src, title, total_duration, data, setData) => {
 
-    await invoke('stop_music');
-    let song = await invoke('play_music', { id: data.playlistId, filePath: audio_src, duration: total_duration, skipSecs: 0, volume: data.barCurrentVolume/100 });
-  
-    setData(prevData => ({
-      ...prevData,
-      id: song.id,
-      title: song.title,
-      author: song.author,
-      isCollect: song.is_collect,
-      isFollow: song.is_follow,
-      lyrics: song.lyrics,
-      lyricsPath: song.lyrics_path,
-      audioSrc: song.audio_src,
-      totalDuration: song.total_duration,
-      barCurrentProgressSec: 0,
-      isPlaying: true,
-      playerAlive: true
-    }));
+    let song = null;
+    if (data.isMusic) {
+        await data.music.current.stop()
+    }else {
+        await data.video.current.stop()
+    }
+    const isMusic = utils.isMusic(audio_src);
+    if (isMusic) {
+        song = await data.music.current.play(data.playlistId, audio_src, total_duration, 0, data.barCurrentVolume/100);
+        setData(prevData => ({
+            ...prevData,
+            id: song.id,
+            title: song.title,
+            author: song.author,
+            isCollect: song.is_collect,
+            isFollow: song.is_follow,
+            lyrics: song.lyrics,
+            lyricsPath: song.lyrics_path,
+            audioSrc: song.audio_src,
+            totalDuration: song.total_duration,
+            barCurrentProgressSec: 0,
+            isPlaying: true,
+            playerAlive: true,
+            isMusic: true,
+        }));
+    } else {
+        song = await data.video.current.play(data.playlistId, audio_src, total_duration, 0, data.barCurrentVolume/100);
+        setData(prevData => ({
+            ...prevData,
+            id: song.id,
+            title: song.title,
+            author: song.author,
+            isCollect: song.is_collect,
+            isFollow: song.is_follow,
+            lyrics: song.lyrics,
+            lyricsPath: song.lyrics_path,
+            audioSrc: song.audio_src,
+            totalDuration: song.total_duration,
+            barCurrentProgressSec: 0,
+            isPlaying: true,
+            playerAlive: true,
+            isMusic: false,
+          }));
+    }
   
 }
 

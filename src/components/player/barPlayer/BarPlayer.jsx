@@ -1,9 +1,9 @@
-import utils from "../../common/utils"
+import * as utils from "../../../common/utils"
 import "./BarPlayer.css"
 import { useState, useEffect, useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
 
-import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp} from "./BarPlayerFun/"
+import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp} from "./BarPlayerFun"
 
 
 function BarPlayer(props) {
