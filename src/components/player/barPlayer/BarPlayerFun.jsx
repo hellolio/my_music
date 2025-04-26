@@ -1,12 +1,14 @@
-import { invoke } from "@tauri-apps/api/tauri";
+// import { invoke } from "@tauri-apps/api/tauri";
+import * as utils from "../../../common/utils"
 
 // 计算并设置进度
 export const updateProgress = (e, progressBarRef, data, setData) =>  {
-    // console.log("eeeee:",handleMouseUp);
     // 获取进度条容器的宽度
     let progressBarWidth = e.currentTarget.clientWidth;
-    // console.log("进度条容器的宽度:", progressBarWidth);
 
+    if (!progressBarRef.current) {
+      return 0;
+    }
     const rect = progressBarRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
 
@@ -61,7 +63,14 @@ export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragg
 
   setCoords((prev) => ({ ...prev, visible: false }));
   if (isDragging){
-    await invoke('seek_music', { skipSecs: barCurrentProgressSec });
+    const isMusic = utils.isMusic(data.audioSrc);
+    let playFun = undefined;
+    if (isMusic){
+      playFun = data.music.current
+    }else {
+      playFun = data.video.current
+    }
+    playFun.seek(barCurrentProgressSec);
 
     setData(prevData => ({
       ...prevData,

@@ -26,7 +26,7 @@ function BarPlayer(props) {
         {coordsVolume.visible && (
             <div
               className="tooltip-volume"
-              style={{ left: coordsVolume.x + 10, top: coordsVolume.y + 75 }}
+              style={{ left: coordsVolume.x + 10, top: coordsVolume.y + 55 }}
             >
               音量：{coordsVolume.volume}%
             </div>

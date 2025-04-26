@@ -5,17 +5,17 @@ import * as utils from "../../common/utils"
 
 
 // 双击列表的某首歌播放
-export const playMusicFromList = async (id, audio_src, title, total_duration, data, setData) => {
-
-    let song = null;
+export const playMusicFromList = async (song, data, setData) => {
+    console.log("song dddddddddddd ：",song);
+    // let song = null;
     if (data.isMusic) {
-        await data.music.current.stop()
+        await data.music.current.stop();
     }else {
-        await data.video.current.stop()
+        await data.video.current.stop();
     }
-    const isMusic = utils.isMusic(audio_src);
+    const isMusic = utils.isMusic(song.audio_src);
     if (isMusic) {
-        song = await data.music.current.play(data.playlistId, audio_src, total_duration, 0, data.barCurrentVolume/100);
+        await data.music.current.play(data.playlistId, song.audio_src, song.total_duration, 0, data.barCurrentVolume);
         setData(prevData => ({
             ...prevData,
             id: song.id,
@@ -33,7 +33,7 @@ export const playMusicFromList = async (id, audio_src, title, total_duration, da
             isMusic: true,
         }));
     } else {
-        song = await data.video.current.play(data.playlistId, audio_src, total_duration, 0, data.barCurrentVolume/100);
+        await data.video.current.play(data.playlistId, song.audio_src, song.total_duration, 0, data.barCurrentVolume);
         setData(prevData => ({
             ...prevData,
             id: song.id,

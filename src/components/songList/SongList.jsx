@@ -4,7 +4,7 @@ import * as utils from "../../common/utils"
 import ShowMsg from '../showMsg/ShowMsg';
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, playMusicFromList, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
-
+import { createPortal } from 'react-dom';
 
 const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPlayerRef }) => {
   const panelRef = useRef(null);
@@ -51,7 +51,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
   }, [updatePlayListFlg]);
 
 
-  return (
+  const panel = (
     <div className={`song-panel ${visible ? 'visible' : ''}`} ref={panelRef}>
 
       <ul>
@@ -73,12 +73,11 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
               {listObj.songs.map((song, index) => (
                 <li
                   key={index}
-                  className={selectedItems.includes(song) ? "song-list active" : "song-list"}
+                  // className={`selectedItems.includes(song) ? "song-list active" : "song-list"`}
+                  className={`song-list ${selectedItems.includes(song) ? 'active':''} ${data.id === song.id ? 'isPlaying': ''}`}
                   onClick={(e) => handleCheckboxChange(e, song, selectedItems, setSelectedItems)}
                   onDoubleClick={() =>{
-                    console.log("sssssssssss:====", song);
-                    playMusicFromList(song.id, song.audio_src, song.title, song.total_duration, data, setData)
-
+                    playMusicFromList(song, data, setData)
                   }
                   }
                 >
@@ -93,72 +92,73 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
         </div>
       </div>
       <div className='add-delete'>
-          <button className="all-songlist" onClick={() => handleAllCheckboxChange(allCheck, setAllCheck, songs, setSelectedItems)} >
-            {allCheck ? '全选歌曲': '取消全选'}
-          </button>
-          <button className="add-songlist" onClick={() => importMusic(songs, setSongs, data.playlistId, setUpdatePlayListFlg)} >
-            添加歌曲
-          </button>
-          <button className="delete-songlist" onClick={() => deleteMusic(setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg)}>
-            删除歌曲
-          </button>
-        </div>
-        <hr />
-        <div className='play-list'>
-          <div className="left-scroll-wrapper">
-            <div className='left-buttons'>
-              {allSongList.map((listObj, index) => {
-                return (
-                  <button
-                    key={index}
-                    id={`songlist-${index}`}
-                    className={listObj.id===data.playlistId ? "switch-songlist active": "switch-songlist"}
-                    onClick={() => {
-                      switchTo(index, listObj.id, setCurrentIndex, setData, setSongs, allSongList)
-                      // 滚动到当前元素
-                      document.getElementById(`songlist-${index}`).scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'nearest',
-                      });
-                    }}
-                  >
-                    {listObj.name}
-                  </button>
-                );
-              })}
-            </div>
+        <button className="all-songlist" onClick={() => handleAllCheckboxChange(allCheck, setAllCheck, songs, setSelectedItems)} >
+          {allCheck ? '全选歌曲': '取消全选'}
+        </button>
+        <button className="add-songlist" onClick={() => importMusic(songs, setSongs, data.playlistId, setUpdatePlayListFlg)} >
+          添加歌曲
+        </button>
+        <button className="delete-songlist" onClick={() => deleteMusic(setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg)}>
+          删除歌曲
+        </button>
+      </div>
+      <hr />
+      <div className='play-list'>
+        <div className="left-scroll-wrapper">
+          <div className='left-buttons'>
+            {allSongList.map((listObj, index) => {
+              return (
+                <button
+                  key={index}
+                  id={`songlist-${index}`}
+                  className={listObj.id===data.playlistId ? "switch-songlist active": "switch-songlist"}
+                  onClick={() => {
+                    switchTo(index, listObj.id, setCurrentIndex, setData, setSongs, allSongList)
+                    // 滚动到当前元素
+                    document.getElementById(`songlist-${index}`).scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'nearest',
+                    });
+                  }}
+                >
+                  {listObj.name}
+                </button>
+              );
+            })}
           </div>
-          <div className='right-buttons'>
-              <div>|</div>
-              <div key={9998} className="switch-button" onClick={() => setShowDialog(true)}><img src="/img/添加.ico" alt="add"/></div>
-              <div key={9999} className="switch-button" onClick={() => setShowConfirmDialog(true)}><img src="/img/删除.ico" alt="del"/></div>
-            </div>
-            {showDialog && (
-              <ShowMsg
-                showMsgParam = {{title: "创建歌单", placeholder:"请输入歌单名", isInput: true}}
-                inputValue = {playlistName}
-                setInputValue = {setPlaylistName}
-                showDialog = {showDialog}
-                setShowDialog = {setShowDialog}
-                callFun={handleCreate}
-                callFunParam={{playlistName: playlistName, setPlaylistName: setPlaylistName, allSongList: allSongList, setShowDialog: setShowDialog, setUpdatePlayListFlg: setUpdatePlayListFlg}}
-              />
-            )}
-
-            {showConfirmDialog && (
-              <ShowMsg
-                showMsgParam = {{title: `确认删除歌单: "${allSongList[currentIndex].name}" 吗?`, isInput: false}}
-                inputValue = {playlistName}
-                setInputValue = {setPlaylistName}
-                showDialog = {showConfirmDialog}
-                setShowDialog = {setShowConfirmDialog}
-                callFun={deletePlayList}
-                callFunParam={{allSongList: allSongList, playlistId: data.playlistId, setUpdatePlayListFlg: setUpdatePlayListFlg, setShowConfirmDialog: setShowConfirmDialog}}
-              />
-            )}
         </div>
+        <div className='right-buttons'>
+            <div>|</div>
+            <div key={9998} className="switch-button" onClick={() => setShowDialog(true)}><img src="/img/添加.ico" alt="add"/></div>
+            <div key={9999} className="switch-button" onClick={() => setShowConfirmDialog(true)}><img src="/img/删除.ico" alt="del"/></div>
+          </div>
+          {showDialog && (
+            <ShowMsg
+              showMsgParam = {{title: "创建歌单", placeholder:"请输入歌单名", isInput: true}}
+              inputValue = {playlistName}
+              setInputValue = {setPlaylistName}
+              showDialog = {showDialog}
+              setShowDialog = {setShowDialog}
+              callFun={handleCreate}
+              callFunParam={{playlistName: playlistName, setPlaylistName: setPlaylistName, allSongList: allSongList, setShowDialog: setShowDialog, setUpdatePlayListFlg: setUpdatePlayListFlg}}
+            />
+          )}
+
+          {showConfirmDialog && (
+            <ShowMsg
+              showMsgParam = {{title: `确认删除 "${allSongList[currentIndex].name}" 吗?`, isInput: false}}
+              inputValue = {playlistName}
+              setInputValue = {setPlaylistName}
+              showDialog = {showConfirmDialog}
+              setShowDialog = {setShowConfirmDialog}
+              callFun={deletePlayList}
+              callFunParam={{allSongList: allSongList, playlistId: data.playlistId, setUpdatePlayListFlg: setUpdatePlayListFlg, setShowConfirmDialog: setShowConfirmDialog}}
+            />
+          )}
+      </div>
     </div>
   );
+  return createPortal(panel, document.body);
 };
 
 export default SongList;

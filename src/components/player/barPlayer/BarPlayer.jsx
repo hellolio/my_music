@@ -17,11 +17,10 @@ function BarPlayer(props) {
     useEffect(() => {
       // 监听进度事件
       if (!isDragging) {
-        // console.log("启动监听:", data);
         const listenProgress = listen("player_progress", (event) => {
           const newProgress = event.payload / 1000;  // 获取进度（这里假设是一个数字）
 
-          if (newProgress === -1) {
+          if (event.payload === -1) {
             // 更新进度
             setData(prevData => ({
               ...prevData,
@@ -29,14 +28,6 @@ function BarPlayer(props) {
               isPlaying: false,
               playState: -1,
               barCurrentProgressSec: 0
-            }));
-          } else if (newProgress>=data.totalDuration){
-            // 更新进度
-            setData(prevData => ({
-              ...prevData,
-              isPlaying: false,
-              playState: 0,
-              barCurrentProgressSec: data.totalDuration
             }));
           } else {
             // 计算百分比
@@ -71,7 +62,7 @@ function BarPlayer(props) {
           {coords.visible && (
             <div
               className="tooltip-progress"
-              style={{ left: coords.x + 10, top: coords.y - 35 }}
+              style={{ left: coords.x + 10, top: coords.y - 25 }}
             >
               进度：{utils.formatTime(coords.sec)}
             </div>

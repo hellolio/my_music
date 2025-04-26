@@ -31,7 +31,8 @@ export default function ShowMsg({showMsgParam, inputValue, setInputValue, showDi
             :
               <div className="dialog-buttons">
                 <button className='ok' onClick={() => callFun(callFunParam)}>确认</button>
-              </div>
+                <button className='cancle' onClick={() => handleCancle()}>取消</button>
+                </div>
             }
         </div>
       </div>

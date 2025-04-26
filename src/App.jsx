@@ -62,7 +62,7 @@ function App() {
       playerAlive: false,
       video: videoRef,
       music: musicRef,
-      isMusic: false
+      isMusic: true
     }
   );
   

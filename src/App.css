@@ -71,14 +71,7 @@ html, body, #app {
   align-items: center;             /* 垂直居中对齐 */
 }
 
-.parent.title{
-  position: absolute;              /* 元素相对于父容器定位 */
-  left: 50%;                       /* 距离左边 50%（元素的左边缘会到达视口的中点） */
-  transform: translateX(-50%);     /* 向左偏移自身宽度的 50%，实现水平居中 */
-  top: 10px;                       /* 距离父容器底部的 20% */
-  width: 100%;
-  height: 5vh;
-}
+
 
 .player {
   position: relative;    /* 元素相对于父容器定位 */

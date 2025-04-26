@@ -32,6 +32,8 @@
     margin-top: 10px;
     text-align: center;
     height: 90%;
+    top: 50px;
+    align-items: center;             /* 垂直居中对齐 */
     overflow: hidden;
     position: relative;
 }

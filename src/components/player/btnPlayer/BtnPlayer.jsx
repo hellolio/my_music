@@ -13,7 +13,7 @@ function BtnPlayer(props) {
   const [musicListAllState, setMusicListAllState] = useState([]);
 
   useEffect(() => {
-    if (data.playState===0) {
+      if (data.playState===-1) {
       if (data.isSingleLoop) {
         togglePlayPause(data, setData);
       } else {

@@ -9,7 +9,7 @@ const Music = forwardRef((props, ref) => {
 
     const play = async (id, filePath, duration, skipSecs, volume) => {
       // await invoke('stop_music');
-      let song = await invoke('play_music', { id: id, filePath: filePath, duration: duration, skipSecs: skipSecs, volume: volume });
+      let song = await invoke('play_music', { id: id, filePath: filePath, duration: duration, skipSecs: skipSecs, volume: volume/100 });
       console.log("songddaaaaaaaaaaaa:", song);
       return song;
   };
@@ -27,8 +27,8 @@ const Music = forwardRef((props, ref) => {
     
     };
   
-    const seek = (sec) => {
-        playerRef.current?.seekTo(sec); // 跳转到第30秒
+    const seek = async (sec) => {
+        await invoke('seek_music', { skipSecs: sec });
     };
 
     const setVolume = async (volume) => {

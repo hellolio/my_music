@@ -32,25 +32,27 @@ impl AudioPlayer {
         audio_player
     }
     pub fn music_play(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32) {
-        match &self.tx {
-            Some(tx) => {
-                println!("尝试关掉播放器重新打开");
-                loop {
-                    let ok = tx.send(Command::Stop);
-                    match ok {
-                        std::result::Result::Ok(()) => {}
-                        _ => {
-                            let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
-                            println!("重新打开一个播放线程");
-                            break;
-                        }
-                    }
-                }
-            }
-            None => {
-                let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
-            }
-        }
+        println!("aaaaaaaa开始播放a{file_path}");
+        let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
+        // match &self.tx {
+        //     Some(tx) => {
+        //         println!("尝试关掉播放器重新打开");
+        //         loop {
+        //             let ok = tx.send(Command::Stop);
+        //             match ok {
+        //                 std::result::Result::Ok(()) => {}
+        //                 _ => {
+        //                     let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
+        //                     println!("重新打开一个播放线程");
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     None => {
+        //         let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
+        //     }
+        // }
     }
     pub fn create_music_player(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32)-> Result<(), Error> {
         ffmpeg::init()?;
@@ -132,7 +134,7 @@ impl AudioPlayer {
                     }
                     Some(Command::Stop) => {
                         sink.lock().unwrap().stop();
-                        println!("停止播放");
+                        println!("因为stop命令停止播放:{file_path}");
                         break;
                     }
                     Some(Command::Volume(volume)) => {
@@ -180,31 +182,35 @@ impl AudioPlayer {
                         sink.lock().unwrap().append(source);
                     }
                 }
-
-                thread::sleep(Duration::from_millis(sleep_time as u64));
-                if duration*1000 - current_ts >= 20 {
-                    if current_ts % 1000 == 0 {
-                        window.emit("player_progress", current_ts)?;
-                        is_playing = true;
-                    }
-                } else {
-                    if is_playing {
-                        sink.lock().unwrap().pause();
-                        msg = Some(Command::Pause);
-                        is_playing = false;
-                        thread::sleep(Duration::from_millis(500));
-                        println!("播放结束");
-                        window.emit("player_progress", duration*1000)?;
-                        continue;
-                    }
+                else if sink.lock().unwrap().empty() {
+                    println!("自动的播放完成：{file_path}");
+                    window.emit("player_progress", -1).unwrap();
+                    break;
                 }
-
-                // if sink.lock().unwrap().empty() {
-                //     println!("播放完成");
-                //     window.emit("player_progress", -1).unwrap();
-                //     break;
+                // if duration*1000 - current_ts >= 20 {
+                //     if current_ts % 1000 == 0 {
+                //         window.emit("player_progress", current_ts)?;
+                //         is_playing = true;
+                //     }
+                // } else {
+                //     if is_playing {
+                //         sink.lock().unwrap().pause();
+                //         msg = Some(Command::Pause);
+                //         is_playing = false;
+                //         thread::sleep(Duration::from_millis(500));
+                //         println!("播放结束");
+                //         window.emit("player_progress", duration*1000)?;
+                //         continue;
+                //     }
                 // }
+                if current_ts % 1000 == 0 {
+                    window.emit("player_progress", current_ts)?;
+                    // is_playing = true;
+                }
+                thread::sleep(Duration::from_millis(sleep_time as u64));
+
             }
+            println!("播放线程已经关掉");
             Ok(())
         });
 
@@ -225,6 +231,7 @@ impl AudioPlayer {
 
     pub fn music_stop(&self) {
         self.send_control(Command::Stop);
+        thread::sleep(Duration::from_millis(100 as u64));
     }
 
     pub fn music_volume(&self, volume: f32) {

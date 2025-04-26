@@ -37,14 +37,14 @@
     "windows": [
       {
         "title": "my-music",
-        "width": 800,
-        "height": 500,
-        "minWidth": 300,  
-        "minHeight": 700
+        "width": 200,
+        "height": 400,
+        "minWidth": 200,  
+        "minHeight": 400
       }
     ],
     "security": {
-       "csp": "default-src 'self'; media-src 'self' asset: tauri://* file://* https://asset.localhost/*"
+       "csp": "default-src 'self'; media-src *; img-src *; script-src 'self';"
     },
     "bundle": {
       "active": true,
