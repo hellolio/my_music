@@ -15,7 +15,7 @@ enum Command {
     Play,
     Pause,
     Resume,
-    Seek(u64), // seconds
+    Seek(u64, f32), // seconds
     Stop,
     Volume(f32)
 }
@@ -119,7 +119,7 @@ impl AudioPlayer {
                         current_ts += sleep_time;
                         msg = Some(Command::Play);
                     }
-                    Some(Command::Seek(target_secs)) => {
+                    Some(Command::Seek(target_secs, volume)) => {
                         let seek_ts = (target_secs * 1_000_000) as i64;
                         println!("跳转播放到:{target_secs}");
 
@@ -130,6 +130,7 @@ impl AudioPlayer {
                         sink.lock().unwrap().stop(); // 清除播放
                         *sink.lock().unwrap() = Sink::try_new(&stream_handle)?;
                         current_ts = target_secs * 1000;
+                        sink.lock().unwrap().set_volume(volume*2.0);
                         msg = Some(Command::Play);
                     }
                     Some(Command::Stop) => {
@@ -225,8 +226,9 @@ impl AudioPlayer {
         self.send_control(Command::Pause);
     }
 
-    pub fn music_seek(&self, seconds: u64) {
-        self.send_control(Command::Seek(seconds));
+    pub fn music_seek(&self, seconds: u64, volume: f32) {
+        self.send_control(Command::Seek(seconds, volume));
+        // self.send_control(Command::Volume(volume));
     }
 
     pub fn music_stop(&self) {

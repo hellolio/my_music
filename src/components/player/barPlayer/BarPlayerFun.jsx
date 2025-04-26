@@ -12,9 +12,6 @@ export const updateProgress = (e, progressBarRef, data, setData) =>  {
     const rect = progressBarRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
 
-    // 获取点击或拖动的位置
-    // console.log("点击或拖动的位置:",offsetX)
-
     // 计算百分比位置
     let newProgress = Math.round((offsetX / progressBarWidth) * 100);
     // console.log("计算百分比位置:", newProgress);
@@ -58,31 +55,53 @@ export const handleMouseMove = (e, progressBarRef, data, setData, setCoords, isD
 };
 
 // 鼠标松开事件，结束拖动
-export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragging, setIsDragging) => {
+export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragging, setIsDragging, AB, setAB) => {
   let barCurrentProgressSec = coords.sec;
 
   setCoords((prev) => ({ ...prev, visible: false }));
   if (isDragging){
-    const isMusic = utils.isMusic(data.audioSrc);
-    let playFun = undefined;
-    if (isMusic){
-      playFun = data.music.current
-    }else {
-      playFun = data.video.current
-    }
-    playFun.seek(barCurrentProgressSec);
+    if (AB.isAB===-1 || AB.isAB === 2){
+      const isMusic = utils.isMusic(data.audioSrc);
+      let playFun = undefined;
+      if (isMusic){
+        playFun = data.music.current
+      }else {
+        playFun = data.video.current
+      }
+      playFun.seek(barCurrentProgressSec, data.barCurrentVolume);
+  
+      setData(prevData => ({
+        ...prevData,
+        isPlaying: true,
+        barCurrentProgressSec: barCurrentProgressSec
+      }));
 
-    setData(prevData => ({
-      ...prevData,
-      isPlaying: true,
-      barCurrentProgressSec: barCurrentProgressSec
-    }));
+    } else if (AB.isAB===0){
+      setAB(prev => ({
+        ...prev,
+        isAB: 1,
+        A: barCurrentProgressSec
+      }));
+    } else if (AB.isAB===1) {
+      if (AB.A >= barCurrentProgressSec){
+        setAB(prev => ({
+          ...prev,
+          isAB: -1,
+          B: data.totalDuration
+        }));
+      } else{
+        setAB(prev => ({
+          ...prev,
+          isAB: 2,
+          B: barCurrentProgressSec
+        }));
+      }
+      // setAB(prev => ({
+      //   ...prev,
+      //   isAB: 2,
+      //   B: barCurrentProgressSec
+      // }));
+    }
   }
   setIsDragging(false);
-};
-
-
-// 通过文件名获取后缀
-const getFileExtension = (fileName) => {
-  return fileName.split('.').pop().toLowerCase();
 };

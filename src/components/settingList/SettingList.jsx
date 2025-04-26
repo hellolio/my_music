@@ -29,6 +29,12 @@ export const SettingList = ({visible, onClose, settinglistRef}) => {
             <ul>
                 <li>AB模式</li>
                 <li>查找歌词</li>
+                <li>歌词自动生成</li>
+                <li>格式转换</li>
+                <li>桌面模式</li>
+                <li>记住桌面位置</li>
+                <li>皮肤</li>
+                <li>帮助</li>
             </ul>
         </div>
     )

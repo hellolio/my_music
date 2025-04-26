@@ -27,8 +27,8 @@ const Music = forwardRef((props, ref) => {
     
     };
   
-    const seek = async (sec) => {
-        await invoke('seek_music', { skipSecs: sec });
+    const seek = async (sec, volume) => {
+        await invoke('seek_music', { skipSecs: sec, volume: volume/100 });
     };
 
     const setVolume = async (volume) => {

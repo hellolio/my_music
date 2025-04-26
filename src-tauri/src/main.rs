@@ -134,9 +134,9 @@ fn stop_music(state: State<'_, Arc<AppState>>) {
 }
 
 #[tauri::command]
-fn seek_music(state: State<'_, Arc<AppState>>, skip_secs: u64) {
+fn seek_music(state: State<'_, Arc<AppState>>, skip_secs: u64, volume: f32) {
     let p = state.player.lock().unwrap();
-    p.music_seek(skip_secs);
+    p.music_seek(skip_secs, volume);
 }
 
 #[tauri::command]

@@ -14,6 +14,12 @@ function BarPlayer(props) {
     const [coords, setCoords] = useState({ x: 0, y: 0, sec:0, visible: false });
     const [isDragging, setIsDragging] = useState(false);
 
+    const [AB, setAB] = useState({
+      isAB: 1,  // -1说明不是AB模式，0是AB模式并且当前是设置A，1是AB模式并且当前是设置B，2是AB模式并且当前是设置完成正在执行AB模式
+      A: -1,
+      B: 999999
+    });
+
     useEffect(() => {
       // 监听进度事件
       if (!isDragging) {
@@ -30,6 +36,21 @@ function BarPlayer(props) {
               barCurrentProgressSec: 0
             }));
           } else {
+            console.log("AB:", AB);
+
+            if (AB.isAB === 2 && AB.A != -1){
+              if (AB.B < newProgress || AB.A > newProgress){
+                const isMusic = utils.isMusic(data.audioSrc);
+                let playFun = undefined;
+                if (isMusic){
+                  playFun = data.music.current
+                }else {
+                  playFun = data.video.current
+                }
+                playFun.seek(AB.A, data.barCurrentVolume);
+              }
+            }
+
             // 计算百分比
             const newProgressP = newProgress / data.totalDuration;
             // 更新进度
@@ -46,18 +67,34 @@ function BarPlayer(props) {
           listenProgress.then((unlisten) => unlisten());  // 组件卸载时清理监听器
         }; 
       }
-    }, [data]);
+    }, [data, AB]);
     
     return (
     <div className="container bar progress">
-        <div className="left-bar-progress">{utils.formatTime(data.barCurrentProgressSec)}</div>
+        <div className={`left-bar-progress ${AB.isAB >=0 ? 'a': ''}  ${AB.isAB ===2 ? 'ab': ''}`}
+          onClick={() => {
+            if (AB.isAB === -1){
+              setAB(prev =>({
+                ...prev,
+                isAB:0
+              }));
+            } else{
+              setAB(prev =>({
+                ...prev,
+                isAB:-1
+              }));
+            }
+          }
+        }
+        >{`${AB.isAB>=0 ?'setA:' + utils.formatTime(AB.A): utils.formatTime(data.barCurrentProgressSec)}`}
+        </div>
         <div className="center-block-progress"
         ref={progressBarRef}
         onClick={(e) => updateProgress(e, data, setData)}  // 点击时更新进度
         onMouseDown={(e) => {handleMouseDown(e, setIsDragging)}}
         onMouseMove={(e) => handleMouseMove(e, progressBarRef, data, setData, setCoords, isDragging)}  // 移动时更新进度
-        onMouseUp={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging)}      // 松开时结束拖动
-        onMouseLeave={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging)} // 离开时结束拖动
+        onMouseUp={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging, AB, setAB)}      // 松开时结束拖动
+        onMouseLeave={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging, AB, setAB)} // 离开时结束拖动
         >
           {coords.visible && (
             <div
@@ -73,12 +110,29 @@ function BarPlayer(props) {
                 <div className="center-bar-rate" style={{ width: `${utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
                 <div className="center-bar-rate-end" style={{ width: `${100-utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
                 {/* 进度条上的小圆球 */}
-                <div className="center-bar-ball" style={{ left: `${utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}>
-                </div>
+                <div className="center-bar-ball" style={{ left: `${utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
+                <div className={`center-bar-ball-ab ${AB.isAB !=-1 ? 'a': ''}`} style={{ left: `${utils.calculatePercentage(AB.A, data.totalDuration)}%` }}></div>
+                <div className={`center-bar-ball-ab ${AB.isAB !=-1 ? 'b': ''}`} style={{ left: `${utils.calculatePercentage(AB.B, data.totalDuration)}%` }}></div>
             </div>
         </div>
 
-        <div className="right-bar-progress">{utils.formatTime(data.totalDuration)}</div>
+        <div className={`right-bar-progress ${AB.isAB >=1 ? 'b': ''}  ${AB.isAB ===2 ? 'ab': ''}`}
+          onClick={() => {
+            if (AB.isAB === -1){
+              setAB(prev =>({
+                ...prev,
+                isAB:1,
+                A: data.barCurrentProgressSec
+              }));
+            } else{
+              setAB(prev =>({
+                ...prev,
+                isAB:-1
+              }));
+            }
+          }}
+        >{`${AB.isAB>=1 ?'setB:' + utils.formatTime(AB.B): utils.formatTime(data.totalDuration)}`}
+        </div>
     </div>
   )
 }

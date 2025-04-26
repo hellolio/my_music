@@ -17,8 +17,6 @@ export const addLyrics = async (data, setData) => {
     let lyricsPath = await importLyrics();
 
     const lyrics = await invoke('add_lyrics', { lyricsFile: lyricsPath, id: data.id });
-    // console.log("歌词抬头：",metadata);
-    console.log("歌词：",lyrics);
     setData(prevData => ({
         ...prevData,
         lyrics: lyrics,
@@ -47,7 +45,7 @@ export const handleLyricClick = (line, index, data, setData) => {
   }else {
       playFun = data.video.current
   }
-  playFun.seek(line.time);
+  playFun.seek(line.time, data.barCurrentVolume);
 
   setData(prevData => ({
       ...prevData,
