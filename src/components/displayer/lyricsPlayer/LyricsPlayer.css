@@ -1,7 +1,7 @@
   
 .container.lyrics {
   display: flex;                   /* 启用 Flexbox 布局 */
-  width: 50%;                      /* 父容器宽度占满可用空间 */
+  width: 80%;                      /* 父容器宽度占满可用空间 */
   justify-content: center;      /* 左对齐 */
   align-items: center;             /* 垂直居中对齐 */
   height: 100%;
@@ -34,7 +34,8 @@
     height: 90%;
     top: 50px;
     align-items: center;             /* 垂直居中对齐 */
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow-y: auto;
     position: relative;
 }
 

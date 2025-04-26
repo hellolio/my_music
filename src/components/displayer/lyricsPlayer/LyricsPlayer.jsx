@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import "./LyricsPlayer.css";
 
-import {addLyrics} from "./LyricsPlayerFun"
+import {addLyrics, handleLyricClick} from "./LyricsPlayerFun"
 
 function LyricsPlayer(props) {
     const {data, setData} = props;
@@ -45,7 +45,6 @@ function LyricsPlayer(props) {
         });
     }, [activeIndex]);
 
-
     return (
         <div className="container lyrics">
             <div 
@@ -59,7 +58,9 @@ function LyricsPlayer(props) {
                     <li 
                     ref={(el) => (listRef.current[index] = el)}
                     className={activeIndex === index ? "active" : ""}
-                        key={index}>{line.text}
+                    key={index}
+                    onClick={() => handleLyricClick(line, index, data, setData)}
+                    >{line.text}
                     </li>
                 ))}
                 </ul>
