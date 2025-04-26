@@ -4,9 +4,7 @@
     top: 20px;
     right: 0;
     width: 80%;    /* 固定宽度 */
-    /* height: 70vh; */
     max-width: 500px;
-    /* max-height: 1000px; */
     margin-top: 10px;
     margin-bottom: calc(5vh + 60px);
     border-radius: 15px;

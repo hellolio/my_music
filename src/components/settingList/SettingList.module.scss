@@ -1,0 +1,25 @@
+.settingList {
+    position: fixed;
+    top: 20px; /* 距离顶部 100px */
+    left: 0px; /* 距离左边 70px */
+    width: 200px; /* 固定宽度 */
+    padding: 10px; /* 内边距，内容不会贴边 */
+    background-color: rgba(83, 90, 93, 0.162);
+    border-radius: 10px;
+    z-index: 999;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2); /* 阴影，让它更像弹窗 */
+    transform: translateX(-100%); /* 隐藏面板 */
+    backdrop-filter: blur(5px); /* 毛玻璃效果 */
+    transition: transform 0.3s ease-in-out;
+    will-change: transform;
+}
+
+.settingList.visible {
+    transform: translateX(0); /* 面板滑动进来 */
+}
+
+.settingList ul {
+    padding-left: 25px; /* 给出一点左边空隙，留给小圆点 */
+    list-style-type: disc; /* 确保使用小圆点 */
+}
+

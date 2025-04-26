@@ -5,34 +5,22 @@
   justify-content: center;      /* 左对齐 */
   align-items: center;             /* 垂直居中对齐 */
   height: 100%;
-  margin-bottom: 200px;
-  margin-top: 100px;
 }
 
-.center-block {
+.lyrics{
   display: flex;                   /* 启用 Flexbox 布局 */
   flex: 0 0 50%;                 /* 固定中间元素宽度为 200px */
   text-align: center;              /* 内容居中 */
   align-items: center;             /* 垂直居中对齐 */
-  height: 25px;
-}
-
-.parent.lyrics{
-    position: absolute;    /* 元素相对于父容器定位 */
-    left: 50%;                 /* 距离左边 50%（元素的左边缘会到达视口的中点） */
-    transform: translateX(-50%); /* 向左偏移自身宽度的 50%，实现水平居中 */
-    top: 15%;            /* 距离父容器底部的 20% */
-    bottom: 30%;            /* 距离父容器底部的 20% */
-    width: 100%;
-    height: 60vh;  /* 设置高度为窗口高度的 80% */
+  width: 100%;
+  height: 60vh;  /* 设置高度为窗口高度的 80% */
 }
 
 .center-lyrics {
-    width: 80%;
-    margin-top: 10px;
+    width: 60%;
+    min-width: 200px;
     text-align: center;
     height: 90%;
-    top: 50px;
     align-items: center;             /* 垂直居中对齐 */
     /* overflow: hidden; */
     overflow-y: auto;
@@ -44,11 +32,6 @@
     margin: 0px auto;
     text-align: center;
 }
-
-/* .center-lyrics-line ul {
-    padding: 5px;
-    font-size: 12px;
-} */
 
 
 .center-lyrics ul {

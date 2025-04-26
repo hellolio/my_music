@@ -6,6 +6,7 @@ import BarPlayer from "./components/player/barPlayer/BarPlayer";
 import BarVolume from "./components/player/barVolume/BarVolume";
 import Video from "./components/displayer/video/Video";
 import Music from "./components/displayer/music/Music";
+import { SettingList } from "./components/settingList/SettingList";
 
 
 function App() {
@@ -81,8 +82,25 @@ function App() {
   }, [data.isMusic]);
 
 
+  const settinglistRef = useRef(null);
+
+  const [setting, setSetting] = useState(false);
+
+  const handleClosePanel = () => {
+    setSetting(false);
+  };
+
   return (
     <div className="my-player">
+      <div
+       onClick={() => setSetting(!setting)}
+       ref={settinglistRef}
+      >设置</div>
+        <SettingList
+        visible={setting}
+        onClose={handleClosePanel}
+        settinglistRef={settinglistRef}
+        />
       <div className="display">
       <div className="play-slider-container">
         <div

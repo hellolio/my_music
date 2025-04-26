@@ -2,3 +2,14 @@
     width: 100%;
     height: 100%;
 }
+
+
+.parent.lyrics{
+    position: absolute;    /* 元素相对于父容器定位 */
+    left: 50%;                 /* 距离左边 50%（元素的左边缘会到达视口的中点） */
+    transform: translateX(-50%); /* 向左偏移自身宽度的 50%，实现水平居中 */
+    top: 15%;            /* 距离父容器底部的 20% */
+    bottom: 30%;            /* 距离父容器底部的 20% */
+    width: 100%;
+    height: 60vh;  /* 设置高度为窗口高度的 80% */
+}
