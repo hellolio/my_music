@@ -60,7 +60,6 @@ export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragg
 
   setCoords((prev) => ({ ...prev, visible: false }));
   if (isDragging){
-    if (AB.isAB===-1 || AB.isAB === 2){
       const isMusic = utils.isMusic(data.audioSrc);
       let playFun = undefined;
       if (isMusic){
@@ -76,32 +75,6 @@ export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragg
         barCurrentProgressSec: barCurrentProgressSec
       }));
 
-    } else if (AB.isAB===0){
-      setAB(prev => ({
-        ...prev,
-        isAB: 1,
-        A: barCurrentProgressSec
-      }));
-    } else if (AB.isAB===1) {
-      if (AB.A >= barCurrentProgressSec){
-        setAB(prev => ({
-          ...prev,
-          isAB: -1,
-          B: data.totalDuration
-        }));
-      } else{
-        setAB(prev => ({
-          ...prev,
-          isAB: 2,
-          B: barCurrentProgressSec
-        }));
-      }
-      // setAB(prev => ({
-      //   ...prev,
-      //   isAB: 2,
-      //   B: barCurrentProgressSec
-      // }));
-    }
   }
   setIsDragging(false);
 };

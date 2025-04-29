@@ -13,8 +13,8 @@
 - [ ] 换肤
 - [ ] 格式转换
 - [ ] 桌面模式
-- [ ] bug改善
-- [ ] 多平台支持（特别是移动端）
+- [ ] bug改善，特别是遇见错误时不能向上抛错
+- [ ] 换构架到tauri2，以支持多平台（特别是移动端）
 
 Windows 下载：[my-music_latest](https://github.com/hellolio/my_music/releases)
 

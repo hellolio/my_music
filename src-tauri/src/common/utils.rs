@@ -3,9 +3,8 @@ use tauri::regex::Regex;
 use ffmpeg_next as ffmpeg;
 use anyhow::Result;
 
-
 use crate::modles::{db_song::Song, music_lyrics::Lyric};
-
+use encoding_rs::{UTF_8, GBK, SHIFT_JIS, GB18030};
 
 // 判断是否像是可读文本（中文或英文）
 fn is_meaningful(s: &str) -> bool {
@@ -23,33 +22,78 @@ fn is_meaningful(s: &str) -> bool {
     has_chinese || alpha_count > 3
 }
 
+fn ret_org(bytes: &[u8]) -> Vec<u8>{
+   // 第一步：把这串 UTF-8 字节转成 Rust 字符串（乱码）
+   let wrong_str = String::from_utf8_lossy(&bytes);
+   println!("误解码后的乱码字符串: {}", wrong_str);
+
+   // 第二步：将这个字符串按照 Latin-1（每个 char -> byte）取出原始字节
+   let raw_bytes: Vec<u8> = wrong_str.chars().map(|c| c as u8).collect();
+   println!("还原出的原始 GBK 字节: {:?}", raw_bytes);
+
+   return raw_bytes;
+}
+
+fn try_decode(bytes: &[u8]) -> String {
+    // let bytes = ret_org(b);
+    let encoding = [
+        ("UTF_8", UTF_8),
+        ("GBK", GBK),
+        ("SHIFT_JIS", SHIFT_JIS),
+        ("GB18030", GB18030),
+    ];
+
+    for (t, e) in encoding{
+        // 遍历编码列表，依次尝试解码
+        let s = e.decode(&bytes).0;
+        let s1 = e.decode(&bytes).1;
+        let s2 = e.decode(&bytes).2;
+        println!("信息s0 {t}: {:?}", s);
+        println!("信息s1 {t}: {:?}", s1);
+        println!("信息s2 {t}: {}", s2);
+
+        if String::from_utf8_lossy(s.as_bytes()).to_string().contains('�'){
+            println!("无效的UTF-8编码，from_utf8_lossy: {}", s);
+        }else if !is_meaningful(&s) {
+            println!("无效的UTF-8编码，is_meaningful: {}", s);
+            let b = ret_org(bytes);
+            return try_decode(&b);
+        } else {
+            match std::str::from_utf8(s.as_bytes()) {
+                Ok(str) => {
+                    println!("编码ok: {}", s);
+                    return str.to_string();
+                }
+                Err(e) => {
+                    println!("错误信息: {}", e);
+                }
+            }
+        }
+
+    }
+
+    return "Unknown".to_string();
+}
 
 pub fn get_audio_metadata(path_str: &str) -> Result<Song> {
 
     let ictx = ffmpeg::format::input(path_str)?;
     // 获取格式上下文中的 metadata
     let metadata = ictx.metadata();
-    for (key, value) in metadata.iter() {
-        println!("{}: {}", key, value);
-    }
 
-    let mut title = metadata.get("title").unwrap_or("").to_string();
-    let mut artist = metadata.get("artist").unwrap_or("").to_string();
-    // let album = metadata.get("album").unwrap_or("").to_string();
+    let mut title = try_decode(metadata.get("title").unwrap_or("Unknown").as_bytes());
+    let artist = try_decode(metadata.get("artist").unwrap_or("Unknown").as_bytes());
 
     let path = Path::new(path_str);
-    
-    if !is_meaningful(&title) {
+    if title == "Unknown".to_string(){
         title = path.file_name().map(|name| name.to_string_lossy().into_owned()).unwrap_or("Unknown".to_string());
-    }
-    if !is_meaningful(&artist) {
-        artist = "Unknown".to_string();
     }
 
     let duration_us = ictx.duration(); // 单位是微秒（i64）
     let duration = duration_us as u64 / 1_000_000; // 转成秒
 
     println!("title:{title}");
+    println!("artist:{artist}");
     println!("音频总时长: {:.2} 秒", duration);
     Ok(Song{
         id: None,

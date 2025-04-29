@@ -37,8 +37,8 @@
     "windows": [
       {
         "title": "my-music",
-        "width": 200,
-        "height": 400,
+        "width": 300,
+        "height": 600,
         "minWidth": 200,  
         "minHeight": 400
       }

@@ -15,9 +15,9 @@ function BarPlayer(props) {
     const [isDragging, setIsDragging] = useState(false);
 
     const [AB, setAB] = useState({
-      isAB: 1,  // -1说明不是AB模式，0是AB模式并且当前是设置A，1是AB模式并且当前是设置B，2是AB模式并且当前是设置完成正在执行AB模式
+      isAB: -1,  // -1说明不是AB模式，0是AB模式并且当前是设置A，1是AB模式并且当前是设置B，2是AB模式并且当前是设置完成正在执行AB模式
       A: -1,
-      B: 999999
+      B: -1
     });
 
     useEffect(() => {
@@ -36,9 +36,8 @@ function BarPlayer(props) {
               barCurrentProgressSec: 0
             }));
           } else {
-            console.log("AB:", AB);
 
-            if (AB.isAB === 2 && AB.A != -1){
+            if (AB.isAB === 1 && AB.A != -1 && AB.B != -1){
               if (AB.B < newProgress || AB.A > newProgress){
                 const isMusic = utils.isMusic(data.audioSrc);
                 let playFun = undefined;
@@ -71,12 +70,13 @@ function BarPlayer(props) {
     
     return (
     <div className="container bar progress">
-        <div className={`left-bar-progress ${AB.isAB >=0 ? 'a': ''}  ${AB.isAB ===2 ? 'ab': ''}`}
-          onClick={() => {
+        <div className={`left-bar-progress ${AB.isAB >=0 ? 'a': ''}`}
+          onDoubleClick={() => {
             if (AB.isAB === -1){
               setAB(prev =>({
                 ...prev,
-                isAB:0
+                isAB:0,
+                A: data.barCurrentProgressSec
               }));
             } else{
               setAB(prev =>({
@@ -86,7 +86,7 @@ function BarPlayer(props) {
             }
           }
         }
-        >{`${AB.isAB>=0 ?'setA:' + utils.formatTime(AB.A): utils.formatTime(data.barCurrentProgressSec)}`}
+        >{`${AB.isAB>=0 ?'A:' + utils.formatTime(AB.A): utils.formatTime(data.barCurrentProgressSec)}`}
         </div>
         <div className="center-block-progress"
         ref={progressBarRef}
@@ -111,18 +111,18 @@ function BarPlayer(props) {
                 <div className="center-bar-rate-end" style={{ width: `${100-utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
                 {/* 进度条上的小圆球 */}
                 <div className="center-bar-ball" style={{ left: `${utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
-                <div className={`center-bar-ball-ab ${AB.isAB !=-1 ? 'a': ''}`} style={{ left: `${utils.calculatePercentage(AB.A, data.totalDuration)}%` }}></div>
-                <div className={`center-bar-ball-ab ${AB.isAB !=-1 ? 'b': ''}`} style={{ left: `${utils.calculatePercentage(AB.B, data.totalDuration)}%` }}></div>
+                <div className={`center-bar-ball-ab ${AB.isAB >=0 ? 'a': ''}`} style={{ left: `${utils.calculatePercentage(AB.A, data.totalDuration)}%` }}></div>
+                <div className={`center-bar-ball-ab ${AB.isAB === 1 ? 'b': ''}`} style={{ left: `${utils.calculatePercentage(AB.B, data.totalDuration)}%` }}></div>
             </div>
         </div>
 
-        <div className={`right-bar-progress ${AB.isAB >=1 ? 'b': ''}  ${AB.isAB ===2 ? 'ab': ''}`}
-          onClick={() => {
-            if (AB.isAB === -1){
+        <div className={`right-bar-progress ${AB.isAB ===1 ? 'b': ''}`}
+          onDoubleClick={() => {
+            if (AB.isAB === 0 && AB.A < data.barCurrentProgressSec){
               setAB(prev =>({
                 ...prev,
                 isAB:1,
-                A: data.barCurrentProgressSec
+                B: data.barCurrentProgressSec
               }));
             } else{
               setAB(prev =>({
@@ -131,7 +131,7 @@ function BarPlayer(props) {
               }));
             }
           }}
-        >{`${AB.isAB>=1 ?'setB:' + utils.formatTime(AB.B): utils.formatTime(data.totalDuration)}`}
+        >{`${AB.isAB>=1 ?'B:' + utils.formatTime(AB.B): utils.formatTime(data.totalDuration)}`}
         </div>
     </div>
   )

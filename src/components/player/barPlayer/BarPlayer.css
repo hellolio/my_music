@@ -12,7 +12,7 @@
   }
   
   .left-bar-progress, .right-bar-progress {
-    flex: 0 0 100px;                /* 左右元素宽度固定为 25px */
+    flex: 0 0 25px;                /* 左右元素宽度固定为 25px */
     text-align: center;            /* 内容居中 */
     height: 25px;
     margin: 5px;
@@ -96,13 +96,6 @@
 .right-bar-progress.b {
   font: bold;
   color: #ff5500;
-}
-
-.ab {
-  /* box-shadow: 0 0 20px rgba(255, 255, 255, 0.697); */
-  background-color: rgba(118, 119, 103, 0.671);
-  border-radius: 5px;
-
 }
 
 /* bar================================== */

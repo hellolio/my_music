@@ -86,8 +86,11 @@ impl AudioPlayer {
                 decoder.rate(),
             )?;
 
-            let skip_secs_tmp = skip_secs as i64 * 1_000_000;
-            ictx.seek(skip_secs_tmp, 0..skip_secs_tmp)?;
+            if skip_secs != 0 {
+                let skip_secs_tmp = skip_secs as i64 * 1_000_000;
+                ictx.seek(skip_secs_tmp, 0..skip_secs_tmp)?;
+            }
+
 
             let (_stream, stream_handle) = OutputStream::try_default()?;
             let sink = Arc::new(Mutex::new(Sink::try_new(&stream_handle)?));
@@ -152,13 +155,20 @@ impl AudioPlayer {
                         continue;
                     }
 
-                    decoder.send_packet(&packet)?;
+                    // // 如果 packet 有有效的 pts，就用 pts 作为当前播放时间
+                    // if let Some(pts) = packet.pts() {
+                    //     current_ts = (pts as u64) / 1000; // ffmpeg pts 通常是微秒，要除以 1000 转成毫秒
+                    // }
+
+                    if let Err(e) = decoder.send_packet(&packet) {
+                        println!("发送 packet 给解码器失败: {e}");
+                        continue;
+                    }
+
                     let mut decoded = ffmpeg::frame::Audio::empty();
 
                     while decoder.receive_frame(&mut decoded).is_ok() {
                         let mut converted = ffmpeg::frame::Audio::empty();
-                        // resampler.run(&decoded, &mut converted).unwrap();
-
                         // 检查是否需要重采样
                         if decoder.format() != ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed) {
                             resampler.run(&decoded, &mut converted)?;

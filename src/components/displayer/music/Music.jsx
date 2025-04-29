@@ -49,7 +49,7 @@ const Music = forwardRef((props, ref) => {
           <div className="parent title">
             <TitlePlayer data={data} setData={setData}/>
           </div>
-    
+
           <div className="parent lyrics">
             <LyricsPlayer data={data} setData={setData}/>
           </div>
