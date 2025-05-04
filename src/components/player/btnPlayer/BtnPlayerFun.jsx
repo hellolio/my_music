@@ -113,10 +113,12 @@ export const togglePlayPause = async (data, setData) => {
 
 export const rightClick = async (musicListImportState, data, setData) => {
   let index = musicListImportState.findIndex((song) => song.id === data.id);
-  const len = musicListImportState.length;
   // const result = findMinMaxId(musicListImportState);
-  if (index >= len-1){
+  console.log("ddddddddddddddddmusicListindex:",index)
+  if (index >= musicListImportState.length-1){
     index = 0;
+  }else if (index === -1){
+    return
   }else{
     index = index + 1;
   }
@@ -130,6 +132,8 @@ export const rightClick = async (musicListImportState, data, setData) => {
     console.log("开始播放之前停止视频",data);
     await data.video.current.stop()
   }
+  console.log("ddddddddddddddddmusicListImportState:",musicListImportState)
+  console.log("dddddddddddddddd:",audioMeta)
 
   const isMusic = utils.isMusic(audioMeta.audio_src);
   let playFun = undefined;

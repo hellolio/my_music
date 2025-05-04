@@ -25,6 +25,16 @@ encoding_rs = "0.8"
 chardetng = "0.1"
 id3 = "1.5"
 
+reqwest = { version = "0.12.15", features = ["json"] }
+tokio = { version = "1", features = ["full"] }
+rand = "0.9.1"
+base64 = "0.22.1"
+
+hex = "0.4"
+flate2 = "1.1.1"
+quick-xml = "0.31"
+regex = "1"
+
 [features]
 # # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
 # 开发时必须

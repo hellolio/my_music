@@ -1,4 +1,5 @@
 use std::{fs::File, io::{self, BufRead}, path::Path};
+use quick_xml::{events::Event, Reader};
 use tauri::regex::Regex;
 use ffmpeg_next as ffmpeg;
 use anyhow::Result;
@@ -149,6 +150,58 @@ pub fn get_audio_lyrics(lyrics_file: &str) -> Result<Vec<Lyric>>{
 
         }
     }
+
+    // metadata暂时不返回，后面再说
+    Ok(lyrics)
+
+}
+
+
+
+pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>>{
+    let path = Path::new(lyrics_file);
+    let file = File::open(path)?;
+    let reader = io::BufReader::new(file);
+    let mut xml_reader = Reader::from_reader(reader);
+    xml_reader.trim_text(true);
+
+    let mut buf = Vec::new();
+    let mut lyrics = Vec::new();
+
+    let re_line = Regex::new(r"\[(\d+),\d+\](.+)").unwrap();
+
+    // 匹配 "(数字,数字)"，并删除它们
+    let re_text = Regex::new(r"\(\d+,\d+\)").unwrap();
+
+    loop {
+        match xml_reader.read_event_into(&mut buf) {
+            Ok(Event::Empty(ref e)) if e.name().as_ref().starts_with(b"Lyric_") => {
+                if let Some(attr) = e.try_get_attribute("LyricContent")? {
+                    let content = attr.unescape_value()?.to_string();
+                    for line in content.lines() {
+                        if let Some(captures) = re_line.captures(line) {
+                            let time_ms: u64 = captures[1].parse().unwrap_or(0);
+                            let time_sec = time_ms as f64 / 1000.0;
+                            let text = captures[2].to_string();
+                            lyrics.push(Lyric {
+                                time: time_sec,
+                                text: re_text.replace_all(&text, "").to_string(),
+                            });
+                        }
+                    }
+                }
+            }
+            Ok(Event::Eof) => break,
+            Err(e) => {
+                eprintln!("XML parse error: {}", e);
+                break;
+            }
+            _ => {}
+        }
+        buf.clear();
+    }
+    println!("歌词测试{:?}", lyrics);
+
 
     // metadata暂时不返回，后面再说
     Ok(lyrics)

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./SettingList.module.scss";
 
+import FindLyrics from '../findLyrics/FindLyrics';
 
-export const SettingList = ({visible, onClose, settinglistRef}) => {
+export const SettingList = ({visible, onClose, settinglistRef, data, setData}) => {
 
     const panelRef = useRef(null);
     useEffect(() => {
@@ -21,19 +22,29 @@ export const SettingList = ({visible, onClose, settinglistRef}) => {
         };
       }, [visible, onClose, settinglistRef]);
 
+    const [findLyrics, setFindLyrics] = useState(true);
 
     return (
         <div className={`${styles.settingList} ${visible ? styles.visible : ''}`}
         ref={panelRef}
         >
             <ul>
-                <li>查找歌词</li>
+                <li onClick={() => setFindLyrics(!findLyrics)}>查找歌词</li>
                 <li>格式转换</li>
                 <li>桌面模式</li>
                 <li>记住桌面位置</li>
                 <li>皮肤</li>
                 <li>帮助</li>
             </ul>
+            {/* {findLyrics &&  */}
+              <FindLyrics
+              findLyrics={findLyrics}
+              setFindLyrics={setFindLyrics}
+              data={data}
+              setData={setData}
+              panelRef={panelRef}
+              />
+            
         </div>
     )
 }

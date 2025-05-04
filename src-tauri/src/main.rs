@@ -1,19 +1,24 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{env, path::Path, sync::{Arc, Mutex}};
+use std::{env, fs, sync::{Arc, Mutex}};
+
 use tauri::{State, Window};
 use rusqlite::Connection;
 
-use controllers::audio_player::AudioPlayer;
-use modles::{db_song::Song, music_lyrics::Lyric, music_playList_song::PlaylistSong};
+
+
+use controllers::{audio_player::AudioPlayer, get_lyrics};
+use modles::{db_song::Song, music_lyrics::Lyric, music_playList_song::PlaylistSong, songs_for_lyrics::SongsForLyrics};
 use common::utils;
 use database::db;
 
-mod modles;
 mod controllers;
 mod common;
 mod database;
+mod modles;
+
+
 
 pub struct AppState {
     pub db: Mutex<Connection>,      // 数据库连接（线程安全）
@@ -23,7 +28,7 @@ pub struct AppState {
 #[tauri::command]
 fn add_lyrics(state: State<'_, Arc<AppState>>, lyrics_file: &str, id: i64) -> Vec<Lyric> {
     let mut conn = state.db.lock().unwrap();
-    let lyrics = utils::get_audio_lyrics(lyrics_file);
+    let lyrics = utils::get_audio_lyrics_qq(lyrics_file);
     match lyrics {
         Ok(lyrics) => {
             let _ = db::update_lyrics(&mut *conn, lyrics_file, id);
@@ -97,7 +102,7 @@ fn play_music(state: State<'_, Arc<AppState>>, window: Window, id: i64, file_pat
         let mut lyrics = vec![];
         match song_meta.lyrics_path.clone() {
             Some(path) => {
-               lyrics = utils::get_audio_lyrics(path.to_str().unwrap_or("")).unwrap_or_default();
+               lyrics = utils::get_audio_lyrics_qq(path.to_str().unwrap_or("")).unwrap_or_default();
             }
             None=> {}
         }
@@ -176,9 +181,30 @@ fn get_song_all(state: State<'_, Arc<AppState>>) -> Vec<PlaylistSong> {
     // }
 }
 
+
 #[tauri::command]
-fn get_video_path(path: String) -> String {
-    format!("file://{}", path)
+async fn get_lyrics_targets(keyword: String) -> Vec<SongsForLyrics> {
+    let songs = get_lyrics::get_qq_lyrics(keyword).await.unwrap_or_else(|e|{
+        println!("get_qq_lytics_list is err: {e}");
+        vec![]
+    });
+    return songs;
+}
+
+
+#[tauri::command]
+async fn get_lyrics(album: &str, singer: &str, song_name: &str, duration: u32, id: i64, save_path: &str) -> Result<Vec<Lyric>, String> {
+    let lyrics = get_lyrics::get_qq_lytics_by_id(album, singer, song_name, duration, id).await.map_err(|e|{
+        e.to_string()
+    });
+    match lyrics {
+        Ok(l)=>{
+            let _ = fs::write(save_path,&l);
+            let show_lyrics = utils::get_audio_lyrics_qq(save_path).unwrap_or_default();
+            return Ok(show_lyrics);
+        }
+        Err(e) => {Err(e.to_string())},
+    }
 }
 
 fn main() {
@@ -202,7 +228,8 @@ fn main() {
             delete_music_from_db,
             add_lyrics,
             get_song_all,
-            get_video_path
+            get_lyrics_targets,
+            get_lyrics,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

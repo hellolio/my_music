@@ -1,0 +1,165 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: rgba(0, 0, 0, 0.3);
+  // box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  backdrop-filter: blur(5px);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.modal.visible {
+  transform: translateY(0);
+}
+  /* 弹窗内容 */
+  .modalContent {
+    background-color: rgba(82, 78, 78, 0.919);
+    padding: 10px;
+    border-radius: 8px;
+    width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  }
+
+  .search {
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  
+  /* 输入框样式 */
+  .inputField {
+    width: 60%;
+    min-width: 100px;
+    padding: 5px 8px;
+    display: block;
+    margin: 5px; /* 上为0，下为16px，左右auto */
+    border: 1px solid #444744;
+    background-color: #393535c8;
+    color: #ffffff;
+    border-radius: 6px;
+    // font-size: 15px;
+    text-align: center; 
+  }
+
+  
+  .inputField:focus {
+    outline: none;
+    border-color: #58b7ce; /* 聚焦时绿色边框 */
+    box-shadow: 0 0 4px #499cb093; /* 绿色光晕 */
+  }
+
+
+  /* 按钮容器样式 */
+  .buttonRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .leftControls {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    gap: 8px;
+    min-width: 0; /* 允许子项缩小 */
+  }
+  
+  .savePathLabel {
+    flex: 1;
+    overflow-x: auto;
+    white-space: nowrap;
+    max-width: 100%;
+    display: inline-block;
+  }
+  
+  .rightControls {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0; /* 保证按钮不会被压缩 */
+  }
+
+  
+  /* 按钮样式 */
+  .btn {
+    padding: 3px 5px;
+    background-color: #58b7ce;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 5px;
+  }
+    
+  
+  .btn:hover {
+    background-color: #9c8f8f;
+  }
+ .btnCancle {
+    color: #000;
+    background-color: #e0e0e0;
+  }
+  .btnCancle:hover {
+    background-color: #9c8f8f;
+  }
+
+  .resultList {
+    max-height: 200px;
+    min-height: 150px;
+    width: 100%;
+    overflow-y: auto;
+    border: 1px solid #444744;
+    border-radius: 4px;
+  }
+  .resultListTable {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  /* 加入你的 CSS 文件中 */
+.resultListTable th {
+  position: sticky;
+  top: 0;
+  color: #69aec3;
+  background-color: rgba(82, 78, 78);
+  z-index: 999; /* 确保表头在上层 */
+}
+
+  
+  .resultListTable td, .resultListTable th {
+    height: 20px; // 保证每行有高度
+    padding: 4px;
+  }
+
+.rowOverHidden {
+  white-space: nowrap;       /* 不换行 */
+  overflow: hidden;          /* 超出隐藏 */
+  text-overflow: ellipsis;
+}
+  
+  .resultRow:last-child {
+    border-bottom: none;
+  }
+  
+  .resultRow:hover {
+    background-color: #546059;
+    cursor: pointer;
+  }
+
+  .selectedRow{
+    background-color: #4eaa6b;
+  }
+

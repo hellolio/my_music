@@ -100,6 +100,8 @@ function App() {
         visible={setting}
         onClose={handleClosePanel}
         settinglistRef={settinglistRef}
+        data={data}
+        setData={setData}
         />
       <div className="display">
       <div className="play-slider-container">

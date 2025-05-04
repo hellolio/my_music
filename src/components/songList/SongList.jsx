@@ -31,7 +31,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
 
   // 用来保存选中的复选框的 id
   const [selectedItems, setSelectedItems] = useState([]);
-  const [allCheck, setAllCheck] = useState(false);
+  const [allCheck, setAllCheck] = useState(true);
 
   // 所有歌单list
   const [allSongList, setAllSongList] = useState([]);

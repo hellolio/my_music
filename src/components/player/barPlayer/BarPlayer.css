@@ -62,9 +62,9 @@
 .center-bar-ball {
     left: 100%;                        /* 将小圆球放置到进度条的右侧 */
     position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
+    width: 0px;
+    height: 0px;
+    /* border-radius: 50%; */
     background: #fff;
     transition: width 0.1s ease;
 }
