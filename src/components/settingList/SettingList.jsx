@@ -22,7 +22,7 @@ export const SettingList = ({visible, onClose, settinglistRef, data, setData}) =
         };
       }, [visible, onClose, settinglistRef]);
 
-    const [findLyrics, setFindLyrics] = useState(true);
+    const [findLyrics, setFindLyrics] = useState(false);
 
     return (
         <div className={`${styles.settingList} ${visible ? styles.visible : ''}`}

@@ -1,0 +1,33 @@
+.containerBtnPlayer {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 40px;
+  width: 100%;
+  max-width: 700px;
+}
+
+.rightBtnPlayer, .centerBtnPlayer, .leftBtnPlayer, .cycleBtnPlayer, .listBtnPlayer {
+  width: 20px;
+  height: 20px;
+  gap: 50px;
+  vertical-align: middle;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.leftBtnPlayer:hover,
+.centerBtnPlayer:hover,
+.rightBtnPlayer:hover,
+.cycleBtnPlayer:hover,
+.listBtnPlayer:hover {
+  transform: scale(1.2); /* 放大一点 */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697); /* 阴影效果 */
+}
+
+.cycleBtnPlayer:active,
+.leftBtnPlayer:active,
+.centerBtnPlayer:active,
+.rightBtnPlayer:active,
+.listBtnPlayer:active {
+  transform: scale(0.99); /* 点击时缩小 */
+}

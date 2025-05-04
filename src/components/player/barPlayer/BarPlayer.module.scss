@@ -1,0 +1,128 @@
+
+@use '@/base/theme-config.scss' as theme;
+
+.containerBarProgress {
+  display: flex;
+  justify-content: flex-start; /* 左对齐，避免元素之间的间隙 */
+  align-items: center;
+  width: 100%;  /* 使容器宽度占满父元素 */
+  max-width: 700px;
+  margin: 10px 50px 0 50px;
+}
+
+.leftBarProgress,
+.rightBarProgress {
+  // flex: 0 0 20px;
+  text-align: center;
+  height: 20px;
+  width: 30px;
+  margin: 5px;
+  font-size: 12px;
+  font-style: normal;
+  color: #cec1bbae;
+  overflow: hidden;
+}
+
+
+.leftBarProgressA {
+  font-weight: bold;
+  color: #58b7ce;
+}
+
+.rightBarProgressB {
+  font-weight: bold;
+  color: #ff5500;
+}
+
+.centerBlockProgress {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  height: 25px;
+  width: 80%;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+.centerBar {
+  display: flex;
+  flex: 0 0 100%;
+  align-items: center;
+  background: #fff;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  position: relative;
+  transition: width 0.1s ease;
+}
+
+.centerBarRate {
+  background: theme.$center-bar-rate-background-color;
+  height: 3px;
+  border-radius: 3px;
+  transition: width 0.1s ease;
+}
+
+.centerBarRateEnd {
+  background: theme.$center-bar-rate-end-background-color;
+  height: 3px;
+  border-radius: 3px;
+  transition: width 0.1s ease;
+}
+
+.centerBarBall {
+  position: absolute;
+  left: 100%;
+  width: 0;
+  height: 0;
+  background: #fff;
+  transition: width 0.1s ease;
+}
+
+.centerBarBallAb {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  transition: width 0.1s ease;
+}
+
+.centerBarBallAbA {
+  background: #339ebe;
+}
+
+.centerBarBallAbB {
+  background: #d85c23;
+}
+
+.tooltipProgress {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* Hover and Active Effects */
+.centerBarRate:hover,
+.centerBarRateEnd:hover {
+  height: 8px;
+}
+
+.centerBarBall:hover {
+  transform: scale(1.5);
+}
+
+.leftBarProgress:hover,
+.rightBarProgress:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
+}
+
+.leftBarProgress:active,
+.rightBarProgress:active {
+  transform: scale(0.99);
+}

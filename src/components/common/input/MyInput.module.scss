@@ -1,0 +1,23 @@
+@use '@/base/theme-config.scss' as theme;
+
+  /* 输入框样式 */
+  .myInput {
+    width: 60%;
+    min-width: 100px;
+    padding: 5px 8px;
+    display: block;
+    margin: 5px; /* 上为0，下为16px，左右auto */
+    border: 1px solid #444744;
+    background-color: #393535c8;
+    color: #ffffff;
+    border-radius: 6px;
+    // font-size: 15px;
+    text-align: center; 
+  }
+
+  
+  .myInput:focus {
+    outline: none;
+    border-color: #58b7ce; /* 聚焦时绿色边框 */
+    box-shadow: 0 0 4px #499cb093; /* 绿色光晕 */
+  }

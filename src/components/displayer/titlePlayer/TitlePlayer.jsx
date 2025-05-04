@@ -1,5 +1,5 @@
 
-import styles from "./TitlePlayer.module.css";
+import styles from "./TitlePlayer.module.scss";
 
 import {collectClick, followClick} from "./TitlePlayerFun"
 

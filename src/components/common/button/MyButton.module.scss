@@ -1,0 +1,29 @@
+@use '@/base/theme-config.scss' as theme;
+
+.myButton {
+  padding: 3px 5px;
+  background-color: #58b7ce;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+  }
+  
+  .confirm {
+    background-color: theme.$button-confirm-background-color;
+    color: theme.$button-confirm-color;
+  }
+  
+  .confirm:hover {
+    background-color: theme.$button-confirm-background-color-hover;
+  }
+  
+  .cancle {
+    background-color: theme.$button-cancle-background-color;
+  }
+  
+  .cancle:hover {
+    background-color: theme.$button-cancle-background-color-hover;
+  }
+  

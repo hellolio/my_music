@@ -1,7 +1,7 @@
 import ReactPlayer from 'react-player';
 import { useState, useEffect, useRef, useImperativeHandle, forwardRef} from "react";
 import { convertFileSrc } from '@tauri-apps/api/tauri';
-import "./Video.css";
+import styles from "./Video.module.scss";
 
 const Video = forwardRef((props, ref) => {
   const {data, setData} = props;
@@ -65,7 +65,7 @@ const Video = forwardRef((props, ref) => {
   }));
 
   return (
-      <div className="my-video">
+      <div className={styles.myVideo}>
           <ReactPlayer 
             ref={playerRef}
             url={videoSrc}

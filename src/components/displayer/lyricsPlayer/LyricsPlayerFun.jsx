@@ -45,7 +45,7 @@ export const handleLyricClick = (line, index, data, setData) => {
   }else {
       playFun = data.video.current
   }
-  playFun.seek(line.time, data.barCurrentVolume);
+  playFun.seek(Math.floor(line.time), data.barCurrentVolume);
 
   setData(prevData => ({
       ...prevData,

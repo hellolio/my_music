@@ -1,30 +1,27 @@
+@use '@/base/theme-config.scss' as theme;
+
 .centerTitle {
 	margin-top: 20px;
 }
-
-.p:hover {
-    /* color: #ff5500; */
-    font-weight: bold;
-    /* transform: scale(1.05); */
-    /* transition: all 0.1s; */
-  }
 
 .p {
 	display: flex;
 	justify-content: center;
 	gap: 10px; /* 控制间距 */
-	color: #58b7ce;
+	color: theme.$font-color-blue;
+	font-family: theme.$font-family;
 	font-size: 21px;
 }
 
 .active{
-	color: #237286d5;
+	color: theme.$font-color-blue-grey;
 	font-weight: bold;
 	display: inline-block;
 	font-size: 12px;
 }
 .span {
-	color: #ff5500;
+	color: theme.$font-color-yellow;
+	font-family: theme.$font-family;
 	display: inline-block;
 	font-size: 12px;
 }

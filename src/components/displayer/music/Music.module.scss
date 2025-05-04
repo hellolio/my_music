@@ -1,8 +1,10 @@
-.my-music {
+@use '@/base/theme-config.scss' as theme;
+
+.myMusic {
     width: 100%;
     height: 100%;
+    // background-color: theme.$body-background-color;
 }
-
 
 .parent.lyrics{
     position: absolute;    /* 元素相对于父容器定位 */

@@ -1,0 +1,89 @@
+@use '@/base/theme-config.scss' as theme;
+
+/* 遮罩层 */
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(62, 61, 61, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.dialogOverlay.fadeOut {
+  animation: fadeOut 0.1s ease-in forwards;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 消失动画 */
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* 弹窗样式 */
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(65, 67, 65);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgb(75, 73, 73);
+  z-index: 1000;
+  width: 80%;
+  max-width: 280px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.dialog.fadeOut {
+  animation: fadeOut 0.1s ease-in forwards;
+}
+
+.dialog h3 {
+  margin-bottom: 16px;
+  font-size: 20px;
+  text-align: center;
+  color: #58b7ce;
+}
+
+.dialog input {
+  width: 80%;
+  padding: 8px 12px;
+  display: block;
+  margin: 0 auto 16px auto;
+  border: 1px solid #444744;
+  background-color: #2d302d;
+  color: #cbc3c3;
+  border-radius: 6px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.dialog input:focus {
+  outline: none;
+  border-color: #58b7ce;
+  box-shadow: 0 0 4px #499cb093;
+}
+
+.dialogButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}

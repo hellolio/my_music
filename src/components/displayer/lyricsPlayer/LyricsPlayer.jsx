@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import "./LyricsPlayer.css";
+import styles from "./LyricsPlayer.module.scss";
 
 import {addLyrics, handleLyricClick} from "./LyricsPlayerFun"
 
@@ -46,26 +46,28 @@ function LyricsPlayer(props) {
     }, [activeIndex]);
 
     return (
-        <div className="container lyrics">
-            <div 
-            ref={containerRef}
-            className="center-lyrics">
-                {<button className="overLoad-lyrics" onClick={()=>addLyrics(data, setData)}>重载歌词</button>}
-                <ul className="center-lyrics-line"
-                onDoubleClick={()=>addLyrics(data, setData)}
+        <div className={`${styles.container} ${styles.lyrics}`}>
+          <div ref={containerRef} className={styles.centerLyrics}>
+            <button className={styles.overLoadLyrics} onClick={() => addLyrics(data, setData)}>
+              重载歌词
+            </button>
+            <ul
+              className={styles.centerLyricsLine}
+              // onDoubleClick={() => addLyrics(data, setData)}
+            >
+              {data.lyrics.map((line, index) => (
+                <li
+                  ref={(el) => (listRef.current[index] = el)}
+                  className={activeIndex === index ? styles.active : ''}
+                  key={index}
+                  onDoubleClick={() => handleLyricClick(line, index, data, setData)}
                 >
-                {data.lyrics.map((line, index) => (
-                    <li 
-                    ref={(el) => (listRef.current[index] = el)}
-                    className={activeIndex === index ? "active" : ""}
-                    key={index}
-                    onClick={() => handleLyricClick(line, index, data, setData)}
-                    >{line.text}
-                    </li>
-                ))}
-                </ul>
-            </div>
+                  {line.text}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-    )
+      );
 }
 export default LyricsPlayer;

@@ -1,16 +1,16 @@
+@use '@/base/theme-config.scss' as theme;
 
 /* 设置应用的所有容器背景为黑色 */
 html, body, #app {
   height: 100%;
   /* background: url(../img/background.png) no-repeat center 10px; */
   background-size: cover;  /* 使背景图像覆盖整个块 */
-  background-color: #464545;
+  background-color: theme.$body-background-color;
   color: white;  /* 设置文本为白色，确保在黑色背景下可读 */
   margin: 0;
   padding: 0;
   overflow-x: hidden;
 }
-
 
 
 * {
@@ -21,8 +21,7 @@ html, body, #app {
   /* overflow: hidden; */
 }
 
-
-.my-player {
+.myPlayer {
   display: flex;                /* 使用 Flexbox 布局 */
   flex-direction: column;       /* 垂直排列子元素 */
   position: relative;   /* 设置父容器为相对定位 */
@@ -40,7 +39,7 @@ html, body, #app {
 
 
 /* 滑动容器（视口） */
-.play-slider-container {
+.playSliderContainer {
   width: 100%;
   height: 100%;         /* 控制滑动内容的垂直高度 */
   overflow: hidden;
@@ -48,7 +47,7 @@ html, body, #app {
 }
 
 /* 滑动轨道（横向排列子组件） */
-.play-slider-wrapper {
+.playSliderWrapper {
   display: flex;
   transition: transform 0.3s ease-in-out;
   will-change: transform;

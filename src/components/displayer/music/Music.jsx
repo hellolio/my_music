@@ -4,6 +4,8 @@ import { useState, useRef, useImperativeHandle, forwardRef} from "react";
 import LyricsPlayer from "@/components/displayer/lyricsPlayer/LyricsPlayer";
 import TitlePlayer from "@/components/displayer/titlePlayer/TitlePlayer";
 
+import styles from './Music.module.scss';
+
 const Music = forwardRef((props, ref) => {
     const {data, setData} = props;
 
@@ -45,12 +47,12 @@ const Music = forwardRef((props, ref) => {
     }));
 
     return (
-        <div className="my-music">
-          <div className="parent title">
+        <div className={styles.myMusic}>
+          <div className={`${styles.parent} ${styles.title}`}>
             <TitlePlayer data={data} setData={setData}/>
           </div>
 
-          <div className="parent lyrics">
+          <div className={`${styles.parent} ${styles.lyrics}`}>
             <LyricsPlayer data={data} setData={setData}/>
           </div>
 

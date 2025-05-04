@@ -5,7 +5,8 @@ import {get_lyrics_targets, get_lyrics, selectSavePath} from './FindLyricsFun'
 import { invoke } from "@tauri-apps/api/tauri";
 import * as utils from "../../common/utils"
 
-
+import MyButton from "@/components/common/button/MyButton";
+import MyInput from "@/components/common/input/MyInput";
 
 export default function FindLyrics({findLyrics, setFindLyrics, data, setData, panelRef, onClose}) {
 
@@ -49,7 +50,7 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
       const target = resultList[selectedRow];
       console.log(target)
       if (savePath === '') {
-        alert('请填写歌名');
+        alert('请填指定保存路径');
       }else {
         let lyrics = await get_lyrics(target.album, target.artist[0], target.title, target.duration, target.id, savePath);
         if (selected) {
@@ -71,62 +72,65 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
                 <div className={styles.modalContent} ref={FindLyricsRef}>
                   <div className={styles.search}>
                       <h3>查找歌词</h3>
-                      {/* <input
-                        type="text"
-                        value={songTitle}
-                        onChange={(e) => setSongTitle(e.target.value)}
-                        placeholder="输入歌名"
-                        className={styles.inputField}
-                      /> */}
                       <div style={{ display: "flex", alignItems: "center" }}>
-                      <input
-                        type="text"
+                      <MyInput 
+                        type={'text'}
                         value={songTitle}
-                        onChange={(e) => setSongTitle(e.target.value)}
+                        setValue={setSongTitle}
                         placeholder="输入歌名"
-                        className={styles.inputField}
                       />
-                        <button 
-                          onClick={searchLyrics} 
-                          className={styles.btn}
-                          style={{ marginLeft: "auto" }} // 推到右边
-                        >
-                          检索
-                        </button>
+                        <MyButton 
+                            style={{ marginLeft: "auto" }} // 推到右边
+                            callFun={searchLyrics}
+                            msg={'检索'}
+                            isConfirm={true}
+                          />
                       </div>
                     </div>
+                    <div className={styles.resultListWrapper}>
+                    {/* 表头部分 */}
+                    <table className={styles.resultListTable}>
+                      <thead>
+                        <tr>
+                          <th style={{ width: "60px", textAlign: "left" }}>歌名</th>
+                          <th style={{ width: "100px", textAlign: "center"  }}>信息</th>
+                          <th style={{ width: "50px", textAlign: "center"  }}>作者</th>
+                          <th style={{ width: "30px", textAlign: "right" }}>时长</th>
+                        </tr>
+                      </thead>
+                    </table>
+
+                    {/* 内容部分 */}
                     <div className={styles.resultList}>
-                        <table className={styles.resultListTable}>
-                            <thead>
-                            <tr>
-                                <th style={{width: "60px"}}>歌名</th>
-                                <th style={{width: "100px"}}>信息</th>
-                                <th style={{width: "50px"}}>作者</th>
-                                <th style={{width: "30px", textAlign:"right"}}>时长</th>
+                      <table className={styles.resultListTable}>
+                        <tbody>
+                          {resultList.map((result, index) => (
+                            <tr
+                              key={index}
+                              className={`${styles.resultRow} ${selectedRow === index ? styles.selectedRow : ''}`}
+                              onClick={() => setSelectedRow(index)}
+                            >
+                              <td className={styles.rowOverHidden} style={{ width: "60px", textAlign: "left"  }}>{result.title}</td>
+                              <td className={styles.rowOverHidden} style={{ width: "100px", textAlign: "center"  }}>{result.subtitle}</td>
+                              <td className={styles.rowOverHidden} style={{ width: "50px", textAlign: "center"  }}>{result.artist}</td>
+                              <td className={styles.rowOverHidden} style={{ width: "30px", textAlign: "right" }}>
+                                {utils.formatTime(result.duration)}
+                              </td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            {resultList.map((result, index) => (
-                                <tr 
-                                  key={index} 
-                                  className={`${styles.resultRow} ${selectedRow === index ? styles.selectedRow: ''}`}
-                                  onClick={()=>setSelectedRow(index)}>
-                                <td className={styles.rowOverHidden}>{result.title}</td>
-                                <td className={styles.rowOverHidden}>{result.subtitle}</td>
-                                <td className={styles.rowOverHidden}>{result.artist}</td>
-                                <td className={styles.rowOverHidden} style={{textAlign:"right"}}>{utils.formatTime(result.duration)}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                      </div>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
 
                       <div className={styles.buttonRow}>
                         {/* 左侧区域 */}
                         <div className={styles.leftControls}>
-                          <button className={styles.btn} onClick={() => selectSavePath(setSavePath, resultList[selectedRow].title)}>
-                            选择保存路径
-                          </button>
+                          <MyButton 
+                            callFun={() => selectSavePath(setSavePath, resultList[selectedRow].title)}
+                            msg={'选择保存路径'}
+                            isConfirm={true}
+                          />
                           <label htmlFor="savePath" className={styles.savePathLabel}>
                             {savePath}
                           </label>
@@ -146,8 +150,16 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
                         </div>
 
                         <div className={`${styles.rightControls}`}>
-                          <button onClick={saveLyrics} className={styles.btn}>保存</button>
-                          <button onClick={() => setFindLyrics(false)} className={`${styles.btn} ${styles.btnCancel}`}>取消</button>
+                          <MyButton 
+                            callFun={saveLyrics}
+                            msg={'保存'}
+                            isConfirm={true}
+                          />
+                          <MyButton 
+                            callFun={() => setFindLyrics(false)}
+                            msg={'取消'}
+                            isConfirm={false}
+                          />
                         </div>
                       </div>
             </div>

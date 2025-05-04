@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useRef } from "react";
-import "./BtnPlayer.css";
+import styles from "./BtnPlayer.module.scss";
 
 import SongList from "../../songList/SongList";
 
@@ -30,32 +30,32 @@ function BtnPlayer(props) {
   const handleClosePanel = () => {
     setShowPanel(false);
   };
-
   return (
-        <div className="container btnPlayer">
-          <img className="cycle-btnPlayer"
-           src={data.isSingleLoop? "/img/单曲循环.ico" : "/img/列表循环.ico"}
-           alt="cycle" onClick={() => cycleClick(data, setData)} />
-          <img className="left-btnPlayer" src="/img/上一曲.ico" alt="Add" onClick={() => leftClick(musicListAllState, data, setData)} />
-          <img 
-            className="center-btnPlayer"
-            src={data.isPlaying ? "/img/暂停.ico" : "/img/播放.ico"} 
-            alt="Change"
-            onClick={() => togglePlayPause(data, setData)} 
-          />
-          <img className="right-btnPlayer" src="/img/下一曲.ico" alt="Reduce" onClick={() => rightClick(musicListAllState, data, setData)} />
-          <img className="list-btnPlayer" ref={listBtnPlayerRef} src="/img/播放列表.ico" alt="Reduce" onClick={() => handleTogglePanel(setShowPanel)} />
-          <SongList 
-            data={data}
-            setData={setData}
-            visible={showPanel}
-            onClose={handleClosePanel}
-            songs={musicListAllState}
-            setSongs={setMusicListAllState}
-            listBtnPlayerRef={listBtnPlayerRef}
-          />
-        </div>
+    <div className={styles.containerBtnPlayer}>
+      <img className={styles.cycleBtnPlayer}
+        src={data.isSingleLoop ? "/img/单曲循环.ico" : "/img/列表循环.ico"}
+        alt="cycle" onClick={() => cycleClick(data, setData)} />
+      <img className={styles.leftBtnPlayer} src="/img/上一曲.ico" alt="Add" onClick={() => leftClick(musicListAllState, data, setData)} />
+      <img 
+        className={styles.centerBtnPlayer}
+        src={data.isPlaying ? "/img/暂停.ico" : "/img/播放.ico"} 
+        alt="Change"
+        onClick={() => togglePlayPause(data, setData)} 
+      />
+      <img className={styles.rightBtnPlayer} src="/img/下一曲.ico" alt="Reduce" onClick={() => rightClick(musicListAllState, data, setData)} />
+      <img className={styles.listBtnPlayer} ref={listBtnPlayerRef} src="/img/播放列表.ico" alt="Reduce" onClick={() => handleTogglePanel(setShowPanel)} />
+      <SongList 
+        data={data}
+        setData={setData}
+        visible={showPanel}
+        onClose={handleClosePanel}
+        songs={musicListAllState}
+        setSongs={setMusicListAllState}
+        listBtnPlayerRef={listBtnPlayerRef}
+      />
+    </div>
   );
+  
 };
 
 export default BtnPlayer;

@@ -1,3 +1,5 @@
+@use '@/base/theme-config.scss' as theme;
+
 .modal {
   position: fixed;
   top: 0;
@@ -10,8 +12,8 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background-color: rgba(0, 0, 0, 0.3);
-  // box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  background-color: theme.$window-background-color-mask;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
   backdrop-filter: blur(5px);
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
@@ -23,7 +25,7 @@
 }
   /* 弹窗内容 */
   .modalContent {
-    background-color: rgba(82, 78, 78, 0.919);
+    background-color: theme.$window-background-color;
     padding: 10px;
     border-radius: 8px;
     width: 500px;
@@ -115,33 +117,35 @@
   .btnCancle:hover {
     background-color: #9c8f8f;
   }
-
+  .resultListWrapper {
+    width: 100%;
+    border-radius: 4px;
+    background-color: theme.$window-background-color;
+  
+    table {
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: collapse;
+      border-spacing: 0;
+      font-family: theme.$font-family;
+    }
+  
+    th, td {
+      padding: 4px;
+      height: 20px;
+      border: none;
+    }
+  
+    th {
+      background-color: rgba(82, 78, 78);
+      color: theme.$font-color-blue;
+    }
+  }
+  
   .resultList {
     max-height: 200px;
     min-height: 150px;
-    width: 100%;
     overflow-y: auto;
-    border: 1px solid #444744;
-    border-radius: 4px;
-  }
-  .resultListTable {
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  /* 加入你的 CSS 文件中 */
-.resultListTable th {
-  position: sticky;
-  top: 0;
-  color: #69aec3;
-  background-color: rgba(82, 78, 78);
-  z-index: 999; /* 确保表头在上层 */
-}
-
-  
-  .resultListTable td, .resultListTable th {
-    height: 20px; // 保证每行有高度
-    padding: 4px;
   }
 
 .rowOverHidden {
@@ -155,11 +159,12 @@
   }
   
   .resultRow:hover {
-    background-color: #546059;
+    background-color: theme.$hover-background-color;
+    color: theme.$hover-font-color;
     cursor: pointer;
   }
 
   .selectedRow{
-    background-color: #4eaa6b;
+    background-color: theme.$selected-background-color;
+    color: theme.$selected-font-color;
   }
-

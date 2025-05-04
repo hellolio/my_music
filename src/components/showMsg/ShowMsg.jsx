@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './ShowMsg.css';
-
+import styles from './ShowMsg.module.scss';
+import MyButton from "@/components/common/button/MyButton";
 
 export default function ShowMsg({showMsgParam, inputValue, setInputValue, showDialog, setShowDialog, callFun, callFunParam}) {
   const [fadeOut, setFadeOut] = useState(false);
@@ -11,30 +11,34 @@ export default function ShowMsg({showMsgParam, inputValue, setInputValue, showDi
   }
 
   return (
-      <div>
-        <div className={`dialog-overlay ${fadeOut ? 'fade-out' : ''}`} onClick={() => handleCancle()} />
-        <div className={`dialog ${fadeOut ? 'fade-out' : ''}`}>
-          <h3>{showMsgParam.title}</h3>
-          {showMsgParam.isInput && (
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder={showMsgParam.placeholder}
-            />
-          )}
-          {showMsgParam.isInput ?  
-              <div className="dialog-buttons">
-                <button className='ok' onClick={() => callFun(callFunParam)}>确认</button>
-                <button className='cancle' onClick={() => handleCancle()}>取消</button>
-              </div>
-            :
-              <div className="dialog-buttons">
-                <button className='ok' onClick={() => callFun(callFunParam)}>确认</button>
-                <button className='cancle' onClick={() => handleCancle()}>取消</button>
-                </div>
-            }
+    <div>
+      <div
+        className={`${styles.dialogOverlay} ${fadeOut ? styles.dialogOverlayFadeOut : ''}`}
+        onClick={() => handleCancle()}
+      />
+      <div className={`${styles.dialog} ${fadeOut ? styles.dialogFadeOut : ''}`}>
+        <h3>{showMsgParam.title}</h3>
+        {showMsgParam.isInput && (
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            placeholder={showMsgParam.placeholder}
+          />
+        )}
+        <div className={styles.dialogButtons}>
+          <MyButton 
+            callFun={() => callFun(callFunParam)}
+            msg={'确认'}
+            isConfirm={true}
+          />
+          <MyButton 
+            callFun={() => handleCancle()}
+            msg={'取消'}
+            isConfirm={false}
+          />
         </div>
       </div>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import "./App.css";
+import styles from "./App.module.scss";
 import BtnPlayer from "./components/player/btnPlayer/BtnPlayer";
 import BarPlayer from "./components/player/barPlayer/BarPlayer";
 import BarVolume from "./components/player/barVolume/BarVolume";
@@ -89,56 +89,57 @@ function App() {
   const handleClosePanel = () => {
     setSetting(false);
   };
-
   return (
-    <div className="my-player">
+    <div className={styles.myPlayer}>
       <div
-       onClick={() => setSetting(!setting)}
-       ref={settinglistRef}
-      >设置</div>
-        <SettingList
+        onClick={() => setSetting(!setting)}
+        ref={settinglistRef}
+      >
+        设置
+      </div>
+      <SettingList
         visible={setting}
         onClose={handleClosePanel}
         settinglistRef={settinglistRef}
         data={data}
         setData={setData}
-        />
-      <div className="display">
-      <div className="play-slider-container">
-        <div
-          className="play-slider-wrapper"
-          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-        >
-          <div className="music">
-            <Music ref={musicRef}  data={data} setData={setData} />
-          </div>
-          <div className="video">
-            <Video  ref={videoRef} data={data} setData={setData} />
+      />
+      
+      <div className={styles.display}>
+        <div className={styles.playSliderContainer}>
+          <div
+            className={styles.playSliderWrapper}
+            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+          >
+            <div className={styles.music}>
+              <Music ref={musicRef} data={data} setData={setData} />
+            </div>
+            <div className={styles.video}>
+              <Video ref={videoRef} data={data} setData={setData} />
+            </div>
           </div>
         </div>
       </div>
-
-      </div>
-
-      <div className="player">
+  
+      <div className={styles.player}>
         {/* 播放进度设置 */}
-        <div className="parent bar">
-          <BarPlayer data={data} setData={setData}/>
+        <div className={`${styles.parent} ${styles.bar}`}>
+          <BarPlayer data={data} setData={setData} />
         </div>
-
+  
         {/* 播放按钮设置 */}
-        <div className="parent btnPlayer">
-          <BtnPlayer data={data} setData={setData}/>
+        <div className={`${styles.parent} ${styles.btnPlayer}`}>
+          <BtnPlayer data={data} setData={setData} />
         </div>
-
+  
         {/* 播放音量设置 */}
-        <div className="parent volumeBar">
-          <BarVolume data={data} setData={setData}/>
+        <div className={`${styles.parent} ${styles.volumeBar}`}>
+          <BarVolume data={data} setData={setData} />
         </div>
-
       </div>
     </div>
   );
+  
 }
 
 export default App;
