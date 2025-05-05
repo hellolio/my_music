@@ -4,7 +4,6 @@ use std::{
     time::Duration,
 };
 
-// use crossbeam_channel::{unbounded, Sender};
 use ffmpeg_next as ffmpeg;
 use rodio::{OutputStream, Sink};
 use tauri::Window;
@@ -50,6 +49,7 @@ impl AudioPlayer {
 
             let stream_index = input.index();
             println!("stream_index:{stream_index}");
+            println!("duration:{duration}");
 
             let codec_params = input.parameters();
             let mut decoder = ffmpeg::codec::context::Context::from_parameters(codec_params)

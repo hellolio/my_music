@@ -1,4 +1,4 @@
-use std::{collections::HashMap, fs::File};
+use std::collections::HashMap;
 
 use base64::{engine::general_purpose, Engine};
 use rand::Rng;
@@ -15,11 +15,11 @@ struct Comm {
     g_tk: i64,
     uin: i64,
     format: String,
-    inCharset: String,
-    outCharset: String,
+    in_charset: String,
+    out_charset: String,
     notice: i32,
     platform: String,
-    needNewCode: i32,
+    need_new_code: i32,
     ct: i32,
     cv: i32,
 }
@@ -46,11 +46,11 @@ pub async fn get_qq_lyrics(keyword: String)-> Result<Vec<SongsForLyrics>> {
         g_tk: 997034911,
         uin: rand::rng().random_range(1000000000..9999999999), // 随机生成 uin
         format: "json".to_string(),
-        inCharset: "utf-8".to_string(),
-        outCharset: "utf-8".to_string(),
+        in_charset: "utf-8".to_string(),
+        out_charset: "utf-8".to_string(),
         notice: 0,
         platform: "h5".to_string(),
-        needNewCode: 1,
+        need_new_code: 1,
         ct: 23,
         cv: 0,
     };

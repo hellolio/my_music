@@ -1,6 +1,5 @@
 use std::path::PathBuf;
 
-use rodio::cpal::Sample;
 use rusqlite::{Connection, Result};
 
 use crate::modles::{db_playlists::Playlists, db_song::Song};

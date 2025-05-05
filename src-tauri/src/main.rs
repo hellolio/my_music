@@ -9,7 +9,7 @@ use rusqlite::Connection;
 
 
 use controllers::{audio_player::AudioPlayer, get_lyrics};
-use modles::{db_song::Song, music_lyrics::Lyric, music_playList_song::PlaylistSong, songs_for_lyrics::SongsForLyrics};
+use modles::{db_song::Song, music_lyrics::Lyric, music_play_list_song::PlaylistSong, songs_for_lyrics::SongsForLyrics};
 use common::utils;
 use database::db;
 
