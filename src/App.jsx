@@ -51,6 +51,7 @@ function App() {
       playlistId: dataTmp ? dataTmpParse.playlistId : 1,
       title: dataTmp ? dataTmpParse.title : null,
       author: null,
+      coverImagePath: dataTmp ? dataTmpParse.coverImagePath : null,
       isCollect: false,
       isFollow: false,
       lyrics: dataTmp ? dataTmpParse.lyrics : [],
@@ -68,14 +69,49 @@ function App() {
       isMusic: true
     }
   );
+
+  const settingDataTmp = localStorage.getItem('settingData');
+  const settingDataTmpParse = JSON.parse(settingDataTmp);
+  const [settingData, setSettingData] = useState(
+    {
+      isChange: true,
+      useMusicCover: settingDataTmp ? settingDataTmpParse.useMusicCover : true,
+      coverImagePath: settingDataTmp ? settingDataTmpParse.coverImagePath : ""
+    }
+  )
+  useEffect(() => {
+    if (settingData.useMusicCover) {
+      if (data.coverImagePath === ""){
+        imageUrl = convertFileSrc(settingData.coverImagePath);
+      }else {
+        imageUrl = convertFileSrc(data.coverImagePath);
+      }
+      document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
+    } else {
+      document.body.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
+    }
+
+    localStorage.setItem('settingData', JSON.stringify(settingData));
+  }, [settingData]);
+
   
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(data));
   }, [data]);
 
+  let imageUrl = "";
+
   useEffect(() => {
-    const imageUrl = convertFileSrc(data.coverImagePath);
-    document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
+    if (settingData.useMusicCover) {
+        if (data.coverImagePath === ""){
+          imageUrl = convertFileSrc(settingData.coverImagePath);
+        }else {
+          imageUrl = convertFileSrc(data.coverImagePath);
+        }
+        document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
+    } else {
+      document.body.style.setProperty('--cover-bg', `url(${settingData.coverImagePath})`);
+    }
 
   }, [data.coverImagePath]);
 
@@ -112,6 +148,8 @@ function App() {
         settinglistRef={settinglistRef}
         data={data}
         setData={setData}
+        settingData={settingData}
+        setSettingData={setSettingData}
       />
       
       <div className={styles.display}>

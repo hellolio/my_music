@@ -17,6 +17,10 @@
     background-color: theme.$button-confirm-background-color-hover;
     color: theme.$button-confirm-color;
   }
+
+  .confirm:active {
+    transform: scale(0.99);
+  }
   
   .cancle {
     background-color: theme.$button-cancle-background-color;
@@ -25,5 +29,9 @@
   .cancle:hover {
     background-color: theme.$button-cancle-background-color-hover;
     color: theme.$button-confirm-color;
+  }
+  
+  .cancle:active {
+    transform: scale(0.99);
   }
   

@@ -17,11 +17,9 @@ fn is_meaningful(s: &str) -> bool {
     if clean.is_empty() || clean.chars().count() < 2 {
         return false;
     }
-
     // 中文（常用区）或 英文字母
     let has_chinese = clean.chars().any(|c| ('\u{4E00}'..='\u{9FFF}').contains(&c));
     let alpha_count = clean.chars().filter(|c| c.is_ascii_alphabetic()).count();
-
     has_chinese || alpha_count > 3
 }
 
@@ -33,11 +31,10 @@ fn ret_org(bytes: &[u8]) -> Vec<u8>{
    // 第二步：将这个字符串按照 Latin-1（每个 char -> byte）取出原始字节
    let raw_bytes: Vec<u8> = wrong_str.chars().map(|c| c as u8).collect();
    println!("还原出的原始 GBK 字节: {:?}", raw_bytes);
-
    return raw_bytes;
 }
 
-fn try_decode(bytes: &[u8]) -> String {
+fn try_decode(bytes: &[u8], n: u8) -> String {
     // let bytes = ret_org(b);
     let encoding = [
         ("UTF_8", UTF_8),
@@ -51,16 +48,15 @@ fn try_decode(bytes: &[u8]) -> String {
         let s = e.decode(&bytes).0;
         let s1 = e.decode(&bytes).1;
         let s2 = e.decode(&bytes).2;
-        println!("信息s0 {t}: {:?}", s);
-        println!("信息s1 {t}: {:?}", s1);
-        println!("信息s2 {t}: {}", s2);
 
         if String::from_utf8_lossy(s.as_bytes()).to_string().contains('�'){
             println!("无效的UTF-8编码，from_utf8_lossy: {}", s);
         }else if !is_meaningful(&s) {
             println!("无效的UTF-8编码，is_meaningful: {}", s);
             let b = ret_org(bytes);
-            return try_decode(&b);
+            if n != 2{
+                return try_decode(&b, 2);
+            }
         } else {
             match std::str::from_utf8(s.as_bytes()) {
                 Ok(str) => {
@@ -72,9 +68,7 @@ fn try_decode(bytes: &[u8]) -> String {
                 }
             }
         }
-
     }
-
     return "Unknown".to_string();
 }
 
@@ -84,8 +78,8 @@ pub fn get_audio_metadata(path_str: &str) -> Result<Song> {
     // 获取格式上下文中的 metadata
     let metadata = ictx.metadata();
 
-    let mut title = try_decode(metadata.get("title").unwrap_or("Unknown").as_bytes());
-    let artist = try_decode(metadata.get("artist").unwrap_or("Unknown").as_bytes());
+    let mut title = try_decode(metadata.get("title").unwrap_or("Unknown").as_bytes(), 1);
+    let artist = try_decode(metadata.get("artist").unwrap_or("Unknown").as_bytes(), 1);
 
     let path = Path::new(path_str);
     if title == "Unknown".to_string(){
@@ -222,17 +216,21 @@ pub fn get_cover_from_music(input_path: &str) -> Result<String>{
 
     let out_image_path = get_temp_image_path();
 
+    let mut cover_image = "".to_string();
+
     if let Some(pictures) = tagged_file.primary_tag().and_then(|tag| Some(tag.pictures())) {
         if let Some(picture) = pictures.first() {
             let mut file = File::create(&out_image_path)?;
             file.write_all(picture.data())?;
             println!("封面图已保存");
+            cover_image = out_image_path.to_str()
+            .context("无法将路径转换为字符串")?
+            .to_string()
         } else {
             println!("未找到封面图");
+            cover_image = "".to_string();
         }
     }
     // 封面图路径返回
-    Ok(out_image_path.to_str()
-        .context("无法将路径转换为字符串")?
-        .to_string())
+    Ok(cover_image)
 }

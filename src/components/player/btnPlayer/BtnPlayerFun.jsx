@@ -70,6 +70,7 @@ export const leftClick = async (musicListImportState, data, setData) => {
 export const togglePlayPause = async (data, setData) => {
   const isMusic = utils.isMusic(data.audioSrc);
   let playFun = undefined;
+  let coverImagePath = "";
   if (isMusic){
     playFun = data.music.current
   }else {
@@ -81,9 +82,10 @@ export const togglePlayPause = async (data, setData) => {
 
     if (data.playState===-1) {
       let song = await playFun.play(data.playlistId, data.audioSrc, data.totalDuration, 0, data.barCurrentVolume);
-      let coverImagePath = await playFun.get_cover(data.audio_src);
+
       if (isMusic) {
         data.lyrics = song.lyrics;
+        coverImagePath = await playFun.get_cover(audioMeta.audio_src);
       }
       setData(prevData => ({
         ...prevData,
@@ -146,6 +148,7 @@ export const rightClick = async (musicListImportState, data, setData) => {
   let coverImagePath = "";
   if (isMusic){
     playFun = data.music.current
+    coverImagePath = await playFun.get_cover(audioMeta.audio_src);
   }else {
     playFun = data.video.current
   }
@@ -153,9 +156,9 @@ export const rightClick = async (musicListImportState, data, setData) => {
   let song = await playFun.play(data.playlistId, audioMeta.audio_src, audioMeta.total_duration, 0, data.barCurrentVolume);
   
   if (isMusic) {
-    coverImagePath = await playFun.get_cover(audioMeta.audio_src);
     audioMeta.lyrics = song.lyrics;
   }
+
   setData(prevData => ({
     ...prevData,
     id: audioMeta.id,
