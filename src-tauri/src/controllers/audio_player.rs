@@ -146,9 +146,9 @@ impl AudioPlayer {
                         if decoded.format() == ffmpeg::format::Sample::F32(ffmpeg::format::sample::Type::Planar) {
                             let channels = decoded.channels() as usize;
                             let samples_per_channel = decoded.samples();
-                        
+
                             let mut interleaved = Vec::with_capacity(channels * samples_per_channel);
-                        
+
                             for i in 0..samples_per_channel {
                                 for ch in 0..channels {
                                     let samples = decoded.plane::<f32>(ch);

@@ -34,6 +34,8 @@ hex = "0.4"
 flate2 = "1.1.1"
 quick-xml = "0.31"
 regex = "1"
+lofty = "0.17.0"
+uuid = "1.16.0"
 
 [features]
 # # This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!

@@ -1,5 +1,5 @@
 
-$body-background-color: #1e2020ce;
+$body-background-color: #3f4141ce;
 $body-background-color-black: #000000;
 
 $window-background-color: rgba(121, 121, 121, 0.188);
@@ -12,6 +12,7 @@ $hover-background-color: #47604780;
 $hover-font-color: #ff5500;
 
 // 颜色
+$font-color-white: rgba(255, 255, 255, 0.875);
 $font-color-blue: #58b7ce;
 $font-color-yellow: #ff5500;
 $font-color-grey: #666;
@@ -19,11 +20,11 @@ $font-color-blue-grey: #237286d5;
 
 $button-confirm-background-color: #42894f;
 $button-confirm-background-color-hover: #3a5e41;
-$button-confirm-color: white;
+$button-confirm-color: rgb(201, 197, 197);
 
 $button-cancle-background-color: #797272;
 $button-cancle-background-color-hover: rgb(81, 74, 74);
-$button-cancle-color: #e0e0e0;
+$button-cancle-color: rgb(201, 197, 197);
 
 
 $center-bar-rate-background-color:#c0bcbc;

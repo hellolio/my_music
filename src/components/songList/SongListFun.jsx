@@ -16,11 +16,13 @@ export const playMusicFromList = async (song, data, setData) => {
     const isMusic = utils.isMusic(song.audio_src);
     if (isMusic) {
         await data.music.current.play(data.playlistId, song.audio_src, song.total_duration, 0, data.barCurrentVolume);
+        let coverImagePath = await data.music.current.get_cover(song.audio_src);
         setData(prevData => ({
             ...prevData,
             id: song.id,
             title: song.title,
             author: song.author,
+            coverImagePath: coverImagePath,
             isCollect: song.is_collect,
             isFollow: song.is_follow,
             lyrics: song.lyrics,

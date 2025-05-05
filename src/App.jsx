@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 
+import { convertFileSrc } from '@tauri-apps/api/tauri';
+
 import styles from "./App.module.scss";
 import BtnPlayer from "./components/player/btnPlayer/BtnPlayer";
 import BarPlayer from "./components/player/barPlayer/BarPlayer";
@@ -70,6 +72,12 @@ function App() {
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(data));
   }, [data]);
+
+  useEffect(() => {
+    const imageUrl = convertFileSrc(data.coverImagePath);
+    document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
+
+  }, [data.coverImagePath]);
 
   // 切换到某个歌单
   const [currentIndex, setCurrentIndex] = useState(0);

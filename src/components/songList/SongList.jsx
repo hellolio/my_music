@@ -125,7 +125,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
         </div>
   
         <div className={styles.rightButtons}>
-          <div>|</div>
+          <div className={styles.switchQrap}><span>|</span></div>
           <div key={9998} className={styles.switchButton} onClick={() => setShowDialog(true)}>
             <img src="/img/添加.ico" alt="add" />
           </div>

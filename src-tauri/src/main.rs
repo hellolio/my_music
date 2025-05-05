@@ -207,6 +207,11 @@ async fn get_lyrics(album: &str, singer: &str, song_name: &str, duration: u32, i
     }
 }
 
+#[tauri::command]
+fn get_cover_from_music(input_path: &str) -> String {
+    utils::get_cover_from_music(input_path).unwrap_or("".to_string())
+}
+
 fn main() {
     add_bin_to_path();
     let state = AppState{
@@ -230,6 +235,7 @@ fn main() {
             get_song_all,
             get_lyrics_targets,
             get_lyrics,
+            get_cover_from_music,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

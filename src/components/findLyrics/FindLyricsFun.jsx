@@ -130,15 +130,54 @@ export const get_lyrics = async (album, singer, songName, duration, id, savePath
     return lyrics;
 }
 
-export const selectSavePath = async (setSavePath, title) => {
-    const selectedPath = await open({
-        directory: true, // 让用户选择目录
-        multiple: false, // 禁止选择多个目录
-      });
-  
-      if (selectedPath) {
-        setSavePath(selectedPath +'\\'+ title+ '.lrc');
-      }
+export const selectSavePath = async (setSavePath, resultList, selectedRow, songTitle) => {
+  let selectedPath = '';
+  let title = songTitle;
+  console.log("resultList:", resultList);
+  console.log("selectedRow:", selectedRow);
 
-    console.log("selectedPath :", savePath);
+  if (resultList !== undefined && resultList.length != 0) {
+    title = resultList[selectedRow].title;
+  }
+
+  selectedPath = await open({
+    directory: true, // 让用户选择目录
+    multiple: false, // 禁止选择多个目录
+  });
+  setSavePath(selectedPath +'\\'+ title+ '.lrc');
+  console.log("selectedPath :", savePath);
+
 }
+
+
+export const searchLyrics = async (songTitle, setResultList) => {
+  if (songTitle) {
+    const results = await get_lyrics_targets(songTitle);
+    console.log("results:",results);
+    setResultList(results);
+  } else {
+    alert('请填写歌名');
+  }
+};
+
+export const saveLyrics = async (resultList, selectedRow, savePath, selected, data, setData) => {
+  const target = resultList[selectedRow];
+  console.log(target)
+  if (savePath === '') {
+    alert('请指定保存路径');
+  } else if (target === undefined){
+    alert('请先检索歌曲');
+  }
+  else {
+    console.log("savePath:",savePath);
+    const lyrics = await get_lyrics(target.album, target.artist[0], target.title, target.duration, target.id, savePath);
+    if (selected) {
+      setData(prevData => ({
+        ...prevData,
+        lyrics: lyrics,
+      }));
+      const _ = await invoke('add_lyrics', { lyricsFile: savePath, id: data.id });
+    }
+    alert('保存成功');
+  }
+};

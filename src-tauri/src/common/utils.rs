@@ -1,8 +1,10 @@
-use std::{fs::File, io::{self, BufRead}, path::Path};
+use std::{env, fs::File, io::{self, BufRead, Write}, path::{Path, PathBuf}};
 use quick_xml::{events::Event, Reader};
 use tauri::regex::Regex;
 use ffmpeg_next as ffmpeg;
-use anyhow::Result;
+use anyhow::{Context, Result};
+use lofty::{AudioFile, Probe, TaggedFileExt};
+use uuid::Uuid;
 
 use crate::modles::{db_song::Song, music_lyrics::Lyric};
 use encoding_rs::{UTF_8, GBK, SHIFT_JIS, GB18030};
@@ -204,4 +206,33 @@ pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>>{
     // metadata暂时不返回，后面再说
     Ok(lyrics)
 
+}
+
+fn get_temp_image_path() -> PathBuf {
+    let mut temp_path = env::temp_dir();
+    let filename = format!("cover_{}.jpg", Uuid::new_v4());
+    temp_path.push(filename);
+    temp_path
+}
+
+pub fn get_cover_from_music(input_path: &str) -> Result<String>{
+    let tagged_file = Probe::open(input_path)?.read()?;
+    // let mut out_image_path = PathBuf::from(input_path);
+    // out_image_path.set_extension("jpg");
+
+    let out_image_path = get_temp_image_path();
+
+    if let Some(pictures) = tagged_file.primary_tag().and_then(|tag| Some(tag.pictures())) {
+        if let Some(picture) = pictures.first() {
+            let mut file = File::create(&out_image_path)?;
+            file.write_all(picture.data())?;
+            println!("封面图已保存");
+        } else {
+            println!("未找到封面图");
+        }
+    }
+    // 封面图路径返回
+    Ok(out_image_path.to_str()
+        .context("无法将路径转换为字符串")?
+        .to_string())
 }

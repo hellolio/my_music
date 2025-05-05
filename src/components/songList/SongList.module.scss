@@ -187,6 +187,15 @@ hr {
   flex-shrink: 0;
 }
 
+.switchQrap {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .switchButton {
   width: 28px;
   height: 28px;

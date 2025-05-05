@@ -34,13 +34,16 @@ export const leftClick = async (musicListImportState, data, setData) => {
 
   const isMusic = utils.isMusic(audioMeta.audio_src);
   let playFun = undefined;
+  let coverImagePath = "";
   if (isMusic){
     playFun = data.music.current
+    coverImagePath = await playFun.get_cover(audioMeta.audio_src);
   }else {
     playFun = data.video.current
   }
 
   let song = await playFun.play(data.playlistId, audioMeta.audio_src, audioMeta.total_duration, 0, data.barCurrentVolume);
+
   if (isMusic) {
     audioMeta.lyrics = song.lyrics;
   }
@@ -49,6 +52,7 @@ export const leftClick = async (musicListImportState, data, setData) => {
     id: audioMeta.id,
     title: audioMeta.title,
     author: audioMeta.author,
+    coverImagePath: coverImagePath,
     isCollect: audioMeta.is_collect,
     isFollow: audioMeta.is_follow,
     lyrics: audioMeta.lyrics,
@@ -77,6 +81,7 @@ export const togglePlayPause = async (data, setData) => {
 
     if (data.playState===-1) {
       let song = await playFun.play(data.playlistId, data.audioSrc, data.totalDuration, 0, data.barCurrentVolume);
+      let coverImagePath = await playFun.get_cover(data.audio_src);
       if (isMusic) {
         data.lyrics = song.lyrics;
       }
@@ -85,6 +90,7 @@ export const togglePlayPause = async (data, setData) => {
         id: data.id,
         title: data.title,
         author: data.author,
+        coverImagePath: coverImagePath,
         isCollect: data.isCollect,
         isFollow: data.isFollow,
         lyrics: data.lyrics,
@@ -137,6 +143,7 @@ export const rightClick = async (musicListImportState, data, setData) => {
 
   const isMusic = utils.isMusic(audioMeta.audio_src);
   let playFun = undefined;
+  let coverImagePath = "";
   if (isMusic){
     playFun = data.music.current
   }else {
@@ -144,7 +151,9 @@ export const rightClick = async (musicListImportState, data, setData) => {
   }
 
   let song = await playFun.play(data.playlistId, audioMeta.audio_src, audioMeta.total_duration, 0, data.barCurrentVolume);
+  
   if (isMusic) {
+    coverImagePath = await playFun.get_cover(audioMeta.audio_src);
     audioMeta.lyrics = song.lyrics;
   }
   setData(prevData => ({
@@ -152,6 +161,7 @@ export const rightClick = async (musicListImportState, data, setData) => {
     id: audioMeta.id,
     title: audioMeta.title,
     author: audioMeta.author,
+    coverImagePath: coverImagePath,
     isCollect: audioMeta.is_collect,
     isFollow: audioMeta.is_follow,
     lyrics: audioMeta.lyrics,
