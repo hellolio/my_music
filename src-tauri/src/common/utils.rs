@@ -200,8 +200,6 @@ pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>>{
         }
         buf.clear();
     }
-    println!("歌词测试{:?}", lyrics);
-
 
     // metadata暂时不返回，后面再说
     Ok(lyrics)

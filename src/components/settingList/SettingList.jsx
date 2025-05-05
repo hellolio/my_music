@@ -29,12 +29,12 @@ export const SettingList = ({visible, onClose, settinglistRef, data, setData}) =
         ref={panelRef}
         >
             <ul>
-                <li onClick={() => setFindLyrics(!findLyrics)}>查找歌词</li>
-                <li>格式转换</li>
-                <li>桌面模式</li>
-                <li>记住桌面位置</li>
-                <li>皮肤</li>
-                <li>帮助</li>
+                <li className={styles.row} onClick={() => setFindLyrics(!findLyrics)}>查找歌词</li>
+                <li className={styles.row}>格式转换</li>
+                <li className={styles.row}>桌面模式</li>
+                <li className={styles.row}>记住桌面位置</li>
+                <li className={styles.row}>皮肤</li>
+                <li className={styles.row}>帮助</li>
             </ul>
             {/* {findLyrics &&  */}
               <FindLyrics

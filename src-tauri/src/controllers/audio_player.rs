@@ -32,27 +32,7 @@ impl AudioPlayer {
         audio_player
     }
     pub fn music_play(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32) {
-        println!("aaaaaaaa开始播放a{file_path}");
         let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
-        // match &self.tx {
-        //     Some(tx) => {
-        //         println!("尝试关掉播放器重新打开");
-        //         loop {
-        //             let ok = tx.send(Command::Stop);
-        //             match ok {
-        //                 std::result::Result::Ok(()) => {}
-        //                 _ => {
-        //                     let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
-        //                     println!("重新打开一个播放线程");
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //     }
-        //     None => {
-        //         let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
-        //     }
-        // }
     }
     pub fn create_music_player(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32)-> Result<(), Error> {
         ffmpeg::init()?;
@@ -77,27 +57,25 @@ impl AudioPlayer {
                 .decoder()
                 .audio()
                 ?;
-            let mut resampler = ffmpeg::software::resampling::Context::get(
-                decoder.format(),       // 源格式
-                decoder.channel_layout(),
-                decoder.rate(),
-                ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed), // 目标格式: i16
-                decoder.channel_layout(),
-                decoder.rate(),
-            )?;
-
+                let mut resampler = ffmpeg::software::resampling::Context::get(
+                    decoder.format(),       // 源格式
+                    decoder.channel_layout(),
+                    decoder.rate(),
+                    ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed), // 目标格式: i16
+                    decoder.channel_layout(),
+                    decoder.rate(),
+                )?;
+            
             if skip_secs != 0 {
                 let skip_secs_tmp = skip_secs as i64 * 1_000_000;
                 ictx.seek(skip_secs_tmp, 0..skip_secs_tmp)?;
             }
-
 
             let (_stream, stream_handle) = OutputStream::try_default()?;
             let sink = Arc::new(Mutex::new(Sink::try_new(&stream_handle)?));
             let mut current_ts: u64 = 0;
             let sleep_time = 10;
             let mut msg = Some(Command::Play);
-            let mut is_playing = true;
 
             sink.lock().unwrap().set_volume(volume*2.0);
 
@@ -155,11 +133,6 @@ impl AudioPlayer {
                         continue;
                     }
 
-                    // // 如果 packet 有有效的 pts，就用 pts 作为当前播放时间
-                    // if let Some(pts) = packet.pts() {
-                    //     current_ts = (pts as u64) / 1000; // ffmpeg pts 通常是微秒，要除以 1000 转成毫秒
-                    // }
-
                     if let Err(e) = decoder.send_packet(&packet) {
                         println!("发送 packet 给解码器失败: {e}");
                         continue;
@@ -169,6 +142,36 @@ impl AudioPlayer {
 
                     while decoder.receive_frame(&mut decoded).is_ok() {
                         let mut converted = ffmpeg::frame::Audio::empty();
+                        // 处理 F32(Planar)
+                        if decoded.format() == ffmpeg::format::Sample::F32(ffmpeg::format::sample::Type::Planar) {
+                            let channels = decoded.channels() as usize;
+                            let samples_per_channel = decoded.samples();
+                        
+                            let mut interleaved = Vec::with_capacity(channels * samples_per_channel);
+                        
+                            for i in 0..samples_per_channel {
+                                for ch in 0..channels {
+                                    let samples = decoded.plane::<f32>(ch);
+                                    if i >= samples.len() {
+                                        eprintln!("Channel {} missing sample {}", ch, i);
+                                        interleaved.push(0); // 填充静音
+                                        continue;
+                                    }
+                                    let s = samples[i];
+                                    let s_i16 = (s * i16::MAX as f32).clamp(i16::MIN as f32, i16::MAX as f32) as i16;
+                                    interleaved.push(s_i16);
+                                }
+                            }
+                        
+                            let source = rodio::buffer::SamplesBuffer::new(
+                                channels as u16,
+                                decoded.rate() as u32,
+                                interleaved,
+                            );
+                            sink.lock().unwrap().append(source);
+                            continue;
+                        }
+
                         // 检查是否需要重采样
                         if decoder.format() != ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed) {
                             resampler.run(&decoded, &mut converted)?;
@@ -198,28 +201,11 @@ impl AudioPlayer {
                     window.emit("player_progress", -1).unwrap();
                     break;
                 }
-                // if duration*1000 - current_ts >= 20 {
-                //     if current_ts % 1000 == 0 {
-                //         window.emit("player_progress", current_ts)?;
-                //         is_playing = true;
-                //     }
-                // } else {
-                //     if is_playing {
-                //         sink.lock().unwrap().pause();
-                //         msg = Some(Command::Pause);
-                //         is_playing = false;
-                //         thread::sleep(Duration::from_millis(500));
-                //         println!("播放结束");
-                //         window.emit("player_progress", duration*1000)?;
-                //         continue;
-                //     }
-                // }
                 if current_ts % 1000 == 0 {
                     window.emit("player_progress", current_ts)?;
                     // is_playing = true;
                 }
                 thread::sleep(Duration::from_millis(sleep_time as u64));
-
             }
             println!("播放线程已经关掉");
             Ok(())

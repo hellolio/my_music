@@ -92,6 +92,7 @@ function App() {
   return (
     <div className={styles.myPlayer}>
       <div
+        className={styles.setting}
         onClick={() => setSetting(!setting)}
         ref={settinglistRef}
       >

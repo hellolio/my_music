@@ -38,29 +38,6 @@
     margin-bottom: 10px;
   }
   
-  /* 输入框样式 */
-  .inputField {
-    width: 60%;
-    min-width: 100px;
-    padding: 5px 8px;
-    display: block;
-    margin: 5px; /* 上为0，下为16px，左右auto */
-    border: 1px solid #444744;
-    background-color: #393535c8;
-    color: #ffffff;
-    border-radius: 6px;
-    // font-size: 15px;
-    text-align: center; 
-  }
-
-  
-  .inputField:focus {
-    outline: none;
-    border-color: #58b7ce; /* 聚焦时绿色边框 */
-    box-shadow: 0 0 4px #499cb093; /* 绿色光晕 */
-  }
-
-
   /* 按钮容器样式 */
   .buttonRow {
     display: flex;
@@ -94,29 +71,6 @@
     flex-shrink: 0; /* 保证按钮不会被压缩 */
   }
 
-  
-  /* 按钮样式 */
-  .btn {
-    padding: 3px 5px;
-    background-color: #58b7ce;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 5px;
-  }
-    
-  
-  .btn:hover {
-    background-color: #9c8f8f;
-  }
- .btnCancle {
-    color: #000;
-    background-color: #e0e0e0;
-  }
-  .btnCancle:hover {
-    background-color: #9c8f8f;
-  }
   .resultListWrapper {
     width: 100%;
     border-radius: 4px;
@@ -137,7 +91,7 @@
     }
   
     th {
-      background-color: rgba(82, 78, 78);
+      // background-color: rgba(82, 78, 78);
       color: theme.$font-color-blue;
     }
   }

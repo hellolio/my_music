@@ -20,7 +20,7 @@ function TitlePlayer(props) {
             }
           </p>
 
-          {data.author 
+          {(data.author && data.author != "Unknown")
             && <p className={styles.p}><span>{data.author}</span>
               <span 
                 onClick={() => followClick(data, setData)} 

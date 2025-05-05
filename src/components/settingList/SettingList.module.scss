@@ -1,3 +1,5 @@
+@use '@/base/theme-config.scss' as theme;
+
 .settingList {
     position: fixed;
     top: 0px; /* 距离顶部 100px */
@@ -22,4 +24,13 @@
 .settingList ul {
     padding-left: 25px; /* 给出一点左边空隙，留给小圆点 */
     list-style-type: disc; /* 确保使用小圆点 */
+}
+
+.row:hover {
+    border-radius: 5px;
+    background-color: theme.$hover-background-color;
+    color: theme.$hover-font-color;
+}
+.row:active {
+    transform: scale(0.95); /* 点击时缩小 */
 }

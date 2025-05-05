@@ -7,7 +7,8 @@ export default function ShowMsg({showMsgParam, inputValue, setInputValue, showDi
   
   const handleCancle = () => {
     setFadeOut(true);
-    setTimeout(() => setShowDialog(false), 500);
+    setShowDialog(false);
+    // setTimeout(() => setShowDialog(false), 200);
   }
 
   return (
