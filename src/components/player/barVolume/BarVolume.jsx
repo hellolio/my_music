@@ -1,6 +1,7 @@
 import * as utils from "@/common/utils"
 import styles from "./BarVolume.module.scss"
 import { useState, useRef } from "react";
+import MyButton from "@/components/common/button/MyButton";
 
 import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp, upVolume, downVolume} from "./BarVolumeFun/"
 
@@ -13,10 +14,11 @@ function BarPlayer(props) {
     const volumeBarRef = useRef(null);
     return (
       <div className={`${styles.container} ${styles.bar} ${styles.volume}`}>
-        <img
-          className={styles.leftBarVolume}
-          src="/img/最小音量.ico"
-          onClick={() => downVolume(data.barCurrentVolume, setData)}
+        <MyButton 
+          callFun={() => downVolume(data.barCurrentVolume, setData)}
+          msg={'🔈'}
+          isConfirm={true}
+          style={styles.setting}
         />
         <div
           className={styles.centerBlockVolume}
@@ -93,10 +95,11 @@ function BarPlayer(props) {
             ></div>
           </div>
         </div>
-        <img
-          className={styles.rightBarVolume}
-          src="/img/最大音量.ico"
-          onClick={() => upVolume(data.barCurrentVolume, setData)}
+        <MyButton 
+          callFun={() => upVolume(data.barCurrentVolume, setData)}
+          msg={'🔊'}
+          isConfirm={true}
+          style={styles.setting}
         />
       </div>
     );

@@ -2,6 +2,7 @@ import * as utils from "../../../common/utils"
 import styles from "./BarPlayer.module.scss"
 import { useState, useEffect, useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
+import MyButton from "@/components/common/button/MyButton";
 
 import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp} from "./BarPlayerFun"
 
@@ -69,9 +70,8 @@ function BarPlayer(props) {
     }, [data, AB]);
     return (
       <div className={`${styles.containerBarProgress}`}>
-        <div
-          className={`${styles.leftBarProgress} ${AB.isAB >= 0 ? styles.leftBarProgressA : ''}`}
-          onDoubleClick={() => {
+          <MyButton 
+          callDoubleFun={() => {
             if (AB.isAB === -1) {
               setAB(prev => ({
                 ...prev,
@@ -85,9 +85,10 @@ function BarPlayer(props) {
               }));
             }
           }}
-        >
-          {`${AB.isAB >= 0 ? 'A:' + utils.formatTime(AB.A) : utils.formatTime(data.barCurrentProgressSec)}`}
-        </div>
+          msg={`${AB.isAB >= 0 ? 'A:' + utils.formatTime(AB.A) : utils.formatTime(data.barCurrentProgressSec)}`}
+          isConfirm={true}
+          style={`${styles.leftBarProgress} ${AB.isAB >= 0 ? styles.leftBarProgressA : ''}`}
+        />
         <div
           className={styles.centerBlockProgress}
           ref={progressBarRef}
@@ -117,25 +118,25 @@ function BarPlayer(props) {
           </div>
         </div>
     
-        <div
-          className={`${styles.rightBarProgress} ${AB.isAB === 1 ? styles.rightBarProgressB : ''}`}
-          onDoubleClick={() => {
-            if (AB.isAB === 0 && AB.A < data.barCurrentProgressSec) {
-              setAB(prev => ({
-                ...prev,
-                isAB: 1,
-                B: data.barCurrentProgressSec,
-              }));
-            } else {
-              setAB(prev => ({
-                ...prev,
-                isAB: -1,
-              }));
-            }
-          }}
-        >
-          {`${AB.isAB >= 1 ? 'B:' + utils.formatTime(AB.B) : utils.formatTime(data.totalDuration)}`}
-        </div>
+              <MyButton 
+                callDoubleFun={() => {
+                  if (AB.isAB === 0 && AB.A < data.barCurrentProgressSec) {
+                    setAB(prev => ({
+                      ...prev,
+                      isAB: 1,
+                      B: data.barCurrentProgressSec,
+                    }));
+                  } else {
+                    setAB(prev => ({
+                      ...prev,
+                      isAB: -1,
+                    }));
+                  }
+                }}
+                msg={`${AB.isAB >= 1 ? 'B:' + utils.formatTime(AB.B) : utils.formatTime(data.totalDuration)}`}
+                isConfirm={true}
+                style={`${styles.rightBarProgress} ${AB.isAB === 1 ? styles.rightBarProgressB : ''}`}
+              />
       </div>
     );
     

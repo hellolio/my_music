@@ -22,13 +22,10 @@ export const isMusic = (filename) => {
     const ext = filename?.split('.').pop()?.toLowerCase() || '';
     const isAudioFile = audioExtensions.includes(ext);
     if (isAudioFile) {
-        console.log('这是音频文件');
         return true;
     } else if (videoExtensions.includes(ext)) {
-        console.log('这是视频文件');
         return false;
     } else {
-        console.log('未知类型');
         return true;
     }
 }

@@ -1,20 +1,20 @@
 @use '@/base/theme-config.scss' as theme;
-
 /* 设置应用的所有容器背景为黑色 */
 html, body, #app {
   height: 100%;
-  // background-size: cover;  /* 使背景图像覆盖整个块 */
-  background-color: theme.$body-background-color;
-  color: theme.$font-color-white;  /* 设置文本为白色，确保在黑色背景下可读 */
   margin: 0;
   padding: 0;
+  background-color: theme.$body-background-color;
+  color: theme.$font-color-white; /* 设置文本为白色，确保在黑色背景下可读 */
   overflow-x: hidden;
+  position: relative;
 }
 
 body {
+  height: 100vh; /* 让页面充满整个视口 */
   position: relative;
   overflow: hidden; /* 防止滚动 */
-  height: 100vh; /* 让页面充满整个视口 */
+  background-color: theme.$body-background-color; /* 确保背景一致 */
 }
 
 body::after {
@@ -30,15 +30,12 @@ body::after {
   z-index: -1; /* 放在所有内容后面 */
 }
 
-
 * {
-	margin: 0px;
-	padding: 0px;
+  margin: 0px;
+  padding: 0px;
   user-select: none;
   font-family: theme.$font-family;
-  color: theme.$font-color-white;
-    /* overflow-x: hidden; */
-  /* overflow: hidden; */
+  // color: theme.$font-color-white;
 }
 
 .myPlayer {
@@ -102,5 +99,17 @@ body::after {
 
 
 .setting {
-  width: 100px;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.window {
+  background-color:rgba(0, 0, 0, 0);
+}
+
+.windowControls {
+  display: flex;              /* 启用 Flexbox 布局 */
+  justify-content: flex-start; /* 子元素从左到右排列 */
+  gap: 20px;                  /* 子元素间距设置为 50px */
 }

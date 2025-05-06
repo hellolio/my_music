@@ -25,10 +25,8 @@ export const leftClick = async (musicListImportState, data, setData) => {
   var audioMeta = musicListImportState[index];
 
   if (data.isMusic) {
-    console.log("开始播放之前停止音乐",data);
     await data.music.current.stop()
   }else {
-    console.log("开始播放之前停止视频",data);
     await data.video.current.stop()
   }
 
@@ -77,6 +75,7 @@ export const togglePlayPause = async (data, setData) => {
     playFun = data.video.current
   }
 
+  coverImagePath = await playFun.get_cover(data.audioSrc);
   // 当前没有播放
   if (!data.isPlaying){
 
@@ -85,7 +84,6 @@ export const togglePlayPause = async (data, setData) => {
 
       if (isMusic) {
         data.lyrics = song.lyrics;
-        coverImagePath = await playFun.get_cover(audioMeta.audio_src);
       }
       setData(prevData => ({
         ...prevData,
@@ -121,8 +119,6 @@ export const togglePlayPause = async (data, setData) => {
 
 export const rightClick = async (musicListImportState, data, setData) => {
   let index = musicListImportState.findIndex((song) => song.id === data.id);
-  // const result = findMinMaxId(musicListImportState);
-  console.log("ddddddddddddddddmusicListindex:",index)
   if (index >= musicListImportState.length-1){
     index = 0;
   }else if (index === -1){
@@ -134,48 +130,45 @@ export const rightClick = async (musicListImportState, data, setData) => {
   var audioMeta = musicListImportState[index];
   
   if (data.isMusic) {
-    console.log("开始播放之前停止音乐",data);
     await data.music.current.stop()
   }else {
-    console.log("开始播放之前停止视频",data);
     await data.video.current.stop()
   }
-  console.log("ddddddddddddddddmusicListImportState:",musicListImportState)
-  console.log("dddddddddddddddd:",audioMeta)
-
-  const isMusic = utils.isMusic(audioMeta.audio_src);
-  let playFun = undefined;
-  let coverImagePath = "";
-  if (isMusic){
-    playFun = data.music.current
-    coverImagePath = await playFun.get_cover(audioMeta.audio_src);
-  }else {
-    playFun = data.video.current
-  }
-
-  let song = await playFun.play(data.playlistId, audioMeta.audio_src, audioMeta.total_duration, 0, data.barCurrentVolume);
+  if (audioMeta != undefined) {
+    const isMusic = utils.isMusic(audioMeta.audio_src);
+    let playFun = undefined;
+    let coverImagePath = "";
+    if (isMusic){
+      playFun = data.music.current
+      coverImagePath = await playFun.get_cover(audioMeta.audio_src);
+    }else {
+      playFun = data.video.current
+    }
   
-  if (isMusic) {
-    audioMeta.lyrics = song.lyrics;
+    let song = await playFun.play(data.playlistId, audioMeta.audio_src, audioMeta.total_duration, 0, data.barCurrentVolume);
+    
+    if (isMusic) {
+      audioMeta.lyrics = song.lyrics;
+    }
+  
+    setData(prevData => ({
+      ...prevData,
+      id: audioMeta.id,
+      title: audioMeta.title,
+      author: audioMeta.author,
+      coverImagePath: coverImagePath,
+      isCollect: audioMeta.is_collect,
+      isFollow: audioMeta.is_follow,
+      lyrics: audioMeta.lyrics,
+      lyricsPath: audioMeta.lyrics_path,
+      audioSrc: audioMeta.audio_src,
+      totalDuration: audioMeta.total_duration,
+      barCurrentProgressSec: 0,
+      isPlaying: true,
+      playerAlive: true,
+      isMusic: isMusic
+    }));
   }
-
-  setData(prevData => ({
-    ...prevData,
-    id: audioMeta.id,
-    title: audioMeta.title,
-    author: audioMeta.author,
-    coverImagePath: coverImagePath,
-    isCollect: audioMeta.is_collect,
-    isFollow: audioMeta.is_follow,
-    lyrics: audioMeta.lyrics,
-    lyricsPath: audioMeta.lyrics_path,
-    audioSrc: audioMeta.audio_src,
-    totalDuration: audioMeta.total_duration,
-    barCurrentProgressSec: 0,
-    isPlaying: true,
-    playerAlive: true,
-    isMusic: isMusic
-  }));
 
 };
 

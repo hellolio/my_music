@@ -3,14 +3,14 @@
 
 use std::{env, fs, sync::{Arc, Mutex}};
 
-use tauri::{State, Window};
+use tauri::{Manager, PhysicalPosition, PhysicalSize, State, Window, WindowEvent};
 use rusqlite::Connection;
 
 
 
 use controllers::{audio_player::AudioPlayer, get_lyrics};
 use modles::{db_song::Song, music_lyrics::Lyric, music_play_list_song::PlaylistSong, songs_for_lyrics::SongsForLyrics};
-use common::utils;
+use common::{utils, window::{self, load_window_state}};
 use database::db;
 
 mod controllers;
@@ -219,6 +219,51 @@ fn main() {
         player: Arc::new(Mutex::new(AudioPlayer::new()))
     };
     tauri::Builder::default()
+        .setup(|app| {
+            let window = app.get_window("main").unwrap();
+
+            if let Some(window_state) = window::load_window_state(&app.app_handle()) {
+                if window_state.selected_remeber_size {
+                    window
+                        .set_position(PhysicalPosition {
+                            x: window_state.window_x,
+                            y: window_state.window_y,
+                        })
+                        .ok();
+                    window
+                        .set_size(PhysicalSize {
+                            width: window_state.window_width,
+                            height: window_state.window_height,
+                        })
+                        .ok();
+                }
+            }
+            Ok(())
+        })
+        
+        .on_window_event(|event| {
+            let window = event.window();
+            match event.event() {
+                WindowEvent::Resized(_) | WindowEvent::Moved(_) => {
+                    let position = window.outer_position().unwrap_or_default();
+                    let size = window.outer_size().unwrap_or_default();
+                    let mut selected_remeber_size = true;
+                    if let Some(window_state_old) = window::load_window_state(&window.app_handle().app_handle()) {
+                        selected_remeber_size = window_state_old.selected_remeber_size;
+                    };
+                    let window_state = window::WindowState {
+                        selected_remeber_size,
+                        window_x: position.x,
+                        window_y: position.y,
+                        window_width: size.width,
+                        window_height: size.height,
+                    };
+                    window::save_window_state(&window.app_handle(),&window_state);
+            }
+                _ => {}
+            }
+        })
+
         .manage(Arc::new(state))
         .invoke_handler(tauri::generate_handler![
             play_music,
@@ -237,6 +282,7 @@ fn main() {
             get_lyrics,
             get_cover_from_music,
         ])
+
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

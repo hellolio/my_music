@@ -14,8 +14,6 @@ export const updateProgress = (e, progressBarRef, data, setData) =>  {
 
     // 计算百分比位置
     let newProgress = Math.round((offsetX / progressBarWidth) * 100);
-    // console.log("计算百分比位置:", newProgress);
-    // console.log("进度条的秒：", Math.round((newProgress * data.totalDuration)/100));
     let barCurrentProgressSec = Math.round((newProgress * data.totalDuration)/100);
 
     // 必须比最长时间少一点，否则播放会结束，无法重新控制进度（只能重新启动一个线程，但是太慢了）

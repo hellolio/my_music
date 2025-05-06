@@ -54,6 +54,7 @@ export default function ChangeTheme({changeTheme, setChangeTheme, data, setData,
                 >
                 <input
                   type="checkbox"
+                  readOnly
                   checked={selected}
                   // onChange={() => setSelected(!selected)}
                 />

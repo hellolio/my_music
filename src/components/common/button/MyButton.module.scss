@@ -1,12 +1,15 @@
 @use '@/base/theme-config.scss' as theme;
 
 .myButton {
-  padding: 3px 5px;
-  background-color: #58b7ce;
+  display: flex;              /* 使用 flexbox 布局 */
+  justify-content: center;    /* 水平居中 */
+  align-items: center;        /* 垂直居中 */
+  padding: 1px 5px;
+  color: theme.$button-confirm-color;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin: 5px;
+  margin: 1px 5px 1px 5px;
   }
   
   .confirm {
@@ -16,6 +19,7 @@
   .confirm:hover {
     background-color: theme.$button-confirm-background-color-hover;
     color: theme.$button-confirm-color;
+    transform: scale(1.1);
   }
 
   .confirm:active {
@@ -29,6 +33,7 @@
   .cancle:hover {
     background-color: theme.$button-cancle-background-color-hover;
     color: theme.$button-confirm-color;
+    transform: scale(1.1);
   }
   
   .cancle:active {

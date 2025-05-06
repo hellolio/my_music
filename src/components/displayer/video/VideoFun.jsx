@@ -6,7 +6,6 @@ import { convertFileSrc } from '@tauri-apps/api/tauri';
 export const handleChooseVideo = async (setVideoSrc, data, setData) => {
     // 获取当前文件的状态
     let selectedFile = await open({ multiple: false });
-    console.log("selectedFile :",selectedFile);
     setData(prevData => ({
         ...prevData,
         audioSrc: selectedFile,

@@ -8,10 +8,19 @@
   },
   "package": {
     "productName": "my-music",
-    "version": "0.3.2"
+    "version": "0.4.1"
   },
   "tauri": {
     "allowlist": {
+      "window": {
+        "maximize": true,
+        "unmaximize": true,
+        "minimize": true,
+        "close": true,
+        "setSize": true,
+        "setPosition": true,
+        "startDragging": true
+      },
       "all": false,
       "shell": {
         "all": false,
@@ -31,16 +40,17 @@
       },
       "fs": {
         "readFile": true,
-        "writeFile": true
+        "writeFile": true,
+        "scope": ["**"]
       }
     },
     "windows": [
       {
         "title": "my-music",
-        "width": 300,
-        "height": 600,
         "minWidth": 200,  
-        "minHeight": 400
+        "minHeight": 400,
+        "decorations": false,
+        "transparent": true
       }
     ],
     "security": {

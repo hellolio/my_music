@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from './SongList.module.scss';
 import * as utils from "../../common/utils"
 import ShowMsg from '../showMsg/ShowMsg';
+import MyButton from "@/components/common/button/MyButton";
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, playMusicFromList, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
 import { createPortal } from 'react-dom';
@@ -75,7 +76,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                     onClick={(e) => handleCheckboxChange(e, song, selectedItems, setSelectedItems)}
                     onDoubleClick={() => playMusicFromList(song, data, setData)}
                   >
-                    <span className={styles.index}>{index + 1}.</span>
+                    <span className={styles.index}>{index + 1}</span>
                     <span className={styles.title}>{song.title}</span>
                     <span className={styles.duration}>{utils.formatTime(song.total_duration)}</span>
                   </li>
@@ -87,15 +88,24 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
       </div>
   
       <div className={styles.addDelete}>
-        <button className={styles.allSonglist} onClick={() => handleAllCheckboxChange(allCheck, setAllCheck, songs, setSelectedItems)}>
-          {allCheck ? '全选歌曲' : '取消全选'}
-        </button>
-        <button className={styles.addSonglist} onClick={() => importMusic(songs, setSongs, data.playlistId, setUpdatePlayListFlg)}>
-          添加歌曲
-        </button>
-        <button className={styles.deleteSonglist} onClick={() => deleteMusic(setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg)}>
-          删除歌曲
-        </button>
+        <MyButton 
+          callFun={() => handleAllCheckboxChange(allCheck, setAllCheck, songs, setSelectedItems)}
+          msg={allCheck ? '全选' : '取消'}
+          isConfirm={true}
+          style={styles.setting}
+        />
+        <MyButton 
+            callFun={() => importMusic(songs, setSongs, data.playlistId, setUpdatePlayListFlg)}
+            msg={'添加'}
+            isConfirm={true}
+            style={styles.setting}
+          />
+        <MyButton 
+            callFun={() => deleteMusic(setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg)}
+            msg={'删除'}
+            isConfirm={true}
+            style={styles.setting}
+          />
       </div>
   
       <hr />
@@ -105,20 +115,24 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
           <div className={styles.leftButtons}>
             {allSongList.map((listObj, index) => {
               return (
-                <button
+                <div
                   key={index}
                   id={`songlist-${index}`}
-                  className={listObj.id === data.playlistId ? `${styles.switchSonglist} ${styles.active}` : styles.switchSonglist}
-                  onClick={() => {
-                    switchTo(index, listObj.id, setCurrentIndex, setData, setSongs, allSongList);
-                    document.getElementById(`songlist-${index}`).scrollIntoView({
-                      behavior: 'smooth',
-                      block: 'nearest',
-                    });
-                  }}
                 >
-                  {listObj.name}
-                </button>
+                  <MyButton 
+                    callFun={() => {
+                      switchTo(index, listObj.id, setCurrentIndex, setData, setSongs, allSongList);
+                      document.getElementById(`songlist-${index}`).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest',
+                      });
+                    }}
+                    msg={listObj.name}
+                    isConfirm={true}
+                    style={listObj.id === data.playlistId ? `${styles.switchSonglist} ${styles.active}` : ''}
+                />
+                </div>
+                
               );
             })}
           </div>
@@ -126,12 +140,18 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
   
         <div className={styles.rightButtons}>
           <div className={styles.switchQrap}><span>|</span></div>
-          <div key={9998} className={styles.switchButton} onClick={() => setShowDialog(true)}>
-            <img src="/img/添加.ico" alt="add" />
-          </div>
-          <div key={9999} className={styles.switchButton} onClick={() => setShowConfirmDialog(true)}>
-            <img src="/img/删除.ico" alt="del" />
-          </div>
+          <MyButton 
+            callFun={() => setShowDialog(true)}
+            msg={'+'}
+            isConfirm={true}
+            style={styles.setting}
+          />
+          <MyButton 
+            callFun={() => setShowConfirmDialog(true)}
+            msg={'-'}
+            isConfirm={true}
+            style={styles.setting}
+          />
         </div>
   
         {showDialog && (

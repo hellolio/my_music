@@ -48,9 +48,9 @@
   display: flex;
   align-items: center;
   padding: 3px 1px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(78, 77, 77, 0.388);
   text-align: left;
-  color: #dbcdcd;
+  // color: #dbcdcd;
 }
 
 .songPanel li span  {
@@ -91,7 +91,7 @@
   cursor: pointer;
   transition: background-color 0.3s;
   background-color: rgba(61, 66, 61, 0.166);
-  color: #dbcdcd;
+  // color: #dbcdcd;
 }
 
 img {
@@ -168,18 +168,18 @@ hr {
   width: fit-content;
 }
 
-.switchSonglist {
-  flex-shrink: 0;
-  padding: 3px 6px;
-  white-space: nowrap;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
-  background-color: rgba(61, 66, 61, 0.166);
-  color: #dbcdcd;
-}
+// .switchSonglist {
+//   flex-shrink: 0;
+//   padding: 3px 6px;
+//   white-space: nowrap;
+//   border-radius: 6px;
+//   border: none;
+//   cursor: pointer;
+//   font-size: 14px;
+//   transition: background-color 0.3s;
+//   background-color: rgba(61, 66, 61, 0.166);
+//   // color: #dbcdcd;
+// }
 
 .rightButtons {
   display: flex;
@@ -212,11 +212,9 @@ hr {
 }
 
 .switchSonglist.active {
-  animation: pop 0.3s ease;
-  font-size: 15px;
-  background-color: rgba(38, 41, 41, 0.608);
+  background-color: theme.$selected-background-color;
   font-weight: bold;
-  color: #58b7ce;
+  color: theme.$selected-font-color;
 }
 
 .songList.active {
@@ -226,7 +224,7 @@ hr {
   color: theme.$selected-font-color;
 }
 
-.songList.isPaying {
+.songList.isPlaying {
   font-size: 15px;
   font-weight: bold;
   color: #ff5500;
@@ -237,8 +235,10 @@ hr {
 .allSonglist:hover,
 .switchSonglist:hover,
 .songPanel li.songList:hover {
-  background-color: theme.$hover-background-color;
+  // background-color: theme.$hover-background-color;
   color: theme.$hover-font-color;
+  border-radius: 5px;
+  transform: theme.$hover-transform;
 }
 
 .switchButton:hover {
@@ -249,12 +249,12 @@ hr {
   transform: scale(0.99);
 }
 
-.addSonglist:active,
-.deleteSonglist:active,
-.allSonglist:active,
-.switchSonglist:active {
-  animation: pop 0.3s ease;
-}
+// .addSonglist:active,
+// .deleteSonglist:active,
+// .allSonglist:active,
+// .switchSonglist:active {
+//   animation: pop 0.3s ease;
+// }
 
 .songPanel li.songList:active {
   transform: scale(0.99);

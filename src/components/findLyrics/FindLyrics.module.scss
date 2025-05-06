@@ -113,9 +113,10 @@
   }
   
   .resultRow:hover {
-    background-color: theme.$hover-background-color;
+    // background-color: theme.$hover-background-color;
     color: theme.$hover-font-color;
     cursor: pointer;
+    transform: theme.$hover-transform;
   }
 
   .selectedRow{

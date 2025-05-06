@@ -4,12 +4,8 @@ import { open } from "@tauri-apps/api/dialog";
 import * as utils from "../../../common/utils"
 
 export const importLyrics = async () =>{
-  console.log("开始导入歌曲");
-
   // 获取当前文件的状态
   let selectedFile = await open({ multiple: false });
-  console.log("selectedFile :", selectedFile);
-
   return selectedFile;
 }
 
@@ -36,8 +32,6 @@ export const findIndex =(data) => {
 }
 
 export const handleLyricClick = (line, index, data, setData) => {
-  console.log("line:", line);
-  console.log("index:", index);
   const isMusic = utils.isMusic(data.audioSrc);
   let playFun = undefined;
   if (isMusic){

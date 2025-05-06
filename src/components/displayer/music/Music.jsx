@@ -11,7 +11,6 @@ const Music = forwardRef((props, ref) => {
 
     const get_cover = async (inputPath) => {
       const cover_image_path = await invoke('get_cover_from_music', { inputPath: inputPath });
-      console.log("cover_image_path:", cover_image_path);
       return cover_image_path;
     };
 
@@ -19,7 +18,6 @@ const Music = forwardRef((props, ref) => {
       // await invoke('stop_music');
       let song = await invoke('play_music', { id: id, filePath: filePath, duration: duration, skipSecs: skipSecs, volume: volume/100 });
       
-      console.log("songddaaaaaaaaaaaa:", song);
       return song;
   };
   

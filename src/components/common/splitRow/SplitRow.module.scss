@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .left * {
+    display: flex;
+    flex-wrap: nowrap;           /* 不允许换行 */
+    justify-content: flex-start; /* 靠左排列 */
+    align-items: center;
+  }
+  
+  .right * {
+    display: flex;
+    flex-wrap: nowrap;           /* 不允许换行 */
+    justify-content: flex-end; /* 靠左排列 */
+    align-items: center;
+  }

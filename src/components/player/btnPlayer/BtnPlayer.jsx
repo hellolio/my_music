@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import styles from "./BtnPlayer.module.scss";
 
 import SongList from "../../songList/SongList";
+import MyButton from "@/components/common/button/MyButton";
 
 import {leftClick, togglePlayPause, rightClick, cycleClick, handleTogglePanel} from "./BtnPlayerFun"
 
@@ -13,7 +14,7 @@ function BtnPlayer(props) {
   const [musicListAllState, setMusicListAllState] = useState([]);
 
   useEffect(() => {
-      if (data.playState===-1) {
+    if (data.playState===-1) {
       if (data.isSingleLoop) {
         togglePlayPause(data, setData);
       } else {
@@ -31,19 +32,40 @@ function BtnPlayer(props) {
     setShowPanel(false);
   };
   return (
-    <div className={styles.containerBtnPlayer}>
-      <img className={styles.cycleBtnPlayer}
-        src={data.isSingleLoop ? "/img/单曲循环.ico" : "/img/列表循环.ico"}
-        alt="cycle" onClick={() => cycleClick(data, setData)} />
-      <img className={styles.leftBtnPlayer} src="/img/上一曲.ico" alt="Add" onClick={() => leftClick(musicListAllState, data, setData)} />
-      <img 
-        className={styles.centerBtnPlayer}
-        src={data.isPlaying ? "/img/暂停.ico" : "/img/播放.ico"} 
-        alt="Change"
-        onClick={() => togglePlayPause(data, setData)} 
+    <div 
+      className={styles.containerBtnPlayer}
+      ref={listBtnPlayerRef}
+    >
+      <MyButton 
+        callFun={() => cycleClick(data, setData)}
+        msg={data.isSingleLoop ? "①" : "↻"}
+        isConfirm={true}
+        style={styles.setting}
       />
-      <img className={styles.rightBtnPlayer} src="/img/下一曲.ico" alt="Reduce" onClick={() => rightClick(musicListAllState, data, setData)} />
-      <img className={styles.listBtnPlayer} ref={listBtnPlayerRef} src="/img/播放列表.ico" alt="Reduce" onClick={() => handleTogglePanel(setShowPanel)} />
+      <MyButton 
+        callFun={() => leftClick(musicListAllState, data, setData)}
+        msg={'<<'}
+        isConfirm={true}
+        style={styles.setting}
+      />
+      <MyButton 
+        callFun={() => togglePlayPause(data, setData)} 
+        msg={data.isPlaying ? '||': '▶'}
+        isConfirm={true}
+        style={styles.setting}
+      />
+      <MyButton 
+        callFun={() => rightClick(musicListAllState, data, setData)}
+        msg={'>>'}
+        isConfirm={true}
+        style={styles.setting}
+      />
+      <MyButton 
+        callFun={() => handleTogglePanel(setShowPanel)}
+        msg={'≡'}
+        isConfirm={true}
+        style={styles.setting}
+      />
       <SongList 
         data={data}
         setData={setData}

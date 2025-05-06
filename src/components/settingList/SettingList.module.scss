@@ -28,8 +28,9 @@
 
 .row:hover {
     border-radius: 5px;
-    background-color: theme.$hover-background-color;
+    // background-color: theme.$hover-background-color;
     color: theme.$hover-font-color;
+    transform: theme.$hover-transform;
 }
 .row:active {
     transform: scale(0.95); /* 点击时缩小 */

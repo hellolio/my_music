@@ -12,11 +12,8 @@ export const updateProgress = (e, volumeBarRef, data, setData) =>  {
     const offsetX = e.clientX - rect.left;
 
     // 获取点击或拖动的位置
-    // console.log("点击或拖动的位置:",offsetX)
-
     // 计算百分比位置
     let barCurrentVolume = Math.round((offsetX / progressBarWidth) * 100);
-    // console.log("计算百分比位置:", barCurrentVolume);
     if (barCurrentVolume <= 0) {
       barCurrentVolume = 0;
     }else if (barCurrentVolume >= 100) {

@@ -6,7 +6,6 @@ import * as utils from "../../common/utils"
 
 // 双击列表的某首歌播放
 export const playMusicFromList = async (song, data, setData) => {
-    console.log("song dddddddddddd ：",song);
     // let song = null;
     if (data.isMusic) {
         await data.music.current.stop();
@@ -53,17 +52,13 @@ export const playMusicFromList = async (song, data, setData) => {
             isMusic: false,
           }));
     }
-  
 }
 
 // 点击添加 导入音乐到数据库
 export const importMusic = async (songs, setSongs, playlistId, setUpdatePlayListFlg) =>{
-    console.log("开始导入歌曲");
-    console.log("songs:",songs);
   
     // 获取当前文件的状态
     let selectedFiles = await open({ multiple: true });
-    console.log("selectedFiles :",selectedFiles);
   
     let songs_new = await invoke('import_music_to_db', { fileNames: selectedFiles, id: playlistId });
     setSongs(songs.concat(songs_new));
@@ -72,11 +67,8 @@ export const importMusic = async (songs, setSongs, playlistId, setUpdatePlayList
 
 export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, setSongs, data, setData, setUpdatePlayListFlg) => {
     let musicLists = await invoke('get_song_all');
-    console.log("musicLists:", musicLists);
-
 
     if (musicLists.length > 0){
-        console.log("data.playlistId:", data.playlistId);
         let i = musicLists.findIndex((e) => e.id === data.playlistId);
         if (i === -1){
             i = 0;
@@ -143,7 +135,6 @@ export const handleAllCheckboxChange = (allCheck, setAllCheck, songs, setSelecte
 
 // 删除选中的项
 export const deleteMusic = async (setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg) => {
-    console.log("selectedItems:", selectedItems);
     await invoke('delete_music_from_db', { songs: selectedItems });
 
     setSongs((prevItems) => prevItems.filter((song) => !selectedItems.includes(song)));

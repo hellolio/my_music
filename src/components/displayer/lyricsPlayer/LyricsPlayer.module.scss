@@ -45,7 +45,7 @@
         color: theme.$font-color-yellow;
         font-weight: bold;
         transform: scale(1.2);
-        transition: all 0.1s;
+        transition: theme.$transition5;
       }
 
       &.active {
@@ -71,7 +71,7 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.5s;
   background-color: rgba(61, 66, 61, 0.166);
   color: #dbcdcd;
 }

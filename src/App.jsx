@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { appWindow, PhysicalPosition  } from '@tauri-apps/api/window';
 
 import styles from "./App.module.scss";
 import BtnPlayer from "./components/player/btnPlayer/BtnPlayer";
@@ -9,11 +8,37 @@ import BarVolume from "./components/player/barVolume/BarVolume";
 import Video from "./components/displayer/video/Video";
 import Music from "./components/displayer/music/Music";
 import { SettingList } from "./components/settingList/SettingList";
+import SplitRow from "./components/common/splitRow/SplitRow";
+import MyButton from "@/components/common/button/MyButton";
 
 
 function App() {
+  const ref = useRef(null);
+
 
   useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const onMouseDown = (e) => {
+      const target = e.target;
+
+      // 忽略按钮、输入框、链接等
+      if (
+        ['BUTTON', 'INPUT', 'TEXTAREA', 'A', 'SELECT', 'IMG', 'LI'].includes(target.tagName) ||
+        target.closest('[data-no-drag]')
+      ) {
+        return;
+      }
+      // 检查是否显式设置了 click 事件
+      const hasClickHandler = typeof el.onclick === 'function' || el.getAttribute('role') === 'button';
+      if (hasClickHandler) return true;
+
+      appWindow.startDragging();
+    };
+    el.addEventListener('mousedown', onMouseDown);
+
+
     const handleContextMenu = (event) => {
       event.preventDefault();
     };
@@ -34,6 +59,7 @@ function App() {
     return () => {
       document.removeEventListener('contextmenu', handleContextMenu);
       document.removeEventListener('keydown', handleKeyDown);
+      el.removeEventListener('mousedown', onMouseDown);
     };
   }, []);
 
@@ -70,50 +96,10 @@ function App() {
     }
   );
 
-  const settingDataTmp = localStorage.getItem('settingData');
-  const settingDataTmpParse = JSON.parse(settingDataTmp);
-  const [settingData, setSettingData] = useState(
-    {
-      isChange: true,
-      useMusicCover: settingDataTmp ? settingDataTmpParse.useMusicCover : true,
-      coverImagePath: settingDataTmp ? settingDataTmpParse.coverImagePath : ""
-    }
-  )
-  useEffect(() => {
-    if (settingData.useMusicCover) {
-      if (data.coverImagePath === ""){
-        imageUrl = convertFileSrc(settingData.coverImagePath);
-      }else {
-        imageUrl = convertFileSrc(data.coverImagePath);
-      }
-      document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
-    } else {
-      document.body.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
-    }
 
-    localStorage.setItem('settingData', JSON.stringify(settingData));
-  }, [settingData]);
-
-  
   useEffect(() => {
     localStorage.setItem('data', JSON.stringify(data));
   }, [data]);
-
-  let imageUrl = "";
-
-  useEffect(() => {
-    if (settingData.useMusicCover) {
-        if (data.coverImagePath === ""){
-          imageUrl = convertFileSrc(settingData.coverImagePath);
-        }else {
-          imageUrl = convertFileSrc(data.coverImagePath);
-        }
-        document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
-    } else {
-      document.body.style.setProperty('--cover-bg', `url(${settingData.coverImagePath})`);
-    }
-
-  }, [data.coverImagePath]);
 
   // 切换到某个歌单
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -128,28 +114,89 @@ function App() {
 
   const settinglistRef = useRef(null);
 
-  const [setting, setSetting] = useState(false);
+  const [showSetting, setShowSetting] = useState(false);
 
   const handleClosePanel = () => {
-    setSetting(false);
+    setShowSetting(false);
   };
+
+  const minWindow = () =>{
+    appWindow.minimize();
+  }
+  const maxWindow = () =>{
+    appWindow.toggleMaximize();
+  }
+  const closeWindow = () =>{
+    appWindow.close();
+  }
+
   return (
-    <div className={styles.myPlayer}>
-      <div
-        className={styles.setting}
-        onClick={() => setSetting(!setting)}
-        ref={settinglistRef}
-      >
-        设置
+    <div 
+      className={styles.myPlayer}
+      ref={ref}
+    >
+      <div id="drag-container"
+        className={styles.window}>
+        <SplitRow
+          left={
+            <div ref={settinglistRef}>
+              <MyButton 
+                callFun={() => setShowSetting(!showSetting)}
+                msg={'⚙'}
+                isConfirm={true}
+                style={styles.setting}
+              />
+              <MyButton 
+                callFun={() => {alert("开发中")}}
+                msg={'👕'}
+                isConfirm={true}
+                style={styles.setting}
+              />
+              <MyButton 
+                callFun={() => {alert("暂未开发")}}
+                msg={'💡'}
+                isConfirm={true}
+                style={styles.setting}
+              />
+            </div>
+          }
+          right={
+            <div className={styles.windowControls}>
+              <MyButton 
+                callFun={() => {alert("桌面模式暂未开发")}}
+                msg={'↬'}
+                isConfirm={true}
+                style={styles.setting}
+              />
+              <MyButton 
+                callFun={() => minWindow()}
+                msg={'-'}
+                isConfirm={true}
+                style={styles.setting}
+              />
+              <MyButton 
+                callFun={() => maxWindow()}
+                msg={'□'}
+                isConfirm={true}
+                style={styles.setting}
+              />
+              <MyButton 
+                callFun={() => closeWindow()}
+                msg={'×'}
+                isConfirm={true}
+                style={styles.setting}
+              />
+          </div>
+          }
+        />
       </div>
+
       <SettingList
-        visible={setting}
+        visible={showSetting}
         onClose={handleClosePanel}
         settinglistRef={settinglistRef}
         data={data}
         setData={setData}
-        settingData={settingData}
-        setSettingData={setSettingData}
       />
       
       <div className={styles.display}>

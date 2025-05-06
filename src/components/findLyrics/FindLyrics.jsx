@@ -51,7 +51,6 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
                 placeholder="输入歌名"
               />
                 <MyButton 
-                    style={{ marginLeft: "auto" }} // 推到右边
                     callFun={() => searchLyrics(songTitle, setResultList)}
                     msg={'检索'}
                     isConfirm={true}
@@ -120,6 +119,7 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
                 >
                 <input
                   type="checkbox"
+                  readOnly
                   checked={selected}
                   // onChange={() => setSelected(!selected)}
                 />

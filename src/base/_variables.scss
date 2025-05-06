@@ -5,11 +5,12 @@ $body-background-color-black: #000000;
 $window-background-color: rgba(121, 121, 121, 0.188);
 $window-background-color-mask: #4344445a;
 
-$selected-background-color: #438157b4;
+$selected-background-color: #47604780;
 $selected-font-color: #ff5500;
 
 $hover-background-color: #47604780;
 $hover-font-color: #ff5500;
+$hover-transform: scale(1.01);
 
 // 颜色
 $font-color-white: rgba(255, 255, 255, 0.875);
@@ -18,7 +19,7 @@ $font-color-yellow: #ff5500;
 $font-color-grey: #666;
 $font-color-blue-grey: #237286d5;
 
-$button-confirm-background-color: #42894f;
+$button-confirm-background-color: #5a5b5a5c;
 $button-confirm-background-color-hover: #3a5e41;
 $button-confirm-color: rgb(201, 197, 197);
 
@@ -30,6 +31,6 @@ $button-cancle-color: rgb(201, 197, 197);
 $center-bar-rate-background-color:#c0bcbc;
 $center-bar-rate-end-background-color:#4e4e50;
 
-$transition5: (all 0.5);
+$transition5: (all 0.5s);
 
 $font-family: 'KaiTi', 'STKaiti', '楷体', '楷体_GB2312', serif;
