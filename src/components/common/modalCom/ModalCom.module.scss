@@ -1,0 +1,31 @@
+@use '@/base/theme-config.scss' as theme;
+
+
+.modal {
+    position: absolute;
+    top: 100%;
+    // left: 25%;
+    // width: 50%;
+    margin-top: 8px;
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: all 0.3s ease;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+    backdrop-filter: blur(5px);
+  }
+  
+  .modal.visible {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  
+  .modalContent {
+    position: relative;
+    background-color: theme.$window-background-color;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+  }
+  

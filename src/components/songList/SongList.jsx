@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useContext  } from 'react';
 import styles from './SongList.module.scss';
 import * as utils from "../../common/utils"
 import ShowMsg from '../showMsg/ShowMsg';
 import MyButton from "@/components/common/button/MyButton";
+import { Context } from '../common/context/MyProvider';
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, playMusicFromList, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
 import { createPortal } from 'react-dom';
@@ -34,8 +35,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
   const [selectedItems, setSelectedItems] = useState([]);
   const [allCheck, setAllCheck] = useState(true);
 
-  // 所有歌单list
-  const [allSongList, setAllSongList] = useState([]);
+  const { allSongList, setAllSongList } = useContext(Context);
 
   // 切换到某个歌单
   const [currentIndex, setCurrentIndex] = useState(0);

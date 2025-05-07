@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext  } from "react";
 import { appWindow, PhysicalPosition  } from '@tauri-apps/api/window';
 
 import styles from "./App.module.scss";
@@ -7,9 +7,8 @@ import BarPlayer from "./components/player/barPlayer/BarPlayer";
 import BarVolume from "./components/player/barVolume/BarVolume";
 import Video from "./components/displayer/video/Video";
 import Music from "./components/displayer/music/Music";
-import { SettingList } from "./components/settingList/SettingList";
-import SplitRow from "./components/common/splitRow/SplitRow";
-import MyButton from "@/components/common/button/MyButton";
+import { Context, MyProvider } from "./components/common/context/MyProvider";
+import { WindowSetting } from "./components/windowSetting/WindowSetting";
 
 
 function App() {
@@ -31,6 +30,7 @@ function App() {
         return;
       }
       // 检查是否显式设置了 click 事件
+      console.log("typeof el.onclick:", typeof el.onclick);
       const hasClickHandler = typeof el.onclick === 'function' || el.getAttribute('role') === 'button';
       if (hasClickHandler) return true;
 
@@ -112,126 +112,56 @@ function App() {
   }, [data.isMusic]);
 
 
-  const settinglistRef = useRef(null);
-
-  const [showSetting, setShowSetting] = useState(false);
-
-  const handleClosePanel = () => {
-    setShowSetting(false);
-  };
-
-  const minWindow = () =>{
-    appWindow.minimize();
-  }
-  const maxWindow = () =>{
-    appWindow.toggleMaximize();
-  }
-  const closeWindow = () =>{
-    appWindow.close();
-  }
 
   return (
-    <div 
-      className={styles.myPlayer}
-      ref={ref}
-    >
-      <div id="drag-container"
-        className={styles.window}>
-        <SplitRow
-          left={
-            <div ref={settinglistRef}>
-              <MyButton 
-                callFun={() => setShowSetting(!showSetting)}
-                msg={'⚙'}
-                isConfirm={true}
-                style={styles.setting}
-              />
-              <MyButton 
-                callFun={() => {alert("开发中")}}
-                msg={'👕'}
-                isConfirm={true}
-                style={styles.setting}
-              />
-              <MyButton 
-                callFun={() => {alert("暂未开发")}}
-                msg={'💡'}
-                isConfirm={true}
-                style={styles.setting}
-              />
-            </div>
-          }
-          right={
-            <div className={styles.windowControls}>
-              <MyButton 
-                callFun={() => {alert("桌面模式暂未开发")}}
-                msg={'↬'}
-                isConfirm={true}
-                style={styles.setting}
-              />
-              <MyButton 
-                callFun={() => minWindow()}
-                msg={'-'}
-                isConfirm={true}
-                style={styles.setting}
-              />
-              <MyButton 
-                callFun={() => maxWindow()}
-                msg={'□'}
-                isConfirm={true}
-                style={styles.setting}
-              />
-              <MyButton 
-                callFun={() => closeWindow()}
-                msg={'×'}
-                isConfirm={true}
-                style={styles.setting}
-              />
-          </div>
-          }
-        />
-      </div>
+    <MyProvider>
+      <div 
+        className={styles.myPlayer}
+        ref={ref}
+      >
+        <div>
+          <WindowSetting 
+            data={data}
+            setData={setData}
+          />
+        </div>
 
-      <SettingList
-        visible={showSetting}
-        onClose={handleClosePanel}
-        settinglistRef={settinglistRef}
-        data={data}
-        setData={setData}
-      />
-      
-      <div className={styles.display}>
-        <div className={styles.playSliderContainer}>
-          <div
-            className={styles.playSliderWrapper}
-            style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-          >
-            <div className={styles.music}>
-              <Music ref={musicRef} data={data} setData={setData} />
+        <div>
+          <div className={styles.display}>
+            <div className={styles.playSliderContainer}>
+              <div
+                className={styles.playSliderWrapper}
+                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              >
+                <div className={styles.music}>
+                  <Music ref={musicRef} data={data} setData={setData} />
+                </div>
+                <div className={styles.video}>
+                  <Video ref={videoRef} data={data} setData={setData} />
+                </div>
+              </div>
             </div>
-            <div className={styles.video}>
-              <Video ref={videoRef} data={data} setData={setData} />
+          </div>
+
+          <div className={styles.player}>
+            {/* 播放进度设置 */}
+            <div className={`${styles.parent} ${styles.bar}`}>
+              <BarPlayer data={data} setData={setData} />
+            </div>
+      
+            {/* 播放按钮设置 */}
+            <div className={`${styles.parent} ${styles.btnPlayer}`}>
+              <BtnPlayer data={data} setData={setData} />
+            </div>
+      
+            {/* 播放音量设置 */}
+            <div className={`${styles.parent} ${styles.volumeBar}`}>
+              <BarVolume data={data} setData={setData} />
             </div>
           </div>
         </div>
       </div>
-  
-      <div className={styles.player}>
-        {/* 播放进度设置 */}
-        <div className={`${styles.parent} ${styles.bar}`}>
-          <BarPlayer data={data} setData={setData} />
-        </div>
-  
-        {/* 播放按钮设置 */}
-        <div className={`${styles.parent} ${styles.btnPlayer}`}>
-          <BtnPlayer data={data} setData={setData} />
-        </div>
-  
-        {/* 播放音量设置 */}
-        <div className={`${styles.parent} ${styles.volumeBar}`}>
-          <BarVolume data={data} setData={setData} />
-        </div>
-      </div>
-    </div>
+    </MyProvider>
   );
   
 }

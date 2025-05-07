@@ -4,15 +4,12 @@ use std::{
     io::{Read, Write},
     path::PathBuf,
 };
-use tauri::{Manager, WindowEvent};
-use tauri::api::path::app_config_dir;
-
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WindowState {
     pub selected_remeber_size: bool,
-    pub window_x: i32,
-    pub window_y: i32,
+    pub window_x: u32,
+    pub window_y: u32,
     pub window_width: u32,
     pub window_height: u32,
 }

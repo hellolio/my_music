@@ -1,0 +1,44 @@
+
+.setting {
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+
+  .settingList {
+    left: 0;
+    // width: 100px;
+  }
+
+  .songSearchList {
+    left: 25%;
+    width: 50%;
+  }
+  
+  .window {
+    background-color:rgba(0, 0, 0, 0);
+    z-index: 1001;
+    position: relative;
+  }
+  
+  .windowControlsLeft {
+    display: flex;              /* 启用 Flexbox 布局 */
+    justify-content: flex-start; /* 子元素从左到右排列 */
+    // gap: 10px;                  /* 子元素间距设置为 50px */
+  }
+  
+  .windowControlsCenter {
+    position: relative;
+    text-align: center;
+    display: flex;              /* 启用 Flexbox 布局 */
+    justify-content: center; /* 子元素从左到右排列 */
+    top: 5px;
+    width: 100%;
+  }
+  
+  .windowControlsRight {
+    display: flex;              /* 启用 Flexbox 布局 */
+    justify-content: flex-start; /* 子元素从左到右排列 */
+    gap: 20px;                  /* 子元素间距设置为 50px */
+  }
+  

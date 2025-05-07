@@ -8,7 +8,7 @@ import * as utils from "../../common/utils"
 import MyButton from "@/components/common/button/MyButton";
 import MyInput from "@/components/common/input/MyInput";
 
-export default function FindLyrics({findLyrics, setFindLyrics, data, setData, panelRef, onClose}) {
+export default function FindLyrics({findLyrics, setFindLyrics, data, setData, panelRef}) {
 
     const [songTitle, setSongTitle] = useState('');
     const [resultList, setResultList] = useState([]);
@@ -26,14 +26,12 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
             setFindLyrics(false);
           }
         };
-      
         document.addEventListener('mousedown', handleClickOutside);
-      
         // 清理函数
         return () => {
           document.removeEventListener('mousedown', handleClickOutside);
         };
-      }, [findLyrics, onClose, panelRef]);
+      }, [findLyrics, panelRef]);
 
 
     return ReactDOM.createPortal(

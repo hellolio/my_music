@@ -253,10 +253,10 @@ fn main() {
                     };
                     let window_state = window::WindowState {
                         selected_remeber_size,
-                        window_x: position.x,
-                        window_y: position.y,
-                        window_width: size.width,
-                        window_height: size.height,
+                        window_x: if position.x <100  {0} else {position.x as u32},
+                        window_y: if position.y <100 {0} else {position.y as u32},
+                        window_width: if size.width < 200 {200} else {size.width},
+                        window_height: if size.height < 400 {size.height} else {size.height},
                     };
                     window::save_window_state(&window.app_handle(),&window_state);
             }

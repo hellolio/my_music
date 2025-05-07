@@ -8,24 +8,8 @@ import FindLyrics from '../findLyrics/FindLyrics';
 import ChangeTheme from '../changeTheme/ChangeTheme';
 import CommonSetting from '../commonSetting/CommonSetting';
 
-export const SettingList = ({visible, onClose, settinglistRef, data, setData}) => {
 
-    const panelRef = useRef(null);
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-          if (visible && panelRef.current && !panelRef.current.contains(event.target) &&
-              settinglistRef.current && !settinglistRef.current.contains(event.target)) {
-            onClose(); // 点击外面关闭
-          }
-        };
-      
-        document.addEventListener('mousedown', handleClickOutside);
-      
-        // 清理函数
-        return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-        };
-      }, [visible, onClose, settinglistRef]);
+export const SettingList = ({panelRef, data, setData}) => {
 
     const [findLyrics, setFindLyrics] = useState(false);
     const [changeTheme, setChangeTheme] = useState(false);
@@ -72,11 +56,11 @@ export const SettingList = ({visible, onClose, settinglistRef, data, setData}) =
         document.body.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
       }
     }, [data.coverImagePath]);
+
+    const SettingRef = useRef(null);
     
     return (
-      <div className={`${styles.settingList} ${visible ? styles.visible : ''}`}
-      ref={panelRef}
-      >
+      <div ref={SettingRef}>
         <ul>
             <li className={styles.row} onClick={() => setFindLyrics(!findLyrics)}>查找歌词</li>
             <li className={styles.row}>格式转换</li>
@@ -91,14 +75,14 @@ export const SettingList = ({visible, onClose, settinglistRef, data, setData}) =
           setFindLyrics={setFindLyrics}
           data={data}
           setData={setData}
-          panelRef={panelRef}
+          panelRef={SettingRef}
         />
         <ChangeTheme
           changeTheme={changeTheme}
           setChangeTheme={setChangeTheme}
           data={data}
           setData={setData}
-          panelRef={panelRef}
+          panelRef={SettingRef}
           settingData={settingData}
           setSettingData={setSettingData}
         />
@@ -108,7 +92,7 @@ export const SettingList = ({visible, onClose, settinglistRef, data, setData}) =
           setCommonSetting={setCommonSetting}
           data={data}
           setData={setData}
-          panelRef={panelRef}
+          panelRef={SettingRef}
           settingData={settingData}
           setSettingData={setSettingData}
           readWindowState={readWindowState}
