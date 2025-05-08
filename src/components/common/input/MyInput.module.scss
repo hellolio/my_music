@@ -2,18 +2,11 @@
 
   /* 输入框样式 */
   .myInput {
-    width: 300px;
-    min-width: 100px;
-    padding: 5px 8px;
-    display: block;
-    margin: 5px; /* 上为0，下为16px，左右auto */
     border: 1px solid #444744;
     background-color: #393535c8;
     color: #ffffff;
     border-radius: 6px;
-    // font-size: 15px;
     text-align: center; 
-    z-index: 999;
   }
 
   

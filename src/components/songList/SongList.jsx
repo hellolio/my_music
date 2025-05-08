@@ -5,7 +5,7 @@ import ShowMsg from '../showMsg/ShowMsg';
 import MyButton from "@/components/common/button/MyButton";
 import { Context } from '../common/context/MyProvider';
 
-import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, playMusicFromList, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
+import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
 import { createPortal } from 'react-dom';
 
 const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPlayerRef }) => {
@@ -74,7 +74,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                     key={index}
                     className={`${styles.songList} ${selectedItems.includes(song) ? styles.active : ''} ${data.id === song.id ? styles.isPlaying : ''}`}
                     onClick={(e) => handleCheckboxChange(e, song, selectedItems, setSelectedItems)}
-                    onDoubleClick={() => playMusicFromList(song, data, setData)}
+                    onDoubleClick={() => utils.playMusicFromList(song, data, setData)}
                   >
                     <span className={styles.index}>{index + 1}</span>
                     <span className={styles.title}>{song.title}</span>

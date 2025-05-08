@@ -1,6 +1,8 @@
 import styles from './WindowSetting.module.scss';
 import { useState, useEffect, useRef, useContext  } from "react";
-import { appWindow, PhysicalPosition  } from '@tauri-apps/api/window';
+import { appWindow } from '@tauri-apps/api/window';
+
+import * as utils from "../../common/utils"
 
 import { SettingList } from "@/components/settingList/SettingList";
 import SplitRow from "@/components/common/splitRow/SplitRow";
@@ -41,11 +43,29 @@ export const WindowSetting = ({data, setData}) => {
   const [searchKey, setSearchKey] = useState('');
 
   const { allSongList, setAllSongList } = useContext(Context);
-  const [visible, setVisible] = useState(true);
+  const [searchedList, setSearchedList] = useState([]);
+  const [visible, setVisible] = useState(false);
   
   useEffect(() => {
-    console.log("allSongList:",allSongList);
+    if (searchKey === "") {
+      setVisible(false);
+      setSearchedList([]);
+      return;
+    }
+
+    const songs =  allSongList.flatMap(item =>
+      item.songs.filter(song => song.title.includes(searchKey) || song.author.includes(searchKey))
+    ).slice(0,5);
+
+    if (songs.length === 0) {
+      setVisible(false);
+      setSearchedList([]);
+      return;
+    }
+    setSearchedList(songs);
+
     setVisible(true);
+
   }, [searchKey]);
 
   return (
@@ -81,6 +101,7 @@ export const WindowSetting = ({data, setData}) => {
                     value={searchKey}
                     setValue={setSearchKey}
                     placeholder="搜索"
+                    style={styles.myInput}
                   />
               </div>
             }
@@ -134,13 +155,16 @@ export const WindowSetting = ({data, setData}) => {
             parentRef={settinglistRef}
             style={styles.songSearchList}
             children={
-              (<div>
-                <ul>
-                  <li>歌曲1</li>
-                  <li>歌曲2</li>
-                  <li>歌曲3</li>
-                </ul>
-              </div>)
+              (<ul>
+                  {searchedList.map((song, index) => (
+                    <li
+                      key={index}
+                      onDoubleClick={() => utils.playMusicFromList(song, data, setData)}
+                    >
+                      <span className={styles.index}>{`${index + 1}-${song.title}-${song.total_duration}`}</span>
+                    </li>
+                  ))}
+              </ul>)
             }
         />
     </div>

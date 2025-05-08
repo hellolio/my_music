@@ -7,6 +7,7 @@ import {readWindowState, writeWindowState} from './SettingListFun'
 import FindLyrics from '../findLyrics/FindLyrics';
 import ChangeTheme from '../changeTheme/ChangeTheme';
 import CommonSetting from '../commonSetting/CommonSetting';
+import CodalComFloat from '../common/modalComFloat/ModalComFloat';
 
 
 export const SettingList = ({panelRef, data, setData}) => {
@@ -70,34 +71,46 @@ export const SettingList = ({panelRef, data, setData}) => {
             <li className={styles.row} onClick={() => setChangeTheme(!changeTheme)}>皮肤</li>
             <li className={styles.row}>帮助</li>
         </ul>
-        <FindLyrics
-          findLyrics={findLyrics}
-          setFindLyrics={setFindLyrics}
-          data={data}
-          setData={setData}
+
+        <CodalComFloat 
+          visible={findLyrics}
+          setVisible={setFindLyrics}
           panelRef={SettingRef}
-        />
-        <ChangeTheme
-          changeTheme={changeTheme}
-          setChangeTheme={setChangeTheme}
-          data={data}
-          setData={setData}
-          panelRef={SettingRef}
-          settingData={settingData}
-          setSettingData={setSettingData}
+          children={
+            <FindLyrics
+              data={data}
+              setData={setData}
+            />
+          }
         />
 
-        <CommonSetting
-          commonSetting={commonSetting}
-          setCommonSetting={setCommonSetting}
-          data={data}
-          setData={setData}
+        <CodalComFloat 
+          visible={changeTheme}
+          setVisible={setChangeTheme}
           panelRef={SettingRef}
-          settingData={settingData}
-          setSettingData={setSettingData}
-          readWindowState={readWindowState}
-          writeWindowState={writeWindowState}
-        />  
+          children={
+            <ChangeTheme
+              data={data}
+              setData={setData}
+              settingData={settingData}
+              setSettingData={setSettingData}
+            />
+          }
+        />
+        
+        <CodalComFloat 
+          visible={commonSetting}
+          setVisible={setCommonSetting}
+          panelRef={SettingRef}
+          children={
+            <CommonSetting
+              settingData={settingData}
+              setSettingData={setSettingData}
+              readWindowState={readWindowState}
+              writeWindowState={writeWindowState}
+            />
+          }
+        />
       </div>
     )
 }

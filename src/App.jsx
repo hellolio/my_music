@@ -14,7 +14,6 @@ import { WindowSetting } from "./components/windowSetting/WindowSetting";
 function App() {
   const ref = useRef(null);
 
-
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -24,13 +23,12 @@ function App() {
 
       // 忽略按钮、输入框、链接等
       if (
-        ['BUTTON', 'INPUT', 'TEXTAREA', 'A', 'SELECT', 'IMG', 'LI'].includes(target.tagName) ||
+        ['BUTTON', 'INPUT', 'TEXTAREA', 'A', 'SELECT', 'LI', 'SPAN'].includes(target.tagName) ||
         target.closest('[data-no-drag]')
       ) {
         return;
       }
       // 检查是否显式设置了 click 事件
-      console.log("typeof el.onclick:", typeof el.onclick);
       const hasClickHandler = typeof el.onclick === 'function' || el.getAttribute('role') === 'button';
       if (hasClickHandler) return true;
 
@@ -119,14 +117,13 @@ function App() {
         className={styles.myPlayer}
         ref={ref}
       >
-        <div>
+        <div className={styles.windowSetting}>
           <WindowSetting 
             data={data}
             setData={setData}
           />
         </div>
 
-        <div>
           <div className={styles.display}>
             <div className={styles.playSliderContainer}>
               <div
@@ -159,7 +156,6 @@ function App() {
               <BarVolume data={data} setData={setData} />
             </div>
           </div>
-        </div>
       </div>
     </MyProvider>
   );

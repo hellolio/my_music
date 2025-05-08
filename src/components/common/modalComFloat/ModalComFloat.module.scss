@@ -1,0 +1,33 @@
+@use '@/base/theme-config.scss' as theme;
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: theme.$window-background-color-mask;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  backdrop-filter: blur(5px);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1001;
+}
+
+.modal.visible {
+  transform: translateY(0);
+}
+  /* 弹窗内容 */
+  .modalContent {
+    background-color: theme.$window-background-color;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 500px;
+  }

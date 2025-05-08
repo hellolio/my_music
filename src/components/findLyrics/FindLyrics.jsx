@@ -1,14 +1,12 @@
 import styles from "./FindLyrics.module.scss";
-import ReactDOM from 'react-dom';
-import React, { useEffect, useRef, useState } from 'react';
-import {get_lyrics_targets, get_lyrics, selectSavePath, saveLyrics, searchLyrics} from './FindLyricsFun'
-import { invoke } from "@tauri-apps/api/tauri";
+import React, { useState } from 'react';
+import {selectSavePath, saveLyrics, searchLyrics} from './FindLyricsFun'
 import * as utils from "../../common/utils"
 
 import MyButton from "@/components/common/button/MyButton";
 import MyInput from "@/components/common/input/MyInput";
 
-export default function FindLyrics({findLyrics, setFindLyrics, data, setData, panelRef}) {
+export default function FindLyrics({data, setData}) {
 
     const [songTitle, setSongTitle] = useState('');
     const [resultList, setResultList] = useState([]);
@@ -18,27 +16,8 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
     const [savePath, setSavePath] = useState('');
     const [selected, setSelected] = useState(false);
 
-    const FindLyricsRef = useRef(null);
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-          if (findLyrics && FindLyricsRef.current && !FindLyricsRef.current.contains(event.target) &&
-          panelRef.current && !panelRef.current.contains(event.target)) {
-            setFindLyrics(false);
-          }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        // 清理函数
-        return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-        };
-      }, [findLyrics, panelRef]);
-
-
-    return ReactDOM.createPortal(
-        
-      <div id="lyricModal" className={`${styles.modal} ${findLyrics ? styles.visible : ''}`}
-      >
-        <div className={styles.modalContent} ref={FindLyricsRef}>
+    return (
+        <div>
           <div className={styles.search}>
               <h3>查找歌词</h3>
               <div style={{ display: "flex", alignItems: "center" }}>
@@ -135,15 +114,8 @@ export default function FindLyrics({findLyrics, setFindLyrics, data, setData, pa
                     msg={'保存'}
                     isConfirm={true}
                   />
-                  <MyButton 
-                    callFun={() => setFindLyrics(false)}
-                    msg={'取消'}
-                    isConfirm={false}
-                  />
                 </div>
               </div>  
           </div>
-      </div>,
-        document.body // 指定挂载点
     )
 }

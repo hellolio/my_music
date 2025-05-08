@@ -70,12 +70,13 @@ export const togglePlayPause = async (data, setData) => {
   let playFun = undefined;
   let coverImagePath = "";
   if (isMusic){
-    playFun = data.music.current
+    playFun = data.music.current;
+    coverImagePath = await playFun.get_cover(data.audioSrc);
   }else {
     playFun = data.video.current
   }
 
-  coverImagePath = await playFun.get_cover(data.audioSrc);
+  
   // 当前没有播放
   if (!data.isPlaying){
 
