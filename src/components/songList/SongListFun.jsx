@@ -1,21 +1,23 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
 
-import * as utils from "../../common/utils"
-
 
 // 点击添加 导入音乐到数据库
-export const importMusic = async (songs, setSongs, playlistId, setUpdatePlayListFlg) =>{
+export const importMusic = async (playlistId, setUpdatePlayListFlg, setAllSongList, currentIndex) =>{
   
     // 获取当前文件的状态
     let selectedFiles = await open({ multiple: true });
   
     let songs_new = await invoke('import_music_to_db', { fileNames: selectedFiles, id: playlistId });
-    setSongs(songs.concat(songs_new));
+    setAllSongList(prevAllSongList => 
+        prevAllSongList.map((item, index)=>
+            index === currentIndex ? {...item, songs: item.songs.concat(songs_new) }: item
+        )
+    )
     setUpdatePlayListFlg(true);
 }
 
-export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, setSongs, data, setData, setUpdatePlayListFlg) => {
+export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, data, setData, setUpdatePlayListFlg) => {
     let musicLists = await invoke('get_song_all');
 
     if (musicLists.length > 0){
@@ -52,7 +54,6 @@ export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, setSon
             }));
         }
     
-        setSongs(musicList.songs);
         setAllSongList(musicLists);
         setUpdatePlayListFlg(false);
     }
@@ -72,9 +73,9 @@ export const handleCheckboxChange = (e, song, selectedItems, setSelectedItems) =
 };
 
 // 取消/全选复选框的变化
-export const handleAllCheckboxChange = (allCheck, setAllCheck, songs, setSelectedItems) => {
+export const handleAllCheckboxChange = (allCheck, setAllCheck, setSelectedItems, allSongList, currentIndex) => {
     if (allCheck) {
-        setSelectedItems(songs);
+        setSelectedItems(allSongList[currentIndex].songs);
     }else {
         setSelectedItems([]);
     }
@@ -84,25 +85,28 @@ export const handleAllCheckboxChange = (allCheck, setAllCheck, songs, setSelecte
 
 
 // 删除选中的项
-export const deleteMusic = async (setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg) => {
+export const deleteMusic = async (selectedItems, setSelectedItems, setUpdatePlayListFlg, setAllSongList, currentIndex) => {
     await invoke('delete_music_from_db', { songs: selectedItems });
 
-    setSongs((prevItems) => prevItems.filter((song) => !selectedItems.includes(song)));
-    getMusicListFormDB(setSongs)
+    setAllSongList(prevAllSongList =>
+        prevAllSongList.map((item, index) => 
+            index === currentIndex ? {...item, songs: item.songs.filter(song => !selectedItems.includes(song))} : item
+        )
+    )
+
     setSelectedItems([]);  // 删除后清空选中的项
     setUpdatePlayListFlg(true);
 };
 
 
 // 切换到第 n 个歌单
-export const switchTo = (index, id, setCurrentIndex, setData, setSongs, allSongList) => {
+export const switchTo = (index, id, setCurrentIndex, setData, allSongList) => {
     setCurrentIndex(index);
     setData(prevData => ({
         ...prevData,
         playlistId: id
     }));
     let i = allSongList.findIndex((e) => e.id === id);
-    setSongs(allSongList[i].songs);
 };
 
 export const deletePlayList = async (param) => {

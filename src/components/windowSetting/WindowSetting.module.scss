@@ -6,8 +6,16 @@
   }
 
   .settingList {
-    left: 0;
+    left: 20px;
     // width: 100px;
+  }
+
+  .themeList {
+    left: 50px;
+  }
+
+  .helpList {
+    left: 100px;
   }
 
   .songSearchList {
@@ -33,6 +41,13 @@
     justify-content: center;
   }
   
+  .searchKeyInput {
+    border: 0;
+    width: 300px;
+    height: 100%;
+  }
+
+
   .windowControlsRight {
     display: flex;              /* 启用 Flexbox 布局 */
     justify-content: flex-start; /* 子元素从左到右排列 */

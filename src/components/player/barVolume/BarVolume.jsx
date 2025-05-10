@@ -20,7 +20,7 @@ function BarPlayer(props) {
           isConfirm={true}
           style={styles.setting}
         />
-        <div
+        <div data-clickable
           className={styles.centerBlockVolume}
           ref={volumeBarRef}
           onClick={(e) => updateProgress(e, data, setData)}

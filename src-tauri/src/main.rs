@@ -98,6 +98,7 @@ fn play_music(state: State<'_, Arc<AppState>>, window: Window, id: i64, file_pat
     p.music_play(window, file_path.to_string(), duration, skip_secs, volume);
 
     let conn = state.db.lock().unwrap();
+    println!("{}, {}", file_path, id);
     if let Ok(mut song_meta) = db::get_song_by_path(&*conn, file_path.to_string(), id){
         let mut lyrics = vec![];
         match song_meta.lyrics_path.clone() {

@@ -31,7 +31,7 @@ export const isMusic = (filename) => {
 }
 
 // 双击列表的某首歌播放
-export const playMusicFromList = async (song, data, setData) => {
+export const playMusicFromList = async (song, data, setData, playlistId) => {
 
     // return true;
     // let song = null;
@@ -44,7 +44,10 @@ export const playMusicFromList = async (song, data, setData) => {
     const isMusicCheck = isMusic(song.audio_src);
 
     if (isMusicCheck) {
-        await data.music.current.play(data.playlistId, song.audio_src, song.total_duration, 0, data.barCurrentVolume);
+        console.log("song:", song);
+        console.log("playlistId:", playlistId);
+        // return 
+        await data.music.current.play(playlistId, song.audio_src, song.total_duration, 0, data.barCurrentVolume);
         let coverImagePath = await data.music.current.get_cover(song.audio_src);
         setData(prevData => ({
             ...prevData,

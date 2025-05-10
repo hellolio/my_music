@@ -1,22 +1,26 @@
 import styles from './WindowSetting.module.scss';
-import { useState, useEffect, useRef, useContext  } from "react";
+import { useState, useEffect, useRef  } from "react";
 import { appWindow } from '@tauri-apps/api/window';
 
-import * as utils from "../../common/utils"
-
 import { SettingList } from "@/components/settingList/SettingList";
+import { ThemeList } from "@/components/themeList/ThemeList";
+import { SearchedList } from "@/components/searchedList/SearchedList";
+import { HelpList } from "@/components/helpList/HelpList";
 import SplitRow from "@/components/common/splitRow/SplitRow";
 import MyButton from "@/components/common/button/MyButton";
 import MyInput from "@/components/common/input/MyInput";
-import { Context } from '../common/context/MyProvider';
+import { Context } from '@/components/common/context/MyProvider';
 import ModalCom from "@/components/common/modalCom/ModalCom";
 
 
-export const WindowSetting = ({data, setData}) => {
+export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIsDesktopMode}) => {
 
     const settinglistRef = useRef(null);
 
     const [showSetting, setShowSetting] = useState(false);
+    const [showThemeList, setShowThemeList] = useState(false);
+    const [showSearchedList, setShowSearchedList] = useState([]);
+    const [showHelpList, setShowHelpList] = useState(false);
  
     const [isMaximize, setisMaximize] = useState(false);
   
@@ -42,29 +46,36 @@ export const WindowSetting = ({data, setData}) => {
   
   const [searchKey, setSearchKey] = useState('');
 
-  const { allSongList, setAllSongList } = useContext(Context);
-  const [searchedList, setSearchedList] = useState([]);
-  const [visible, setVisible] = useState(false);
+  const [searchedListRst, setSearchedListRst] = useState([]);
   
+  const searchOnFocus = () => {
+    if (searchKey != "" && searchedListRst.length > 0){
+      setShowSearchedList(true);
+    }
+  }
+
   useEffect(() => {
     if (searchKey === "") {
-      setVisible(false);
-      setSearchedList([]);
+      setShowSearchedList(false);
+      setSearchedListRst([]);
       return;
     }
+    console.log("allSongList:",allSongList);
 
-    const songs =  allSongList.flatMap(item =>
-      item.songs.filter(song => song.title.includes(searchKey) || song.author.includes(searchKey))
+    const songs =  allSongList.flatMap((items,index) =>
+      items.songs.filter(song => song.title.includes(searchKey) || song.author.includes(searchKey)).map(item=>({...item, playlistId: items.id}))
     ).slice(0,5);
 
+    console.log("songs:",songs);
+
     if (songs.length === 0) {
-      setVisible(false);
-      setSearchedList([]);
+      setShowSearchedList(false);
+      setSearchedListRst([]);
       return;
     }
-    setSearchedList(songs);
+    setSearchedListRst(songs);
 
-    setVisible(true);
+    setShowSearchedList(true);
 
   }, [searchKey]);
 
@@ -81,13 +92,13 @@ export const WindowSetting = ({data, setData}) => {
                   style={styles.setting}
                 />
                 <MyButton 
-                  callFun={() => {alert("开发中")}}
+                  callFun={() => setShowThemeList(!showThemeList)}
                   msg={'👕'}
                   isConfirm={true}
                   style={styles.setting}
                 />
                 <MyButton 
-                  callFun={() => {alert("暂未开发")}}
+                  callFun={() => setShowHelpList(!showHelpList)}
                   msg={'💡'}
                   isConfirm={true}
                   style={styles.setting}
@@ -101,14 +112,15 @@ export const WindowSetting = ({data, setData}) => {
                     value={searchKey}
                     setValue={setSearchKey}
                     placeholder="搜索"
-                    style={styles.myInput}
+                    style={styles.searchKeyInput}
+                    onFocus={searchOnFocus}
                   />
               </div>
             }
             right={
               <div className={styles.windowControlsRight}>
                 <MyButton 
-                  callFun={() => {alert("桌面模式暂未开发")}}
+                  callFun={() => setIsDesktopMode(true)}
                   msg={'↬'}
                   isConfirm={true}
                   style={styles.setting}
@@ -134,6 +146,7 @@ export const WindowSetting = ({data, setData}) => {
             </div>
             }
           />
+        
         <ModalCom
           visible={showSetting}
           setVisible={setShowSetting}
@@ -141,30 +154,49 @@ export const WindowSetting = ({data, setData}) => {
           style={styles.settingList}
           children={
             <SettingList
-              settinglistRef={settinglistRef}
               data={data}
               setData={setData}
             />
           }
         />
-          
+
+        <ModalCom
+          visible={showThemeList}
+          setVisible={setShowThemeList}
+          parentRef={settinglistRef}
+          style={styles.themeList}
+          children={
+            <ThemeList
+              data={data}
+              setData={setData}
+            />
+          }
+        />
+
+        <ModalCom
+          visible={showHelpList}
+          setVisible={setShowHelpList}
+          parentRef={settinglistRef}
+          style={styles.helpList}
+          children={
+            <HelpList
+              data={data}
+              setData={setData}
+            />
+          }
+        />
 
         <ModalCom 
-            visible={visible}
-            setVisible={setVisible}
+            visible={showSearchedList}
+            setVisible={setShowSearchedList}
             parentRef={settinglistRef}
             style={styles.songSearchList}
             children={
-              (<ul>
-                  {searchedList.map((song, index) => (
-                    <li
-                      key={index}
-                      onDoubleClick={() => utils.playMusicFromList(song, data, setData)}
-                    >
-                      <span className={styles.index}>{`${index + 1}-${song.title}-${song.total_duration}`}</span>
-                    </li>
-                  ))}
-              </ul>)
+              <SearchedList 
+                data={data}
+                setData={setData}
+                searchedListRst={searchedListRst}
+              />
             }
         />
     </div>

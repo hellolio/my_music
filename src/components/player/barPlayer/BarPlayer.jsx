@@ -89,7 +89,7 @@ function BarPlayer(props) {
           isConfirm={true}
           style={`${styles.leftBarProgress} ${AB.isAB >= 0 ? styles.leftBarProgressA : ''}`}
         />
-        <div
+        <div data-clickable
           className={styles.centerBlockProgress}
           ref={progressBarRef}
           onClick={(e) => updateProgress(e, data, setData)}  // 点击时更新进度

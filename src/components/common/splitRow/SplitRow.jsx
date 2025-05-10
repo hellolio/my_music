@@ -1,12 +1,12 @@
 import React from 'react';
 import styles from './SplitRow.module.scss';
 
-const SplitRow = ({ left, center, right }) => {
+const SplitRow = ({ left, leftStyle,  center, centerStyle, right, righStyle }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.left}>{left}</div>
-      <div className={styles.center}>{center}</div>
-      <div className={styles.right}>{right}</div>
+      <div className={`${leftStyle} ${styles.left}`}>{left}</div>
+      <div className={`${centerStyle} ${styles.center}`}>{center}</div>
+      <div className={`${righStyle} ${styles.right}`}>{right}</div>
     </div>
   );
 };

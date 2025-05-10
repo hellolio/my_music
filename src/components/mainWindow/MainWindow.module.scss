@@ -1,0 +1,99 @@
+@use '@/base/theme-config.scss' as theme;
+/* 设置应用的所有容器背景为黑色 */
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: theme.$body-background-color;
+  color: theme.$font-color-white; /* 设置文本为白色，确保在黑色背景下可读 */
+  overflow-x: hidden;
+  position: relative;
+}
+
+body {
+  height: 100vh; /* 让页面充满整个视口 */
+  position: relative;
+  overflow: hidden; /* 防止滚动 */
+  background-color: theme.$body-background-color; /* 确保背景一致 */
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--cover-bg, none) no-repeat center center;
+  background-size: cover; /* 让背景填满整个窗口 */
+  filter: blur(20px); /* 高斯模糊 */
+  z-index: -1; /* 放在所有内容后面 */
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
+  user-select: none;
+  font-family: theme.$font-family;
+  // color: theme.$font-color-white;
+}
+
+.myPlayer {
+  display: flex;                /* 使用 Flexbox 布局 */
+  flex-direction: column;       /* 垂直排列子元素 */
+  position: relative;   /* 设置父容器为相对定位 */
+  height: 100vh;         /* 设定父容器的高度为视口高度 */
+  width: 100%;
+}
+
+.display {
+  height: 70vh;
+  width: 100%;
+  flex: 1; /* 占满剩余高度 */
+  min-height: 0;         /* 必须有这句！否则 flexbox 不允许它真正缩小 */
+  overflow: auto;
+}
+
+
+/* 滑动容器（视口） */
+.playSliderContainer {
+  width: 100%;
+  height: 100%;         /* 控制滑动内容的垂直高度 */
+  overflow: hidden;
+  position: relative;
+}
+
+/* 滑动轨道（横向排列子组件） */
+.playSliderWrapper {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  will-change: transform;
+  width: 100%;
+  height: 100%;
+}
+
+/* 每个子组件占满容器 */
+.music, .video {
+  min-width: 100%;
+  max-width: 100%;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+/* 最外层的父容器 */
+.parent {
+  display: flex;                   /* 启用 Flexbox 布局 */
+  justify-content: center;         /* 水平居中对齐 */
+  align-items: center;             /* 垂直居中对齐 */
+}
+
+
+
+.player {
+  position: relative;    /* 元素相对于父容器定位 */
+  left: 50%;                 /* 距离左边 50%（元素的左边缘会到达视口的中点） */
+  transform: translateX(-50%); /* 向左偏移自身宽度的 50%，实现水平居中 */
+  bottom: 10px;
+  width: 100%;
+}
+

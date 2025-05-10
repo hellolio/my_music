@@ -23,7 +23,7 @@ export default function ModalComFloat({visible, setVisible, panelRef, children})
 
     return ReactDOM.createPortal(
         
-      <div id="lyricModal" className={`${styles.modal} ${visible ? styles.visible : ''}`}
+      <div className={`${styles.modal} ${visible ? styles.visible : ''}`}
       >
         <div className={styles.modalContent} ref={ModalComFloatRef}>
           {children}

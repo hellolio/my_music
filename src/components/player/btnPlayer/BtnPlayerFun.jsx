@@ -12,17 +12,17 @@ export const importMusic = async (musicListImportState, setMusicListImportState)
   setMusicListImportState(musicListImportState.concat(musicListImportState_new));
 }
 
-
 // 处理按钮点击事件
-export const leftClick = async (musicListImportState, data, setData) => {
-  let index = musicListImportState.findIndex((song) => song.id === data.id);
+export const leftClick = async (data, setData, allSongList) => {
+  let currentSongIndex = allSongList.findIndex((item) => item.id === data.playlistId);
+  let index = allSongList[currentSongIndex].songs.findIndex((song) => song.id === data.id);
 
   if (index <= 0){
-    index = musicListImportState.length-1;
+    index = allSongList[currentSongIndex].songs.length-1;
   }else{
     index = index - 1;
   }
-  var audioMeta = musicListImportState[index];
+  var audioMeta = allSongList[currentSongIndex].songs[index];
 
   if (data.isMusic) {
     await data.music.current.stop()
@@ -118,23 +118,24 @@ export const togglePlayPause = async (data, setData) => {
   }));
 };
 
-export const rightClick = async (musicListImportState, data, setData) => {
-  let index = musicListImportState.findIndex((song) => song.id === data.id);
-  if (index >= musicListImportState.length-1){
+export const rightClick = async (data, setData, allSongList) => {
+  let currentSongIndex = allSongList.findIndex((item) => item.id === data.playlistId);
+  let index = allSongList[currentSongIndex].songs.findIndex((song) => song.id === data.id);
+
+
+  if (index >= allSongList[currentSongIndex].songs.length-1){
     index = 0;
-  }else if (index === -1){
-    return
   }else{
     index = index + 1;
   }
-
-  var audioMeta = musicListImportState[index];
+  var audioMeta = allSongList[currentSongIndex].songs[index];
   
   if (data.isMusic) {
     await data.music.current.stop()
   }else {
     await data.video.current.stop()
   }
+  
   if (audioMeta != undefined) {
     const isMusic = utils.isMusic(audioMeta.audio_src);
     let playFun = undefined;
@@ -181,8 +182,4 @@ export const cycleClick = async (data, setData) => {
   }));
   localStorage.setItem('isSingleLoop', JSON.stringify(!data.isSingleLoop));
 }
-
-export const handleTogglePanel = (setShowPanel) => {
-  setShowPanel((prev => !prev));
-};
 

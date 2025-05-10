@@ -48,7 +48,7 @@
       {
         "title": "my-music",
         "minWidth": 200,  
-        "minHeight": 400,
+        "minHeight": 30,
         "decorations": false,
         "transparent": true
       }

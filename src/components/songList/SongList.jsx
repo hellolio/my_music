@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useState, useContext  } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './SongList.module.scss';
 import * as utils from "../../common/utils"
 import ShowMsg from '../showMsg/ShowMsg';
 import MyButton from "@/components/common/button/MyButton";
-import { Context } from '../common/context/MyProvider';
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
 import { createPortal } from 'react-dom';
 
-const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPlayerRef }) => {
+const SongList = ({ data, setData, allSongList, setAllSongList, visible, onClose, listBtnPlayerRef }) => {
   const panelRef = useRef(null);
 
   // 点击组件外自动收起
@@ -35,8 +34,6 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
   const [selectedItems, setSelectedItems] = useState([]);
   const [allCheck, setAllCheck] = useState(true);
 
-  const { allSongList, setAllSongList } = useContext(Context);
-
   // 切换到某个歌单
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -48,7 +45,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
 
   // 初次加载的时候从数据库获取歌曲列表
   useEffect(() => {
-    getMusicListFormDB(setCurrentIndex, setAllSongList, setSongs, data, setData, setUpdatePlayListFlg);
+    getMusicListFormDB(setCurrentIndex, setAllSongList, data, setData, setUpdatePlayListFlg);
   }, [updatePlayListFlg]);
 
   const panel = (
@@ -74,7 +71,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                     key={index}
                     className={`${styles.songList} ${selectedItems.includes(song) ? styles.active : ''} ${data.id === song.id ? styles.isPlaying : ''}`}
                     onClick={(e) => handleCheckboxChange(e, song, selectedItems, setSelectedItems)}
-                    onDoubleClick={() => utils.playMusicFromList(song, data, setData)}
+                    onDoubleClick={() => utils.playMusicFromList(song, data, setData, data.playlistId)}
                   >
                     <span className={styles.index}>{index + 1}</span>
                     <span className={styles.title}>{song.title}</span>
@@ -89,19 +86,19 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
   
       <div className={styles.addDelete}>
         <MyButton 
-          callFun={() => handleAllCheckboxChange(allCheck, setAllCheck, songs, setSelectedItems)}
+          callFun={() => handleAllCheckboxChange(allCheck, setAllCheck, setSelectedItems, allSongList, currentIndex )}
           msg={allCheck ? '全选' : '取消'}
           isConfirm={true}
           style={styles.setting}
         />
         <MyButton 
-            callFun={() => importMusic(songs, setSongs, data.playlistId, setUpdatePlayListFlg)}
+            callFun={() => importMusic(data.playlistId, setUpdatePlayListFlg, setAllSongList, currentIndex)}
             msg={'添加'}
             isConfirm={true}
             style={styles.setting}
           />
         <MyButton 
-            callFun={() => deleteMusic(setSongs, selectedItems, setSelectedItems, setUpdatePlayListFlg)}
+            callFun={() => deleteMusic(selectedItems, setSelectedItems, setUpdatePlayListFlg, setAllSongList, currentIndex)}
             msg={'删除'}
             isConfirm={true}
             style={styles.setting}
@@ -121,7 +118,7 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
                 >
                   <MyButton 
                     callFun={() => {
-                      switchTo(index, listObj.id, setCurrentIndex, setData, setSongs, allSongList);
+                      switchTo(index, listObj.id, setCurrentIndex, setData, allSongList);
                       document.getElementById(`songlist-${index}`).scrollIntoView({
                         behavior: 'smooth',
                         block: 'nearest',
@@ -180,8 +177,8 @@ const SongList = ({ data, setData, visible, onClose, songs, setSongs, listBtnPla
       </div>
     </div>
   );
-  
-  return createPortal(panel, document.body);
+
+  return createPortal(panel, document.body);  
 };
 
 export default SongList;
