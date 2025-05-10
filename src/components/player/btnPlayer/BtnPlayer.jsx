@@ -4,12 +4,13 @@ import styles from "./BtnPlayer.module.scss";
 
 import SongList from "../../songList/SongList";
 import MyButton from "@/components/common/button/MyButton";
-import ModalCom from "@/components/common/modalCom/ModalCom";
+import ModalComFloat from "@/components/common/modalComFloat/ModalComFloat";
 
 import {leftClick, togglePlayPause, rightClick, cycleClick} from "./BtnPlayerFun"
 
 function BtnPlayer(props) {
   const {data, setData, allSongList, setAllSongList} = props;
+  const listBtnPlayerRef = useRef(null);
 
   useEffect(() => {
     if (data.playState===-1) {
@@ -24,7 +25,6 @@ function BtnPlayer(props) {
   // 是否显示播放list
   const [showSongList, setShowSongList] = useState(false);
 
-  const listBtnPlayerRef = useRef(null);
 
   return (
     <div 
@@ -61,27 +61,20 @@ function BtnPlayer(props) {
         isConfirm={true}
         style={styles.setting}
       />
-      <SongList 
-        data={data}
-        setData={setData}
-        allSongList={allSongList}
-        setAllSongList={setAllSongList}
+
+      <ModalComFloat 
         visible={showSongList}
-        onClose={() => {setShowSongList(false)}}
-        listBtnPlayerRef={listBtnPlayerRef}
+        setVisible={setShowSongList}
+        panelRef={listBtnPlayerRef}
+        children={
+          <SongList 
+            data={data}
+            setData={setData}
+            allSongList={allSongList}
+            setAllSongList={setAllSongList}
+          />
+        }
       />
-
-              {/* <ModalCom
-                visible={showSongList}
-                setVisible={setShowSongList}
-                parentRef={listBtnPlayerRef}
-                style={styles.songList}
-                children={
-                  
-                  <div>aaa</div>
-                }
-              /> */}
-
     </div>
   );
   

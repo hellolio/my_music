@@ -7,28 +7,8 @@ import MyButton from "@/components/common/button/MyButton";
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
 import { createPortal } from 'react-dom';
 
-const SongList = ({ data, setData, allSongList, setAllSongList, visible, onClose, listBtnPlayerRef }) => {
+const SongList = ({ data, setData, allSongList, setAllSongList }) => {
   const panelRef = useRef(null);
-
-  // 点击组件外自动收起
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if ((panelRef.current && !panelRef.current.contains(event.target)) && (listBtnPlayerRef.current && !listBtnPlayerRef.current.contains(event.target))){
-        onClose(); // 调用父组件的关闭函数
-      }
-    };
-
-    if (visible) {
-      document.addEventListener('mousedown', handleClickOutside);
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }
-
-    // 清理
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [visible, onClose]);
 
   // 用来保存选中的复选框的 id
   const [selectedItems, setSelectedItems] = useState([]);
@@ -48,8 +28,8 @@ const SongList = ({ data, setData, allSongList, setAllSongList, visible, onClose
     getMusicListFormDB(setCurrentIndex, setAllSongList, data, setData, setUpdatePlayListFlg);
   }, [updatePlayListFlg]);
 
-  const panel = (
-    <div className={`${styles.songPanel} ${visible ? styles.visible : ''}`} ref={panelRef}>
+  return (
+    <div className={styles.songPanel}>
       <ul>
         <li className={styles.playListTitle}>
           <span className={styles.index}><h3>序号</h3></span>
@@ -150,8 +130,8 @@ const SongList = ({ data, setData, allSongList, setAllSongList, visible, onClose
             style={styles.setting}
           />
         </div>
-  
-        {showDialog && (
+      </div>
+      {showDialog && (
           <ShowMsg
             showMsgParam={{ title: "创建歌单", placeholder: "请输入歌单名", isInput: true }}
             inputValue={playlistName}
@@ -174,11 +154,9 @@ const SongList = ({ data, setData, allSongList, setAllSongList, visible, onClose
             callFunParam={{allSongList: allSongList, playlistId: data.playlistId, setUpdatePlayListFlg: setUpdatePlayListFlg, setShowConfirmDialog: setShowConfirmDialog}}
           />
         )}
-      </div>
     </div>
   );
 
-  return createPortal(panel, document.body);  
 };
 
 export default SongList;

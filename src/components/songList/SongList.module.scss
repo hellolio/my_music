@@ -1,34 +1,42 @@
 @use '@/base/theme-config.scss' as theme;
 
 .songPanel {
-  position: fixed;
-  bottom: 40px;
-  top: 20px;
-  right: 0;
-  width: 50%;
-  min-width: 200px;
-  max-width: 500px;
-  margin-top: 10px;
-  margin-bottom: calc(5vh + 60px);
-  border-radius: 15px;
-  background-color: rgba(121, 121, 121, 0.188);
-  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  overflow-y: hidden;
-  z-index: 999;
-  transition: transform 0.3s ease-in-out;
-  will-change: transform;
-  transform: translateX(100%);
-  backdrop-filter: blur(5px);
-  padding-bottom: 50px;
+  height: 100%; /* 设置为父元素的 50% */
+  display: flex;
+  flex-direction: column; /* 使用 flexbox，垂直排列内容 */
+  overflow: hidden;
 }
 
-.songPanel.visible {
-  transform: translateX(0);
+ul {
+  list-style: none;
+  padding: 0;
+  // max-height: 90%;
+  overflow-y: auto;
 }
 
-.songPanel .title {
+li {
+  display: flex;
+  align-items: center;
+  padding: 3px 1px;
+  border-bottom: 1px solid rgba(78, 77, 77, 0.388);
+  text-align: left;
+}
+
+li span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+li .index {
+  flex: 0 0 40px;
+  text-align: left;
+}
+
+li .title {
   flex: 1;
+  padding: 0 10px;
+  text-align: left;
   display: inline-block;
   max-width: 300px;
   overflow: hidden;
@@ -36,41 +44,7 @@
   white-space: nowrap;
 }
 
-
-.songPanel ul {
-  list-style: none;
-  padding: 0;
-  max-height: 90%;
-  overflow-y: auto;
-}
-
-.songPanel li {
-  display: flex;
-  align-items: center;
-  padding: 3px 1px;
-  border-bottom: 1px solid rgba(78, 77, 77, 0.388);
-  text-align: left;
-  // color: #dbcdcd;
-}
-
-.songPanel li span  {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.songPanel li .index {
-  flex: 0 0 40px;
-  text-align: left;
-}
-
-.songPanel li .title {
-  flex: 1;
-  padding: 0 10px;
-  text-align: left;
-}
-
-.songPanel li .duration {
+li .duration {
   flex: 0 0 60px;
   text-align: right;
   margin-left: auto;
@@ -91,7 +65,6 @@
   cursor: pointer;
   transition: background-color 0.3s;
   background-color: rgba(61, 66, 61, 0.166);
-  // color: #dbcdcd;
 }
 
 img {
@@ -103,7 +76,7 @@ img {
 /* 滑动区域容器 */
 .sliderContainer {
   width: 100%;
-  height: calc(100% - 80px);
+  height: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -121,13 +94,15 @@ img {
 .sliderWrapper .list {
   min-width: 100%;
   max-width: 100%;
+  // max-height: 500px;
+  min-height: 50px;
   height: 100%;
-  flex-shrink: 0;
+  // flex-shrink: 0;
 }
 
 .addDelete {
-  position: absolute;
-  bottom: 70px;
+  // position: absolute;
+  // bottom: 70px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
@@ -135,16 +110,14 @@ img {
 }
 
 hr {
-  position: absolute;
   width: 100%;
-  bottom: 65px;
+  // bottom: 65px;
   border: none;
   border-top: 2px solid #58b7ce;
 }
 
 .playList {
-  position: absolute;
-  bottom: 20px;
+  // bottom: 20px;
   display: flex;
   align-items: center;
   width: 90%;
@@ -167,19 +140,6 @@ hr {
   gap: 6px;
   width: fit-content;
 }
-
-// .switchSonglist {
-//   flex-shrink: 0;
-//   padding: 3px 6px;
-//   white-space: nowrap;
-//   border-radius: 6px;
-//   border: none;
-//   cursor: pointer;
-//   font-size: 14px;
-//   transition: background-color 0.3s;
-//   background-color: rgba(61, 66, 61, 0.166);
-//   // color: #dbcdcd;
-// }
 
 .rightButtons {
   display: flex;
@@ -205,12 +165,6 @@ hr {
   justify-content: center;
 }
 
-@keyframes pop {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
 .switchSonglist.active {
   background-color: theme.$selected-background-color;
   font-weight: bold;
@@ -234,8 +188,7 @@ hr {
 .deleteSonglist:hover,
 .allSonglist:hover,
 .switchSonglist:hover,
-.songPanel li.songList:hover {
-  // background-color: theme.$hover-background-color;
+li.songList:hover {
   color: theme.$hover-font-color;
   border-radius: 5px;
   transform: theme.$hover-transform;
@@ -249,14 +202,7 @@ hr {
   transform: scale(0.99);
 }
 
-// .addSonglist:active,
-// .deleteSonglist:active,
-// .allSonglist:active,
-// .switchSonglist:active {
-//   animation: pop 0.3s ease;
-// }
-
-.songPanel li.songList:active {
+li.songList:active {
   transform: scale(0.99);
 }
 
