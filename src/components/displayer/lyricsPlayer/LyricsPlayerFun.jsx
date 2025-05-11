@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { open } from "@tauri-apps/api/dialog";
 
-import * as utils from "../../../common/utils"
+import * as player from "../../../common/player"
 
 export const importLyrics = async () =>{
   // 获取当前文件的状态
@@ -32,7 +32,7 @@ export const findIndex =(data) => {
 }
 
 export const handleLyricClick = (line, index, data, setData) => {
-  const isMusic = utils.isMusic(data.audioSrc);
+  const isMusic = player.checkIsMusic(data.audioSrc);
   let playFun = undefined;
   if (isMusic){
       playFun = data.music.current

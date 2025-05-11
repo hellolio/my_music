@@ -17,13 +17,11 @@ function LyricsPlayer(props) {
     // 4. 根据时间更新高亮行
     useEffect(() => {
         if (!data.lyrics.length) return;
-        
         // 找到第一个时间超过 barCurrentProgressSec 的索引
         const index = data.lyrics.findIndex((e) => e.time > data.barCurrentProgressSec);
         const newIndex = index === -1 ? data.lyrics.length - 1 : Math.max(0, index - 1);
-        
         setActiveIndex(newIndex);
-    }, [data]);
+    }, [data.barCurrentProgressSec]);
 
     // 5. 自动滚动到当前行
     useEffect(() => {
@@ -58,7 +56,7 @@ function LyricsPlayer(props) {
               {data.lyrics.map((line, index) => (
                 <li
                   ref={(el) => (listRef.current[index] = el)}
-                  className={activeIndex === index ? styles.active : ''}
+                  className={`${styles.list} ${activeIndex === index ? styles.active : ''}`}
                   key={index}
                   onDoubleClick={() => handleLyricClick(line, index, data, setData)}
                 >

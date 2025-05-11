@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from './SongList.module.scss';
 import * as utils from "../../common/utils"
+import * as player from "../../common/player"
 import ShowMsg from '../showMsg/ShowMsg';
 import MyButton from "@/components/common/button/MyButton";
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
-import { createPortal } from 'react-dom';
 
 const SongList = ({ data, setData, allSongList, setAllSongList }) => {
   const panelRef = useRef(null);
@@ -30,8 +30,8 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
 
   return (
     <div className={styles.songPanel}>
-      <ul>
-        <li className={styles.playListTitle}>
+      <ul className={styles.list}>
+        <li className={`${styles.playListTitle} ${styles.songList}`}>
           <span className={styles.index}><h3>序号</h3></span>
           <span className={styles.title}><h3>歌名</h3></span>
           <span className={styles.duration}><h3>时长</h3></span>
@@ -51,7 +51,7 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
                     key={index}
                     className={`${styles.songList} ${selectedItems.includes(song) ? styles.active : ''} ${data.id === song.id ? styles.isPlaying : ''}`}
                     onClick={(e) => handleCheckboxChange(e, song, selectedItems, setSelectedItems)}
-                    onDoubleClick={() => utils.playMusicFromList(song, data, setData, data.playlistId)}
+                    onDoubleClick={() => player.playMusicFromList(song, data, setData, data.playlistId)}
                   >
                     <span className={styles.index}>{index + 1}</span>
                     <span className={styles.title}>{song.title}</span>

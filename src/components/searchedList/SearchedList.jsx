@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styles from "./SearchedList.module.scss";
+import * as player from "@/common/player"
 import * as utils from "@/common/utils"
 
 
@@ -15,10 +16,10 @@ export const SearchedList = ({data, setData, searchedListRst}) => {
                 className={styles.row} 
                 key={index}
                 onClick={() => {
-                  utils.playMusicFromList(song, data, setData, song.playlistId)
+                  player.playMusicFromList(song, data, setData, song.playlistId)
                 }}
               >
-                <span className={styles.index}>{`${index + 1}-${song.title}-${song.total_duration}`}</span>
+                {`${song.title}-${song.author + 1}-${utils.formatTime(song.total_duration)}`}
               </li>
             ))}
         </ul>

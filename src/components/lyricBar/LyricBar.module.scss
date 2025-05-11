@@ -1,10 +1,11 @@
+@use '@/base/theme-config.scss' as theme;
+
+
 .lyricBar {
     position: relative;
     width: 100%;
-    height: 32px; /* 高度精简为一行 */
-    background-color: rgba(30, 30, 30, 0.5);
-    color: white;
-    font-size: 14px;
+    height: 100vh;
+    background-color: transparent;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,37 +13,59 @@
     padding: 0 10px;
     box-sizing: border-box;
     transition: background-color 0.3s ease;
-    overflow: hidden;
+  }
+
+  .lyricInfo {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lyricInfo.active {
+    border-radius: 6px;
+    background: var(--cover-bg, none) no-repeat center center;
+    background-size: cover;
+    background-color: rgba(78, 74, 74, 0.29);
+    filter: blur(2px);
+    z-index: -1;
+  }
+
+  .lyricText {
+    display: inline-block;
+    white-space: nowrap;
+    color: theme.$font-color-yellow;
+    font-size: larger;
+  }
+
+  .scroll {
+    animation: scrollText 10s linear infinite;
   }
   
-  .lyricText {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: center;
-    width: 100%;
-    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  @keyframes scrollText {
+    0% {
+      transform: translateX(0); /* 一开始就从左侧开始 */
+    }
+    100% {
+      transform: translateX(-100%); /* 滚动到左侧完全出去 */
+    }
+  }
+
+  .lyricTitle {
+    color: theme.$font-color-blue;
   }
   
   .controls {
     position: absolute;
-    right: 8px;
+    top: 0%;
+    right: 0%;
+    z-index: 10; /* 保证浮在其他元素上方 */
     display: flex;
-    gap: 6px;
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 2px 4px;
-    border-radius: 4px;
+    flex-direction: row;
+    justify-content: flex-start; /* 靠左 */
+    align-items: center;         /* 垂直居中 */
+    gap: 8px;                    /* 按钮之间的间距 */
+    margin-left: 10px;           /* 靠左边一点点内边距 */
   }
-  
-  .controls button {
-    background: transparent;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 2px;
+
+  .setting {
+    font-size: 20px;
   }
-  
-  .controls button:hover {
-    color: #aaffaa;
-  }
-  

@@ -1,4 +1,5 @@
 import * as utils from "../../../common/utils"
+import * as player from "../../../common/player"
 import styles from "./BarPlayer.module.scss"
 import { useState, useEffect, useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
@@ -40,7 +41,7 @@ function BarPlayer(props) {
 
             if (AB.isAB === 1 && AB.A != -1 && AB.B != -1){
               if (AB.B < newProgress || AB.A > newProgress){
-                const isMusic = utils.isMusic(data.audioSrc);
+                const isMusic = player.checkIsMusic(data.audioSrc);
                 let playFun = undefined;
                 if (isMusic){
                   playFun = data.music.current

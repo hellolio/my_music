@@ -7,14 +7,8 @@
   overflow: hidden;
 }
 
-ul {
-  list-style: none;
-  padding: 0;
-  // max-height: 90%;
-  overflow-y: auto;
-}
 
-li {
+.songList {
   display: flex;
   align-items: center;
   padding: 3px 1px;
@@ -22,18 +16,13 @@ li {
   text-align: left;
 }
 
-li span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-li .index {
+.index {
   flex: 0 0 40px;
   text-align: left;
 }
 
-li .title {
+.title {
   flex: 1;
   padding: 0 10px;
   text-align: left;
@@ -44,16 +33,17 @@ li .title {
   white-space: nowrap;
 }
 
-li .duration {
+.duration {
   flex: 0 0 60px;
   text-align: right;
   margin-left: auto;
 }
 
 .playListTitle * {
-  color: #58b7ce;
   height: 30px;
+  color: #58b7ce;
 }
+
 
 .addSonglist,
 .deleteSonglist,
@@ -67,11 +57,11 @@ li .duration {
   background-color: rgba(61, 66, 61, 0.166);
 }
 
-img {
-  margin-left: 5px;
-  width: 20px;
-  height: 20px;
-}
+// img {
+//   margin-left: 5px;
+//   width: 20px;
+//   height: 20px;
+// }
 
 /* 滑动区域容器 */
 .sliderContainer {
@@ -94,10 +84,9 @@ img {
 .sliderWrapper .list {
   min-width: 100%;
   max-width: 100%;
-  // max-height: 500px;
   min-height: 50px;
   height: 100%;
-  // flex-shrink: 0;
+  overflow-y: auto;
 }
 
 .addDelete {
@@ -188,7 +177,7 @@ hr {
 .deleteSonglist:hover,
 .allSonglist:hover,
 .switchSonglist:hover,
-li.songList:hover {
+.songList:hover {
   color: theme.$hover-font-color;
   border-radius: 5px;
   transform: theme.$hover-transform;
@@ -202,7 +191,7 @@ li.songList:hover {
   transform: scale(0.99);
 }
 
-li.songList:active {
+.songList:active {
   transform: scale(0.99);
 }
 

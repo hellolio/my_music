@@ -4,7 +4,7 @@ export default function MyButton({callFun,callDoubleFun, msg, isConfirm, style})
 
   return (
         <button 
-          className={`${styles.myButton} ${style? style : isConfirm ? styles.confirm: styles.cancle}`} 
+          className={`${style} ${isConfirm ? styles.confirm: styles.cancle} ${styles.myButton}`} 
           onClick={callFun} 
           onDoubleClick={callDoubleFun}
         >{msg}

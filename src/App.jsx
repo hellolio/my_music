@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { appWindow  } from '@tauri-apps/api/window';
+import { motion } from 'framer-motion';
 
 import MainWindow  from "@/components/mainWindow/MainWindow";
 import LyricBar from "@/components/lyricBar/LyricBar";
@@ -10,6 +11,7 @@ function App() {
     const ref = useRef(null);
     const musicRef = useRef();
     const videoRef = useRef();
+    
 
     useEffect(() => {
       const el = ref.current;
@@ -20,7 +22,7 @@ function App() {
   
         // 忽略按钮、输入框、链接等
         if (
-          ['BUTTON', 'INPUT', 'TEXTAREA', 'A', 'SELECT', 'LI', 'SPAN'].includes(target.tagName) ||
+          ['BUTTON', 'INPUT', 'TEXTAREA', 'A', 'SELECT', 'LI'].includes(target.tagName) ||
           target.closest('[data-no-drag], [data-clickable]')
         ) {
           return;
@@ -96,30 +98,60 @@ function App() {
 
     const [isDesktopMode, setIsDesktopMode] = useState(false);
 
-  return (
-    <div ref={ref}>
-      { (!isDesktopMode && data.isMusic) ?
-        <MainWindow 
-          data={data}
-          setData={setData}
-          allSongList={allSongList}
-          setAllSongList={setAllSongList}
-          musicRef={musicRef}
-          videoRef={videoRef}
-          setIsDesktopMode={setIsDesktopMode}
-        />
-      :
-        <LyricBar
-          data={data}
-          setData={setData}
-          allSongList={allSongList}
-          setAllSongList={setAllSongList}
-          setIsDesktopMode={setIsDesktopMode}
-        />
-      }
-
-    </div>
-  );
+    return (
+      <div ref={ref} style={{ position: 'relative' }}>
+        {/* MainWindow 显示时可见 */}
+        <motion.div
+          initial={false}
+          animate={{ 
+            opacity: isDesktopMode ? 0 : 1,
+            pointerEvents: isDesktopMode ? 'none' : 'auto',
+            scale: isDesktopMode ? 0.98 : 1 
+          }}
+          transition={{ duration: 0.3 }}
+          style={{ 
+            position: 'absolute', 
+            width: '100%', 
+            height: '100%' 
+          }}
+        >
+          <MainWindow 
+            data={data}
+            setData={setData}
+            allSongList={allSongList}
+            setAllSongList={setAllSongList}
+            musicRef={musicRef}
+            videoRef={videoRef}
+            setIsDesktopMode={setIsDesktopMode}
+          />
+        </motion.div>
+    
+        {/* LyricBar 显示时可见 */}
+        <motion.div
+          initial={false}
+          animate={{ 
+            opacity: isDesktopMode ? 1 : 0,
+            pointerEvents: isDesktopMode ? 'auto' : 'none',
+            scale: isDesktopMode ? 1 : 0.98
+          }}
+          transition={{ duration: 0.3 }}
+          style={{ 
+            position: 'absolute', 
+            width: '100%', 
+            height: '100%' 
+          }}
+        >
+          <LyricBar
+            data={data}
+            setData={setData}
+            allSongList={allSongList}
+            setAllSongList={setAllSongList}
+            isDesktopMode={isDesktopMode}
+            setIsDesktopMode={setIsDesktopMode}
+          />
+        </motion.div>
+      </div>
+    );
   
 }
 

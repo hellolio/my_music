@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styles from "./SettingList.module.scss";
 import { convertFileSrc } from '@tauri-apps/api/tauri';
 
-import {readWindowState, writeWindowState} from './SettingListFun'
+import * as utils from "@/common/utils";
 
 import FindLyrics from '../findLyrics/FindLyrics';
 import ChangeTheme from '../changeTheme/ChangeTheme';
@@ -35,9 +35,9 @@ export const SettingList = ({data, setData}) => {
         }else {
           imageUrl = convertFileSrc(data.coverImagePath);
         }
-        document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
+        document.getElementById('myPlayer')?.style.setProperty('--cover-bg', `url(${imageUrl})`);
       } else {
-        document.body.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
+        document.getElementById('myPlayer')?.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
       }
   
       localStorage.setItem('settingData', JSON.stringify(settingData));
@@ -52,9 +52,9 @@ export const SettingList = ({data, setData}) => {
           }else {
             imageUrl = convertFileSrc(data.coverImagePath);
           }
-          document.body.style.setProperty('--cover-bg', `url(${imageUrl})`);
-      } else {
-        document.body.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
+          document.getElementById('myPlayer')?.style.setProperty('--cover-bg', `url(${imageUrl})`);
+        } else {
+          document.getElementById('myPlayer')?.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
       }
     }, [data.coverImagePath]);
 
@@ -103,8 +103,8 @@ export const SettingList = ({data, setData}) => {
             <CommonSetting
               settingData={settingData}
               setSettingData={setSettingData}
-              readWindowState={readWindowState}
-              writeWindowState={writeWindowState}
+              readWindowState={utils.readWindowState}
+              writeWindowState={utils.writeWindowState}
             />
           }
         />

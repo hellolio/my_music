@@ -1,3 +1,9 @@
+import { join } from '@tauri-apps/api/path';
+import { readTextFile, writeFile } from '@tauri-apps/api/fs';
+import { appConfigDir } from '@tauri-apps/api/path';
+
+import { convertFileSrc } from '@tauri-apps/api/tauri';
+
 
 
 export const formatTime = (seconds) => {
@@ -16,73 +22,22 @@ export const calculatePercentage = (part, total) => {
     return Math.round((part / total) * 100);
 }
 
-export const isMusic = (filename) => {
-    const audioExtensions = ['mp3', 'wav', 'ogg', 'flac', 'aac', 'm4a', 'wma'];
-    const videoExtensions = ['mp4', 'webm', 'ogg', 'avi', 'mov', 'mkv', 'flv', 'wmv'];
-    const ext = filename?.split('.').pop()?.toLowerCase() || '';
-    const isAudioFile = audioExtensions.includes(ext);
-    if (isAudioFile) {
-        return true;
-    } else if (videoExtensions.includes(ext)) {
-        return false;
-    } else {
-        return true;
+export async function getWindowStatePath() {
+    return await join(await appConfigDir(), 'window_state.json');
+  }
+  
+
+export async function readWindowState() {
+    const path = await getWindowStatePath();
+    try {
+      const content = await readTextFile(path);
+      return JSON.parse(content);
+    } catch (e) {
+    return null;
     }
-}
-
-// 双击列表的某首歌播放
-export const playMusicFromList = async (song, data, setData, playlistId) => {
-
-    // return true;
-    // let song = null;
-    if (data.isMusic) {
-        await data.music.current.stop();
-    }else {
-        await data.video.current.stop();
-    }
-
-    const isMusicCheck = isMusic(song.audio_src);
-
-    if (isMusicCheck) {
-        console.log("song:", song);
-        console.log("playlistId:", playlistId);
-        // return 
-        await data.music.current.play(playlistId, song.audio_src, song.total_duration, 0, data.barCurrentVolume);
-        let coverImagePath = await data.music.current.get_cover(song.audio_src);
-        setData(prevData => ({
-            ...prevData,
-            id: song.id,
-            title: song.title,
-            author: song.author,
-            coverImagePath: coverImagePath,
-            isCollect: song.is_collect,
-            isFollow: song.is_follow,
-            lyrics: song.lyrics,
-            lyricsPath: song.lyrics_path,
-            audioSrc: song.audio_src,
-            totalDuration: song.total_duration,
-            barCurrentProgressSec: 0,
-            isPlaying: true,
-            playerAlive: true,
-            isMusic: true,
-        }));
-    } else {
-        await data.video.current.play(data.playlistId, song.audio_src, song.total_duration, 0, data.barCurrentVolume);
-        setData(prevData => ({
-            ...prevData,
-            id: song.id,
-            title: song.title,
-            author: song.author,
-            isCollect: song.is_collect,
-            isFollow: song.is_follow,
-            lyrics: song.lyrics,
-            lyricsPath: song.lyrics_path,
-            audioSrc: song.audio_src,
-            totalDuration: song.total_duration,
-            barCurrentProgressSec: 0,
-            isPlaying: true,
-            playerAlive: true,
-            isMusic: false,
-          }));
-    }
+  }
+  
+export async function writeWindowState(window_state) {
+    const path = await getWindowStatePath();
+    await writeFile({ path, contents: JSON.stringify(window_state, null, 2) });
 }

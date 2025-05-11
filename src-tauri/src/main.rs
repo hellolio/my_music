@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{env, fs, sync::{Arc, Mutex}};
+use std::{env, fs, sync::{atomic::{AtomicBool, Ordering}, Arc, Mutex}};
 
 use tauri::{Manager, PhysicalPosition, PhysicalSize, State, Window, WindowEvent};
 use rusqlite::Connection;
@@ -23,6 +23,7 @@ mod modles;
 pub struct AppState {
     pub db: Mutex<Connection>,      // 数据库连接（线程安全）
     pub player: Arc<Mutex<AudioPlayer>>,   // 应用配置
+    is_desktop_mode: Arc<AtomicBool>,         // 是否记住桌面大小和位置
 }
 
 #[tauri::command]
@@ -213,11 +214,22 @@ fn get_cover_from_music(input_path: &str) -> String {
     utils::get_cover_from_music(input_path).unwrap_or("".to_string())
 }
 
+#[tauri::command]
+fn set_is_desktop_mode(state: State<'_, Arc<AppState>>, is_desktop_mode: bool) {
+    state.is_desktop_mode.store(is_desktop_mode, Ordering::Relaxed);
+}
+
+#[tauri::command]
+fn set_always_on_top(window: Window, window_on_top: bool) {
+    let _ = window.set_always_on_top(window_on_top);
+}
+
 fn main() {
     add_bin_to_path();
     let state = AppState{
         db: Mutex::new(db::init_db().expect("数据库初始化失败")),
-        player: Arc::new(Mutex::new(AudioPlayer::new()))
+        player: Arc::new(Mutex::new(AudioPlayer::new())),
+        is_desktop_mode: Arc::new(AtomicBool::new(false)),
     };
     tauri::Builder::default()
         .setup(|app| {
@@ -241,31 +253,37 @@ fn main() {
             }
             Ok(())
         })
+        .manage(Arc::new(state))
         
         .on_window_event(|event| {
             let window = event.window();
-            match event.event() {
-                WindowEvent::Resized(_) | WindowEvent::Moved(_) => {
-                    let position = window.outer_position().unwrap_or_default();
-                    let size = window.outer_size().unwrap_or_default();
-                    let mut selected_remeber_size = true;
-                    if let Some(window_state_old) = window::load_window_state(&window.app_handle().app_handle()) {
-                        selected_remeber_size = window_state_old.selected_remeber_size;
-                    };
-                    let window_state = window::WindowState {
-                        selected_remeber_size,
-                        window_x: if position.x <100  {0} else {position.x as u32},
-                        window_y: if position.y <100 {0} else {position.y as u32},
-                        window_width: if size.width < 200 {200} else {size.width},
-                        window_height: if size.height < 400 {size.height} else {size.height},
-                    };
-                    window::save_window_state(&window.app_handle(),&window_state);
+            let app_handle = window.app_handle();
+
+            let is_desktop_mode = app_handle.state::<Arc<AppState>>().is_desktop_mode.load(Ordering::Relaxed);
+            if !is_desktop_mode {
+                match event.event() {
+                    WindowEvent::Resized(_) | WindowEvent::Moved(_) => {
+                        let position = window.outer_position().unwrap_or_default();
+                        let size = window.outer_size().unwrap_or_default();
+                        let mut selected_remeber_size = true;
+                        if let Some(window_state_old) = window::load_window_state(&window.app_handle().app_handle()) {
+                            selected_remeber_size = window_state_old.selected_remeber_size;
+                        };
+                        let window_state = window::WindowState {
+                            selected_remeber_size,
+                            window_x: if position.x <100  {0} else {position.x as u32},
+                            window_y: if position.y <100 {0} else {position.y as u32},
+                            window_width: if size.width < 200 {200} else {size.width},
+                            window_height: if size.height < 400 {size.height} else {size.height},
+                        };
+                        window::save_window_state(&window.app_handle(),&window_state);
+                }
+                    _ => {}
+                }
             }
-                _ => {}
-            }
+
         })
 
-        .manage(Arc::new(state))
         .invoke_handler(tauri::generate_handler![
             play_music,
             pause_music,
@@ -282,6 +300,8 @@ fn main() {
             get_lyrics_targets,
             get_lyrics,
             get_cover_from_music,
+            set_is_desktop_mode,
+            set_always_on_top,
         ])
 
         .run(tauri::generate_context!())

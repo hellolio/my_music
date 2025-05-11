@@ -1,5 +1,4 @@
-// import { invoke } from "@tauri-apps/api/tauri";
-import * as utils from "../../../common/utils"
+import * as player from "../../../common/player"
 
 // 计算并设置进度
 export const updateProgress = (e, progressBarRef, data, setData) =>  {
@@ -58,7 +57,7 @@ export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragg
 
   setCoords((prev) => ({ ...prev, visible: false }));
   if (isDragging){
-      const isMusic = utils.isMusic(data.audioSrc);
+      const isMusic = player.checkIsMusic(data.audioSrc);
       let playFun = undefined;
       if (isMusic){
         playFun = data.music.current

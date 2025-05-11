@@ -26,11 +26,8 @@
   overflow-y: auto;
   position: relative;
 
-  ul {
-    width: 100%;
-    transition: theme.$transition5;
-
-    li {
+  .centerLyricsLine {
+    .list {
       width: 100%;
       height: 30px;
       color: theme.$font-color-grey;
@@ -60,6 +57,7 @@
 
 .centerLyricsLine {
   width: 100%;
+  transition: theme.$transition5;
   margin: 0 auto;
   text-align: center;
   font-style: normal;

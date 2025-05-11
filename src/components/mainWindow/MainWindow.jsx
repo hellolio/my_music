@@ -27,6 +27,7 @@ function MainWindow({data, setData, allSongList, setAllSongList, musicRef, video
   return (
     <MyProvider>
       <div 
+        id="myPlayer"
         className={styles.myPlayer}
       >
         <div className={styles.windowSetting}>

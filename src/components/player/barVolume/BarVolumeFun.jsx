@@ -1,4 +1,4 @@
-import * as utils from "../../../common/utils"
+import * as player from "../../../common/player"
 
 // 计算并设置进度
 export const updateProgress = (e, volumeBarRef, data, setData) =>  {
@@ -58,7 +58,7 @@ export const handleMouseUp = async (e, data, setData, coordsVolume, setCoordsVol
   setCoordsVolume((prev) => ({ ...prev, visible: false }));
   if (isDraggingVolume){
     // await invoke('control_volume', { volume: barCurrentVolume/100 });
-    const isMusic = utils.isMusic(data.audioSrc);
+    const isMusic = player.checkIsMusic(data.audioSrc);
     let playFun = undefined;
     if (isMusic){
       playFun = data.music.current

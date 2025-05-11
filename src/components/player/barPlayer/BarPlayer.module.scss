@@ -13,15 +13,15 @@
 .leftBarProgress,
 .rightBarProgress {
   // flex: 0 0 20px;
-  text-align: center;
-  height: 20px;
-  width: 30px;
-  margin: 5px;
-  font-size: 12px;
-  font-style: normal;
-  color: #cec1bbae;
-  overflow: hidden;
-  background-color: theme.$button-confirm-background-color;
+  // text-align: center;
+  // height: 20px;
+  // width: 30px;
+  // margin: 5px;
+  // font-size: 12px;
+  // font-style: normal;
+  // color: #cec1bbae;
+  // background-color: transparent;
+  // direction: rtl;
 }
 
 
@@ -108,22 +108,22 @@
 }
 
 /* Hover and Active Effects */
-.centerBarRate:hover,
-.centerBarRateEnd:hover {
-  height: 8px;
-}
+// .centerBarRate:hover,
+// .centerBarRateEnd:hover {
+//   height: 8px;
+// }
 
-.centerBarBall:hover {
-  transform: scale(1.5);
-}
+// .centerBarBall:hover {
+//   transform: scale(1.5);
+// }
 
-.leftBarProgress:hover,
-.rightBarProgress:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
-}
+// .leftBarProgress:hover,
+// .rightBarProgress:hover {
+//   transform: scale(1.2);
+//   box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
+// }
 
-.leftBarProgress:active,
-.rightBarProgress:active {
-  transform: scale(0.99);
-}
+// .leftBarProgress:active,
+// .rightBarProgress:active {
+//   transform: scale(0.99);
+// }

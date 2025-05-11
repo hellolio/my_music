@@ -1,12 +1,13 @@
 
 import { useState, useEffect, useRef } from "react";
 import styles from "./BtnPlayer.module.scss";
+import * as player from "@/common/player"
 
 import SongList from "../../songList/SongList";
 import MyButton from "@/components/common/button/MyButton";
 import ModalComFloat from "@/components/common/modalComFloat/ModalComFloat";
 
-import {leftClick, togglePlayPause, rightClick, cycleClick} from "./BtnPlayerFun"
+// import {leftClick, togglePlayPause, rightClick, cycleClick} from "./BtnPlayerFun"
 
 function BtnPlayer(props) {
   const {data, setData, allSongList, setAllSongList} = props;
@@ -15,9 +16,9 @@ function BtnPlayer(props) {
   useEffect(() => {
     if (data.playState===-1) {
       if (data.isSingleLoop) {
-        togglePlayPause(data, setData);
+        player.togglePlayPause(data, setData);
       } else if (allSongList.length > 0){
-        rightClick(data, setData, allSongList);
+        player.rightClick(data, setData, allSongList);
       }
     } 
   }, [data.playState]);
@@ -32,25 +33,25 @@ function BtnPlayer(props) {
       ref={listBtnPlayerRef}
     >
       <MyButton 
-        callFun={() => cycleClick(data, setData)}
+        callFun={() => player.cycleClick(data, setData)}
         msg={data.isSingleLoop ? "①" : "↻"}
         isConfirm={true}
         style={styles.setting}
       />
       <MyButton 
-        callFun={() => leftClick(data, setData, allSongList)}
+        callFun={() => player.leftClick(data, setData, allSongList)}
         msg={'<<'}
         isConfirm={true}
         style={styles.setting}
       />
       <MyButton 
-        callFun={() => togglePlayPause(data, setData)} 
+        callFun={() => player.togglePlayPause(data, setData)} 
         msg={data.isPlaying ? '||': '▶'}
         isConfirm={true}
         style={styles.setting}
       />
       <MyButton 
-        callFun={() => rightClick(data, setData, allSongList)}
+        callFun={() => player.rightClick(data, setData, allSongList)}
         msg={'>>'}
         isConfirm={true}
         style={styles.setting}
