@@ -3,9 +3,12 @@ import styles from './SongList.module.scss';
 import * as utils from "../../common/utils"
 import * as player from "../../common/player"
 import ShowMsg from '../showMsg/ShowMsg';
-import MyButton from "@/components/common/button/MyButton";
+import SettingButton from "@/components/common/SettingButton/SettingButton";
+import SplitRow from "@/components/common/splitRow/SplitRow";
+
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';
+import { div } from 'framer-motion/client';
 
 const SongList = ({ data, setData, allSongList, setAllSongList }) => {
   const panelRef = useRef(null);
@@ -31,10 +34,62 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
   return (
     <div className={styles.songPanel}>
       <ul className={styles.list}>
+          <div className={styles.container}>
+            <div className={styles.rightButtons}>
+            <div className={styles.playListTitle}><h3>播放列表:</h3></div>
+              <div className={styles.rightButtons}>
+                {allSongList.map((listObj, index) => {
+                  return (
+                    <div
+                      key={index}
+                      id={`songlist-${index}`}
+                    >
+                      <SettingButton 
+                        callFun={() => {
+                          switchTo(index, listObj.id, setCurrentIndex, setData, allSongList);
+                          document.getElementById(`songlist-${index}`).scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                          });
+                        }}
+                        msg={listObj.name}
+                        style={listObj.id === data.playlistId ? `${styles.switchSonglist} ${styles.active}` : ''}
+                      />
+                    </div>
+                  );
+                })}
+                <SettingButton 
+                  callFun={() => setShowDialog(true)}
+                  msg={'+添加歌单'}
+                  style={styles.setting}
+                />
+                <SettingButton 
+                  callFun={() => setShowConfirmDialog(true)}
+                  msg={'×删除歌单'}
+                  style={styles.setting}
+                />
+              </div>
+            </div>
+          </div>
+          <div className={styles.controllerButton}>
+            <SettingButton 
+              callFun={() => importMusic(data.playlistId, setUpdatePlayListFlg, setAllSongList, currentIndex)}
+              msg={'添加'}
+            />
+            <SettingButton 
+              callFun={() => handleAllCheckboxChange(allCheck, setAllCheck, setSelectedItems, allSongList, currentIndex )}
+              msg={allCheck ? '全选' : '取消'}
+            />
+            <SettingButton 
+              callFun={() => deleteMusic(selectedItems, setSelectedItems, setUpdatePlayListFlg, setAllSongList, currentIndex)}
+              msg={'删除'}
+            />
+          </div>
+
         <li className={`${styles.playListTitle} ${styles.songList}`}>
-          <span className={styles.index}><h3>序号</h3></span>
-          <span className={styles.title}><h3>歌名</h3></span>
-          <span className={styles.duration}><h3>时长</h3></span>
+          <span className={styles.index}>序号</span>
+          <span className={styles.title}>歌名</span>
+          <span className={styles.duration}>时长</span>
         </li>
       </ul>
   
@@ -64,73 +119,6 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
         </div>
       </div>
   
-      <div className={styles.addDelete}>
-        <MyButton 
-          callFun={() => handleAllCheckboxChange(allCheck, setAllCheck, setSelectedItems, allSongList, currentIndex )}
-          msg={allCheck ? '全选' : '取消'}
-          isConfirm={true}
-          style={styles.setting}
-        />
-        <MyButton 
-            callFun={() => importMusic(data.playlistId, setUpdatePlayListFlg, setAllSongList, currentIndex)}
-            msg={'添加'}
-            isConfirm={true}
-            style={styles.setting}
-          />
-        <MyButton 
-            callFun={() => deleteMusic(selectedItems, setSelectedItems, setUpdatePlayListFlg, setAllSongList, currentIndex)}
-            msg={'删除'}
-            isConfirm={true}
-            style={styles.setting}
-          />
-      </div>
-  
-      <hr />
-  
-      <div className={styles.playList}>
-        <div className={styles.leftScrollWrapper}>
-          <div className={styles.leftButtons}>
-            {allSongList.map((listObj, index) => {
-              return (
-                <div
-                  key={index}
-                  id={`songlist-${index}`}
-                >
-                  <MyButton 
-                    callFun={() => {
-                      switchTo(index, listObj.id, setCurrentIndex, setData, allSongList);
-                      document.getElementById(`songlist-${index}`).scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'nearest',
-                      });
-                    }}
-                    msg={listObj.name}
-                    isConfirm={true}
-                    style={listObj.id === data.playlistId ? `${styles.switchSonglist} ${styles.active}` : ''}
-                />
-                </div>
-                
-              );
-            })}
-          </div>
-        </div>
-  
-        <div className={styles.rightButtons}>
-          <div className={styles.switchQrap}><span>|</span></div>
-          <MyButton 
-            callFun={() => setShowDialog(true)}
-            msg={'+'}
-            isConfirm={true}
-            style={styles.setting}
-          />
-          <MyButton 
-            callFun={() => setShowConfirmDialog(true)}
-            msg={'-'}
-            isConfirm={true}
-            style={styles.setting}
-          />
-        </div>
-      </div>
       {showDialog && (
           <ShowMsg
             showMsgParam={{ title: "创建歌单", placeholder: "请输入歌单名", isInput: true }}

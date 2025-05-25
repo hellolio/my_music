@@ -80,7 +80,6 @@
   height: 100%;
 }
 
-/* 每个列表占据 slider-container 一整屏 */
 .sliderWrapper .list {
   min-width: 100%;
   max-width: 100%;
@@ -198,4 +197,20 @@ hr {
 ::-webkit-scrollbar {
   width: 0px;
   display: none;
+}
+
+
+.controllerButton {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr; /* 子元素平均宽度 */
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+}
+
+.container {
+    display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }

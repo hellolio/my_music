@@ -78,6 +78,13 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
 
   }, [searchKey]);
 
+
+  const setShowFlg = (showFlg) => {
+    setShowSetting(showFlg === 1);
+    setShowThemeList(showFlg === 2);
+    setShowHelpList(showFlg === 3);
+  }
+
   return (
         <div id="drag-container" ref={settinglistRef}
           className={styles.window}>
@@ -86,15 +93,15 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
             left={
               <div  className={styles.windowControlsLeft}>
                 <SettingButton 
-                  callFun={() => setShowSetting(!showSetting)}
+                  callFun={() => setShowFlg(1)}
                   msg={'⚙'}
                 />
                 <SettingButton 
-                  callFun={() => setShowThemeList(!showThemeList)}
+                  callFun={() => setShowFlg(2)}
                   msg={'👕'}
                 />
                 <SettingButton 
-                  callFun={() => setShowHelpList(!showHelpList)}
+                  callFun={() => setShowFlg(3)}
                   msg={'💡'}
                 />
               </div>
