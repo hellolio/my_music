@@ -309,26 +309,5 @@ fn main() {
 }
 
 fn add_bin_to_path() {
-    // 获取当前可执行文件的路径
-    let exe_path = env::current_exe().unwrap_or_default();
-    
-    // 获取当前目录
-    let current_dir = exe_path.parent().unwrap();
-    
-    // 构造 bin 目录的路径
-    let bin_dir = current_dir.join("bin");
-    
-    // 将 bin 目录路径转换为字符串
-    let bin_dir_str = bin_dir.to_string_lossy().to_string();
-
-    // 获取当前的 PATH 环境变量
-    let mut path = env::var("PATH").unwrap_or_default();
-    
-    // 检查 bin 目录是否已在 PATH 中
-    if !path.contains(&bin_dir_str) {
-        // 如果 bin 目录不在 PATH 中，将其添加到 PATH 环境变量中
-        path.push_str(&format!(";{}", bin_dir_str));
-        env::set_var("PATH", path);
-    }
-
+    std::env::set_var("MY_DLL_PATH", "./bin/");
 }
