@@ -25,7 +25,7 @@ export const SettingList = ({data, setData}) => {
         coverImagePath: settingDataTmp ? settingDataTmpParse.coverImagePath : "",
         selectedRemeberSize:  settingDataTmp ? settingDataTmpParse.selectedRemeberSize : true,
         selectedDongan: settingDataTmp ? settingDataTmpParse.selectedDongan : false,
-        backColor: settingDataTmp ? settingDataTmpParse.backColor : rgba(121, 121, 121, 0.188),
+        backColor: settingDataTmp ? settingDataTmpParse.backColor : 'rgba(121, 121, 121, 0.988)',
         backdropFilter: settingDataTmp ? settingDataTmpParse.backdropFilter : 10,
       }
     )
