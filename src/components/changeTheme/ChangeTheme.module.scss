@@ -70,3 +70,14 @@
     width: 100%; /* 确保容器的宽度是 100% */
     justify-content: flex-end; /* 将子元素推到右侧 */
   }
+
+  .hiddenColorInput {
+    appearance: none; /* 去掉默认样式 */
+    border: none;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    background: none;
+  }

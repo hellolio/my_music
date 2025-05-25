@@ -1,15 +1,5 @@
 @use '@/base/theme-config.scss' as theme;
 
-.container.bar.volume {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-  height: 40px;
-  width: 100%;
-  max-width: 700px;
-  margin-left: 50px;
-  margin-right: 50px;
-}
 
 .leftBarVolume,
 .rightBarVolume {
@@ -22,13 +12,14 @@
 }
 
 .centerBlockVolume {
+  position: relative;
   display: flex;
   flex: 1;
   text-align: center;
   align-items: center;
   height: 25px;
   width: 80%;
-  min-width: 150px;
+  min-width: 50px;
   cursor: pointer;
 }
 
@@ -71,40 +62,17 @@
   transition: width 0.1s ease;
 }
 
+
 .tooltipVolume {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.75);
+  position: absolute; /* ✅ 改成 absolute */
+  bottom: 100%;
+  transform: translateX(-50%) translateY(-8px);
+  // background-color: rgb(0, 0, 0);
   color: #fff;
   font-size: 12px;
   padding: 4px 6px;
   border-radius: 4px;
   pointer-events: none;
   white-space: nowrap;
-}
-
-.centerBarRate:hover,
-.centerBarRateEnd:hover {
-  height: 8px;
-}
-
-.centerBarBall:hover {
-  transform: scale(1.5);
-}
-
-.leftBarVolume:hover,
-.rightBarVolume:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
-}
-
-.leftBarVolume:active,
-.rightBarVolume:active {
-  transform: scale(0.99);
-}
-
-
-.setting {
-  background: transparent;
-  border: none;
-  outline: none;
+  z-index: 1000;
 }

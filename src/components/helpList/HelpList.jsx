@@ -1,21 +1,34 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styles from "./HelpList.module.scss";
-
+import { open } from '@tauri-apps/api/shell';
 
 
 export const HelpList = ({data, setData}) => {
 
     const SettingRef = useRef(null);
+
+    const gotoInter = async (link) => {
+      await open('https://v2.tauri.app/');
+    }
     
     return (
       <div ref={SettingRef}>
         <ul className={styles.list}>
-            <li className={styles.row}>welcome</li>
-            <li className={styles.row}>show release Notes</li>
-            <li className={styles.row}>report issue</li>
-            <li className={styles.row}>view license</li>
-            <li className={styles.row}>乞讨</li>
-            <li className={styles.row}>about</li>
+            <li className={styles.row}
+              onClick={() => gotoInter("https://github.com/hellolio/my_music")}
+            >welcome</li>
+            <li className={styles.row}
+              onClick={() => gotoInter("https://github.com/hellolio/my_music/releases")}
+            >show release Notes</li>
+            <li className={styles.row}
+              onClick={() => gotoInter("https://github.com/hellolio/my_music/issues")}
+            >report issue</li>
+            <li className={styles.row}
+              onClick={() => gotoInter("https://github.com/hellolio/my_music")}
+            >view license</li>
+            <li className={styles.row}
+              onClick={() => gotoInter("https://github.com/hellolio/my_music")}
+            >about</li>
         </ul>
       </div>
     )

@@ -7,7 +7,7 @@ import { ThemeList } from "@/components/themeList/ThemeList";
 import { SearchedList } from "@/components/searchedList/SearchedList";
 import { HelpList } from "@/components/helpList/HelpList";
 import SplitRow from "@/components/common/splitRow/SplitRow";
-import MyButton from "@/components/common/button/MyButton";
+import SettingButton from "@/components/common/settingButton/SettingButton";
 import MyInput from "@/components/common/input/MyInput";
 import { Context } from '@/components/common/context/MyProvider';
 import ModalCom from "@/components/common/modalCom/ModalCom";
@@ -82,28 +82,24 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
         <div id="drag-container" ref={settinglistRef}
           className={styles.window}>
           <SplitRow
+            gridCols={"1fr 60vw 1fr"}
             left={
               <div  className={styles.windowControlsLeft}>
-                <MyButton 
+                <SettingButton 
                   callFun={() => setShowSetting(!showSetting)}
                   msg={'⚙'}
-                  isConfirm={true}
-                  style={styles.setting}
                 />
-                <MyButton 
+                <SettingButton 
                   callFun={() => setShowThemeList(!showThemeList)}
                   msg={'👕'}
-                  isConfirm={true}
-                  style={styles.setting}
                 />
-                <MyButton 
+                <SettingButton 
                   callFun={() => setShowHelpList(!showHelpList)}
                   msg={'💡'}
-                  isConfirm={true}
-                  style={styles.setting}
                 />
               </div>
             }
+            leftStyle={styles.leftStyle}
             center={
               <div className={styles.windowControlsCenter}>
                   <MyInput 
@@ -118,32 +114,25 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
             }
             right={
               <div className={styles.windowControlsRight}>
-                <MyButton 
+                <SettingButton 
                   callFun={() => setIsDesktopMode(true)}
                   msg={'↬'}
-                  isConfirm={true}
-                  style={styles.setting}
                 />
-                <MyButton 
+                <SettingButton 
                   callFun={() => minWindow()}
                   msg={'-'}
-                  isConfirm={true}
-                  style={styles.setting}
                 />
-                <MyButton 
+                <SettingButton 
                   callFun={() => maxWindow()}
                   msg={isMaximize ? '◱' : '□'}
-                  isConfirm={true}
-                  style={styles.setting}
                 />
-                <MyButton 
+                <SettingButton 
                   callFun={() => closeWindow()}
                   msg={'×'}
-                  isConfirm={true}
-                  style={styles.setting}
                 />
             </div>
             }
+            rightStyle={styles.rightStyle}
           />
         
         <ModalCom

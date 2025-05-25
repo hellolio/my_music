@@ -25,6 +25,8 @@ export const SettingList = ({data, setData}) => {
         coverImagePath: settingDataTmp ? settingDataTmpParse.coverImagePath : "",
         selectedRemeberSize:  settingDataTmp ? settingDataTmpParse.selectedRemeberSize : true,
         selectedDongan: settingDataTmp ? settingDataTmpParse.selectedDongan : false,
+        backColor: settingDataTmp ? settingDataTmpParse.backColor : rgba(121, 121, 121, 0.188),
+        backdropFilter: settingDataTmp ? settingDataTmpParse.backdropFilter : 10,
       }
     )
   
@@ -39,6 +41,11 @@ export const SettingList = ({data, setData}) => {
       } else {
         document.getElementById('myPlayer')?.style.setProperty('--cover-bg', `url(${convertFileSrc(settingData.coverImagePath)})`);
       }
+
+      document.getElementById('myPlayer')
+        ?.style.setProperty('--bg-color', settingData.backColor);
+      document.getElementById('myPlayer')
+        ?.style.setProperty('--blur-radius', `${settingData.backdropFilter}px`);
   
       localStorage.setItem('settingData', JSON.stringify(settingData));
     }, [settingData]);

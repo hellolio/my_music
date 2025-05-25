@@ -1,24 +1,29 @@
+
 .container {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  // grid-template-columns: var(--grid-cols, 1fr 40vw 1fr);
+  grid-template-columns: 1fr clamp(10%, 60%, 90%) 1fr;;
   align-items: center;
   width: 100%;
 }
 
-.left,
-.right {
+.left {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   white-space: nowrap;
 }
 
 .center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   align-items: center;
   white-space: nowrap;
-  flex-wrap: nowrap;
+}
+
+.right {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  white-space: nowrap;
 }

@@ -1,8 +1,8 @@
 import * as utils from "@/common/utils"
 import styles from "./BarVolume.module.scss"
 import { useState, useRef } from "react";
-import MyButton from "@/components/common/button/MyButton";
-
+import SettingButton from "@/components/common/settingButton/SettingButton";
+import SplitRow from "@/components/common/splitRow/SplitRow";
 import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp, upVolume, downVolume} from "./BarVolumeFun/"
 
 
@@ -13,14 +13,15 @@ function BarPlayer(props) {
 
     const volumeBarRef = useRef(null);
     return (
-      <div className={`${styles.container} ${styles.bar} ${styles.volume}`}>
-        <MyButton 
+<SplitRow
+       gridCols={"1fr 5vw 1fr"}
+       left={
+        <SettingButton 
           callFun={() => downVolume(data.barCurrentVolume, setData)}
           msg={'🔈'}
-          isConfirm={true}
-          style={styles.setting}
         />
-        <div data-clickable
+       }
+       center={<div data-clickable
           className={styles.centerBlockVolume}
           ref={volumeBarRef}
           onClick={(e) => updateProgress(e, data, setData)}
@@ -61,7 +62,7 @@ function BarPlayer(props) {
           {coordsVolume.visible && (
             <div
               className={styles.tooltipVolume}
-              style={{ left: coordsVolume.x + 10, top: coordsVolume.y + 55 }}
+              style={{ left: `${coordsVolume.x +  20}px`, top: `${coordsVolume.y - 20}px` }}
             >
               音量：{coordsVolume.volume}%
             </div>
@@ -94,14 +95,14 @@ function BarPlayer(props) {
               }}
             ></div>
           </div>
-        </div>
-        <MyButton 
+        </div>}
+       right={
+        <SettingButton 
           callFun={() => upVolume(data.barCurrentVolume, setData)}
           msg={'🔊'}
-          isConfirm={true}
-          style={styles.setting}
         />
-      </div>
+       }
+        />
     );
     
   }

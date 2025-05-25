@@ -58,13 +58,24 @@ export const saveLyrics = async (resultList, selectedRow, savePath, selected, da
   }
 };
 
-export const saveSetting = (data, setData, settingData, setSettingData, savePath, selected) => {
+export const saveSetting = (data, setData, settingData, setSettingData, savePath, selected, backColor, backAlpha, backdropFilter) => {
+
+  const r = parseInt(backColor.slice(1, 3), 16);
+  const g = parseInt(backColor.slice(3, 5), 16);
+  const b = parseInt(backColor.slice(5, 7), 16);
+  const backColorTmp = `rgba(${r},${g},${b},${backAlpha})`;
 
   setSettingData(prevData => ({
     ...prevData,
     isChange: !prevData.isChange,
     useMusicCover: selected,
-    coverImagePath: savePath
+    coverImagePath: savePath,
+    backColor: backColorTmp,
+    backdropFilter: backdropFilter
   }));
 
+}
+
+export const onChangeBackColor = (e) => {
+  console.log(e.target.value);
 }

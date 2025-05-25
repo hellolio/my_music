@@ -3,9 +3,10 @@ import * as player from "../../../common/player"
 import styles from "./BarPlayer.module.scss"
 import { useState, useEffect, useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
-import MyButton from "@/components/common/button/MyButton";
-
+import SettingButton from "@/components/common/settingButton/SettingButton";
+import SplitRow from "@/components/common/splitRow/SplitRow";
 import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp} from "./BarPlayerFun"
+import { div } from "framer-motion/client";
 
 
 function BarPlayer(props) {
@@ -70,27 +71,30 @@ function BarPlayer(props) {
       }
     }, [data, AB]);
     return (
-      <div className={`${styles.containerBarProgress}`}>
-          <MyButton 
-          callDoubleFun={() => {
-            if (AB.isAB === -1) {
-              setAB(prev => ({
-                ...prev,
-                isAB: 0,
-                A: data.barCurrentProgressSec,
-              }));
-            } else {
-              setAB(prev => ({
-                ...prev,
-                isAB: -1,
-              }));
-            }
-          }}
-          msg={`${AB.isAB >= 0 ? 'A:' + utils.formatTime(AB.A) : utils.formatTime(data.barCurrentProgressSec)}`}
-          isConfirm={true}
-          style={`${styles.leftBarProgress} ${AB.isAB >= 0 ? styles.leftBarProgressA : ''}`}
-        />
-        <div data-clickable
+      <SplitRow 
+       gridCols={"1fr 60vw 1fr"}
+        left={
+            <SettingButton 
+              callDoubleFun={() => {
+                if (AB.isAB === -1) {
+                  setAB(prev => ({
+                    ...prev,
+                    isAB: 0,
+                    A: data.barCurrentProgressSec,
+                  }));
+                } else {
+                  setAB(prev => ({
+                    ...prev,
+                    isAB: -1,
+                  }));
+                }
+              }}
+              msg={`${AB.isAB >= 0 ? 'A:' + utils.formatTime(AB.A) : utils.formatTime(data.barCurrentProgressSec)}`}
+              style={`${styles.leftBarProgress} ${AB.isAB >= 0 ? styles.leftBarProgressA : ''}`}
+            />
+        }
+        center={
+          <div data-clickable
           className={styles.centerBlockProgress}
           ref={progressBarRef}
           onClick={(e) => updateProgress(e, data, setData)}  // 点击时更新进度
@@ -102,7 +106,7 @@ function BarPlayer(props) {
           {coords.visible && (
             <div
               className={styles.tooltipProgress}
-              style={{ left: coords.x + 10, top: coords.y - 25 }}
+              style={{ left: `${coords.x +  20}px`, top: `${coords.y - 20}px` }}
             >
               进度：{utils.formatTime(coords.sec)}
             </div>
@@ -118,27 +122,28 @@ function BarPlayer(props) {
             <div className={`${styles.centerBarBallAb} ${AB.isAB === 1 ? styles.centerBarBallAbB : ''}`} style={{ left: `${utils.calculatePercentage(AB.B, data.totalDuration)}%` }}></div>
           </div>
         </div>
-    
-              <MyButton 
-                callDoubleFun={() => {
-                  if (AB.isAB === 0 && AB.A < data.barCurrentProgressSec) {
-                    setAB(prev => ({
-                      ...prev,
-                      isAB: 1,
-                      B: data.barCurrentProgressSec,
-                    }));
-                  } else {
-                    setAB(prev => ({
-                      ...prev,
-                      isAB: -1,
-                    }));
-                  }
-                }}
-                msg={`${AB.isAB >= 1 ? 'B:' + utils.formatTime(AB.B) : utils.formatTime(data.totalDuration)}`}
-                isConfirm={true}
-                style={`${styles.rightBarProgress} ${AB.isAB === 1 ? styles.rightBarProgressB : ''}`}
-              />
-      </div>
+        }
+        right={
+          <SettingButton 
+          callDoubleFun={() => {
+            if (AB.isAB === 0 && AB.A < data.barCurrentProgressSec) {
+              setAB(prev => ({
+                ...prev,
+                isAB: 1,
+                B: data.barCurrentProgressSec,
+              }));
+            } else {
+              setAB(prev => ({
+                ...prev,
+                isAB: -1,
+              }));
+            }
+          }}
+          msg={`${AB.isAB >= 1 ? 'B:' + utils.formatTime(AB.B) : utils.formatTime(data.totalDuration)}`}
+          style={`${styles.rightBarProgress} ${AB.isAB === 1 ? styles.rightBarProgressB : ''}`}
+        />
+        }
+      />
     );
     
 }

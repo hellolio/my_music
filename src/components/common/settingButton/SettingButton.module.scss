@@ -1,0 +1,30 @@
+@use '@/base/theme-config.scss' as theme;
+
+.myButton {
+  display: flex;              /* 使用 flexbox 布局 */
+  justify-content: center;    /* 水平居中 */
+  align-items: center;        /* 垂直居中 */
+  padding: 1px 5px;
+  color: theme.$button-confirm-color;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 1px 5px 1px 5px;
+  }
+  
+  .setting {
+    background: transparent;
+    border: none;
+    outline: none;
+  }
+  
+  .setting:hover {
+    background-color: theme.$button-cancle-background-color-hover;
+    color: theme.$button-confirm-color;
+    transform: scale(1.1);
+  }
+  
+  .setting:active {
+    transform: scale(0.99);
+  }
+  

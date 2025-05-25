@@ -1,7 +1,7 @@
 // Context.js
 import React, { createContext, useState } from 'react';
 
-export const Context = createContext([]); // 默认值是 light
+export const Context = createContext([]);
 
 export const MyProvider = ({ children }) => {
 

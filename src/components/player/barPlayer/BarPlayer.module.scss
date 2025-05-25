@@ -1,29 +1,6 @@
 
 @use '@/base/theme-config.scss' as theme;
 
-.containerBarProgress {
-  display: flex;
-  justify-content: flex-start; /* 左对齐，避免元素之间的间隙 */
-  align-items: center;
-  width: 100%;  /* 使容器宽度占满父元素 */
-  max-width: 700px;
-  margin: 10px 50px 0 50px;
-}
-
-.leftBarProgress,
-.rightBarProgress {
-  // flex: 0 0 20px;
-  // text-align: center;
-  // height: 20px;
-  // width: 30px;
-  // margin: 5px;
-  // font-size: 12px;
-  // font-style: normal;
-  // color: #cec1bbae;
-  // background-color: transparent;
-  // direction: rtl;
-}
-
 
 .leftBarProgressA {
   font-weight: bold;
@@ -36,12 +13,13 @@
 }
 
 .centerBlockProgress {
+  position: relative;
   display: flex;
   flex: 1;
   align-items: center;
   height: 25px;
   width: 80%;
-  min-width: 150px;
+  min-width: 50px;
   cursor: pointer;
 }
 
@@ -97,33 +75,15 @@
 }
 
 .tooltipProgress {
-  position: fixed;
-  background-color: rgba(0, 0, 0, 0.75);
+  position: absolute; /* ✅ 改成 absolute */
+  bottom: 100%;
+  transform: translateX(-50%) translateY(-8px);
+  // background-color: rgb(0, 0, 0);
   color: #fff;
   font-size: 12px;
   padding: 4px 6px;
   border-radius: 4px;
   pointer-events: none;
   white-space: nowrap;
+  z-index: 1000;
 }
-
-/* Hover and Active Effects */
-// .centerBarRate:hover,
-// .centerBarRateEnd:hover {
-//   height: 8px;
-// }
-
-// .centerBarBall:hover {
-//   transform: scale(1.5);
-// }
-
-// .leftBarProgress:hover,
-// .rightBarProgress:hover {
-//   transform: scale(1.2);
-//   box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
-// }
-
-// .leftBarProgress:active,
-// .rightBarProgress:active {
-//   transform: scale(0.99);
-// }

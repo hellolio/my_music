@@ -1,10 +1,4 @@
 
-.setting {
-    background: transparent;
-    border: none;
-    outline: none;
-  }
-
   .settingList {
     left: 20px;
     // width: 100px;
@@ -31,8 +25,7 @@
   
   .windowControlsLeft {
     display: flex;              /* 启用 Flexbox 布局 */
-    justify-content: flex-start; /* 子元素从左到右排列 */
-    // gap: 10px;                  /* 子元素间距设置为 50px */
+    gap: 10px;         
   }
   
   .windowControlsCenter {
@@ -43,14 +36,20 @@
   
   .searchKeyInput {
     border: 0;
-    width: 300px;
+    width: 100%;
     height: 100%;
   }
 
 
   .windowControlsRight {
     display: flex;              /* 启用 Flexbox 布局 */
-    justify-content: flex-start; /* 子元素从左到右排列 */
-    gap: 20px;                  /* 子元素间距设置为 50px */
+    gap: 20px;                
   }
   
+  .leftStyle {
+    justify-content: flex-start;
+  }
+    
+  .rightStyle {
+    justify-content: flex-end;
+  }

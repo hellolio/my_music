@@ -4,7 +4,7 @@ import styles from "./BtnPlayer.module.scss";
 import * as player from "@/common/player"
 
 import SongList from "../../songList/SongList";
-import MyButton from "@/components/common/button/MyButton";
+import SettingButton from "@/components/common/settingButton/SettingButton";
 import ModalComFloat from "@/components/common/modalComFloat/ModalComFloat";
 
 // import {leftClick, togglePlayPause, rightClick, cycleClick} from "./BtnPlayerFun"
@@ -32,35 +32,25 @@ function BtnPlayer(props) {
       className={styles.containerBtnPlayer}
       ref={listBtnPlayerRef}
     >
-      <MyButton 
+      <SettingButton 
         callFun={() => player.cycleClick(data, setData)}
         msg={data.isSingleLoop ? "①" : "↻"}
-        isConfirm={true}
-        style={styles.setting}
       />
-      <MyButton 
+      <SettingButton 
         callFun={() => player.leftClick(data, setData, allSongList)}
         msg={'<<'}
-        isConfirm={true}
-        style={styles.setting}
       />
-      <MyButton 
+      <SettingButton 
         callFun={() => player.togglePlayPause(data, setData)} 
         msg={data.isPlaying ? '||': '▶'}
-        isConfirm={true}
-        style={styles.setting}
       />
-      <MyButton 
+      <SettingButton 
         callFun={() => player.rightClick(data, setData, allSongList)}
         msg={'>>'}
-        isConfirm={true}
-        style={styles.setting}
       />
-      <MyButton 
+      <SettingButton 
         callFun={() => setShowSongList(!showSongList)}
         msg={'≡'}
-        isConfirm={true}
-        style={styles.setting}
       />
 
       <ModalComFloat 

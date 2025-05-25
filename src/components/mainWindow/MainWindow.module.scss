@@ -12,7 +12,7 @@
   position: relative;   /* 设置父容器为相对定位 */
   height: 100vh;         /* 设定父容器的高度为视口高度 */
   width: 100%;
-  background-color: theme.$body-background-color;
+  background-color: var(--bg-color);
   font-family: theme.$font-family;
   color: theme.$font-color-white;
 }
@@ -25,8 +25,9 @@
   width: 100%;
   height: 100%;
   background: var(--cover-bg, none) no-repeat center center;
+  background-color: var(--bg-color);
   background-size: cover;
-  filter: blur(20px);
+  filter: blur(var(--blur-radius, 0px));
   z-index: -1;
 }
 
@@ -72,10 +73,43 @@
 }
 
 .player {
-  position: relative;    /* 元素相对于父容器定位 */
-  left: 50%;                 /* 距离左边 50%（元素的左边缘会到达视口的中点） */
-  transform: translateX(-50%); /* 向左偏移自身宽度的 50%，实现水平居中 */
-  bottom: 10px;
-  width: 100%;
+  display: flex;
+  flex-direction: column; /* 默认是垂直排列 */
+  gap: 1rem; /* 子元素间距 */
 }
 
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px; /* 或自动 */
+  // border: 1px solid #ccc;
+}
+
+/* 宽屏时变成水平排列 */
+@media (min-width: 700px) {
+  .player {
+    flex-direction: row; /* 横向排列 */
+    background-color: rgba(57, 61, 61, 0.717);
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .a {
+    order: 2;
+    flex: 1 1 auto; /* 占据剩余空间 */
+    min-width: 0;   /* 避免内容溢出 */
+  }
+
+  .b {
+    order: 1;
+    flex: 0 0 auto; /* 宽度根据内容决定，不拉伸 */
+    width: 300px;
+  }
+
+  .c {
+    order: 3;
+    flex: 0 0 auto; /* 宽度根据内容决定，不拉伸 */
+    width: 200px;
+  }
+}

@@ -6,7 +6,7 @@ import { appWindow, PhysicalSize  } from '@tauri-apps/api/window';
 import * as utils from "@/common/utils";
 import * as player from "@/common/player"
 
-import MyButton from "@/components/common/button/MyButton";
+import SettingButton from "@/components/common/settingButton/SettingButton";
 
 export default function LyricBar({ data, setData, allSongList, setAllSongList, isDesktopMode, setIsDesktopMode }) {
   const [hovered, setHovered] = useState(false);
@@ -75,29 +75,21 @@ export default function LyricBar({ data, setData, allSongList, setAllSongList, i
 
       {hovered && (
         <div className={styles.controls}>
-            <MyButton 
+            <SettingButton 
               callFun={() => player.leftClick(data, setData, allSongList)}
               msg={'<<'}
-              isConfirm={true}
-              style={styles.setting}
             />
-            <MyButton 
+            <SettingButton 
               callFun={() => player.togglePlayPause(data, setData)} 
               msg={data.isPlaying ? '||': '▶'}
-              isConfirm={true}
-              style={styles.setting}
             />
-            <MyButton 
+            <SettingButton 
               callFun={() => player.rightClick(data, setData, allSongList)}
               msg={'>>'}
-              isConfirm={true}
-              style={styles.setting}
             />
-            <MyButton 
+            <SettingButton 
               callFun={() => setIsDesktopMode(false)}
               msg={'◱'}
-              isConfirm={true}
-              style={styles.setting}
             />
         </div>
       )}

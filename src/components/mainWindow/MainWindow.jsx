@@ -57,23 +57,18 @@ function MainWindow({data, setData, allSongList, setAllSongList, musicRef, video
         </div>
 
         <div className={styles.player}>
-          {/* 播放进度设置 */}
-          <div className={`${styles.parent} ${styles.bar}`}>
+          <div className={`${styles.a} ${styles.item}`}>
             <BarPlayer data={data} setData={setData} />
           </div>
-    
-          {/* 播放按钮设置 */}
-          <div className={`${styles.parent} ${styles.btnPlayer}`}>
+          <div className={`${styles.b} ${styles.item}`}>
             <BtnPlayer 
               data={data} 
               setData={setData}
               allSongList={allSongList}
               setAllSongList={setAllSongList}
-              />
+            />
           </div>
-    
-          {/* 播放音量设置 */}
-          <div className={`${styles.parent} ${styles.volumeBar}`}>
+          <div className={`${styles.c} ${styles.item}`}>
             <BarVolume data={data} setData={setData} />
           </div>
         </div>
