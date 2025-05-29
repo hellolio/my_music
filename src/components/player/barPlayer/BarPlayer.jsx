@@ -4,9 +4,7 @@ import styles from "./BarPlayer.module.scss"
 import { useState, useEffect, useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
 import SettingButton from "@/components/common/settingButton/SettingButton";
-import SplitRow from "@/components/common/splitRow/SplitRow";
 import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp} from "./BarPlayerFun"
-import { div } from "framer-motion/client";
 
 
 function BarPlayer(props) {

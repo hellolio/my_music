@@ -77,8 +77,10 @@ export const handleMouseUp = async (e, data, setData, coordsVolume, setCoordsVol
 };
 
 
-export const upVolume = (barCurrentVolume, setData) => {
-  if (barCurrentVolume >= 100) {
+export const upVolume = (data, setData) => {
+  let barCurrentVolume = data.barCurrentVolume;
+  
+  if (data.barCurrentVolume >= 100) {
     barCurrentVolume = 100;
   }else{
     barCurrentVolume = barCurrentVolume + 1;
@@ -88,9 +90,22 @@ export const upVolume = (barCurrentVolume, setData) => {
     ...prevData,
     barCurrentVolume: barCurrentVolume
   }));
+
+  const isMusic = player.checkIsMusic(data.audioSrc);
+  let playFun = undefined;
+  if (isMusic){
+    playFun = data.music.current
+  }else {
+    playFun = data.video.current
+  }
+  if (data.isPlaying) {
+    playFun.setVolume(barCurrentVolume);
+  }
 }
 
-export const downVolume = (barCurrentVolume, setData) => {
+export const downVolume = (data, setData) => {
+  let barCurrentVolume = data.barCurrentVolume;
+
   if (barCurrentVolume <= 0) {
     barCurrentVolume = 0;
   }else{
@@ -101,4 +116,15 @@ export const downVolume = (barCurrentVolume, setData) => {
     ...prevData,
     barCurrentVolume: barCurrentVolume
   }));
+
+  const isMusic = player.checkIsMusic(data.audioSrc);
+  let playFun = undefined;
+  if (isMusic){
+    playFun = data.music.current
+  }else {
+    playFun = data.video.current
+  }
+  if (data.isPlaying) {
+    playFun.setVolume(barCurrentVolume);
+  }
 }

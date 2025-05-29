@@ -89,7 +89,6 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
         <div id="drag-container" ref={settinglistRef}
           className={styles.window}>
           <SplitRow
-            gridCols={"1fr 60vw 1fr"}
             left={
               <div  className={styles.windowControlsLeft}>
                 <SettingButton 
@@ -106,7 +105,6 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
                 />
               </div>
             }
-            leftStyle={styles.leftStyle}
             center={
               <div className={styles.windowControlsCenter}>
                   <MyInput 
@@ -139,7 +137,6 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
                 />
             </div>
             }
-            rightStyle={styles.rightStyle}
           />
         
         <ModalCom

@@ -277,7 +277,7 @@ fn main() {
                             window_x: if position.x <100  {0} else {position.x as u32},
                             window_y: if position.y <100 {0} else {position.y as u32},
                             window_width: if size.width < 200 {200} else {size.width},
-                            window_height: if size.height < 400 {size.height} else {size.height},
+                            window_height: if size.height < 400 {200} else {size.height},
                         };
                         window::save_window_state(&window.app_handle(),&window_state);
                 }
@@ -306,7 +306,7 @@ fn main() {
             set_is_desktop_mode,
             set_always_on_top,
         ])
-
+        // .plugin(tauri_plugin_window::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

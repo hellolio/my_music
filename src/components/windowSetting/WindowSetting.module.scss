@@ -41,18 +41,11 @@
     border: 0;
     width: 100%;
     height: 100%;
+    margin: 2px;
+    
   }
-
 
   .windowControlsRight {
     display: flex;              /* 启用 Flexbox 布局 */
     gap: 20px;                
-  }
-  
-  .leftStyle {
-    justify-content: flex-start;
-  }
-    
-  .rightStyle {
-    justify-content: flex-end;
   }

@@ -4,7 +4,6 @@ import * as utils from "../../common/utils"
 import * as player from "../../common/player"
 import ShowMsg from '../showMsg/ShowMsg';
 import SettingButton from "@/components/common/SettingButton/SettingButton";
-import SplitRow from "@/components/common/splitRow/SplitRow";
 
 
 import {importMusic, deleteMusic, handleCheckboxChange, handleAllCheckboxChange, getMusicListFormDB, handleCreate, switchTo, deletePlayList} from './SongListFun';

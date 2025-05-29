@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 
 import MainWindow  from "@/components/mainWindow/MainWindow";
 import LyricBar from "@/components/lyricBar/LyricBar";
+import styles from './App.module.scss';
+// import { appWindow } from '@tauri-apps/api/window';
 
 function App() {
 
@@ -12,6 +14,18 @@ function App() {
     const musicRef = useRef();
     const videoRef = useRef();
     
+
+
+
+    // document.querySelectorAll('.resize-handle').forEach((el) => {
+    //   el.addEventListener('mousedown', async () => {
+    //     const direction = el.dataset.direction; // 不需要类型断言
+    //     if (direction) {
+    //       await appWindow.startResizing(direction);
+    //     }
+    //   });
+    // });
+
 
     useEffect(() => {
       const el = ref.current;
@@ -99,6 +113,12 @@ function App() {
     const [isDesktopMode, setIsDesktopMode] = useState(false);
 
     return (
+      <div id="app">
+  <div class={`${styles.resizeHandle} ${styles.resizeleft}`} data-direction="w"></div>
+  <div class={`${styles.resizeHandle} ${styles.resizeright}`} data-direction="e"></div>
+  <div class={`${styles.resizeHandle} ${styles.resizetop}`} data-direction="n"></div>
+  <div class={`${styles.resizeHandle} ${styles.resizebottom}`} data-direction="s"></div>
+
       <div ref={ref} style={{ position: 'relative' }}>
         {/* MainWindow 显示时可见 */}
         <motion.div
@@ -151,6 +171,8 @@ function App() {
           />
         </motion.div>
       </div>
+</div>
+
     );
   
 }

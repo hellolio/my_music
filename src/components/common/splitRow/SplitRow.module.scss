@@ -1,34 +1,4 @@
 
-// .container {
-//   display: grid;
-//   // grid-template-columns: var(--grid-cols, 1fr 40vw 1fr);
-//   grid-template-columns: 1fr clamp(10%, 70%, 80%) 1fr;
-//   align-items: center;
-//   width: 100%;
-// }
-
-// .left {
-//   display: flex;
-//   justify-content: flex-end;
-//   align-items: center;
-//   white-space: nowrap;
-// }
-
-// .center {
-//   display: flex;
-//   justify-content: center;
-//   align-items: center;
-//   white-space: nowrap;
-// }
-
-// .right {
-//   display: flex;
-//   justify-content: flex-start;
-//   align-items: center;
-//   white-space: nowrap;
-// }
-
-
 
 .threeColumnWrapper {
   position: relative;
@@ -58,4 +28,5 @@
   left: 50%;
   transform: translate(-50%, 0%);
   white-space: nowrap;
+  width: 30%;
 }

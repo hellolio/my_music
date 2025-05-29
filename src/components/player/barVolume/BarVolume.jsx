@@ -2,7 +2,6 @@ import * as utils from "@/common/utils"
 import styles from "./BarVolume.module.scss"
 import { useState, useRef } from "react";
 import SettingButton from "@/components/common/settingButton/SettingButton";
-import SplitRow from "@/components/common/splitRow/SplitRow";
 import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp, upVolume, downVolume} from "./BarVolumeFun/"
 
 
@@ -16,7 +15,7 @@ function BarPlayer(props) {
 <div className={styles.gridContainer}>
         <SettingButton 
         className={styles.left}
-          callFun={() => downVolume(data.barCurrentVolume, setData)}
+          callFun={() => downVolume(data, setData)}
           msg={'🔈'}
         />
        <div data-clickable
@@ -96,7 +95,7 @@ function BarPlayer(props) {
         </div>
         <SettingButton 
         className={styles.right}
-          callFun={() => upVolume(data.barCurrentVolume, setData)}
+          callFun={() => upVolume(data, setData)}
           msg={'🔊'}
         />
         </div>
