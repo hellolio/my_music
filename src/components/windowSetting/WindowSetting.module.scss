@@ -18,9 +18,12 @@
   }
   
   .window {
-    background-color:rgba(0, 0, 0, 0);
+    background-color:rgba(95, 91, 91, 0.374);
     z-index: 1001;
     position: relative;
+  }
+  .window::after {
+    filter: blur(10px);
   }
   
   .windowControlsLeft {

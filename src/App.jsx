@@ -79,7 +79,7 @@ function App() {
         totalDuration: dataTmp ? dataTmpParse.totalDuration : 100,
         barCurrentProgressSec: 0,
         barCurrentVolume: dataTmp ? dataTmpParse.barCurrentVolume : 30,
-        isPlaying: true,
+        isPlaying: false,
         playState: -1,   // -1是当前没有播放或者播放线程结束，0是播放结束，但线程未结束，1是正在播放
         isSingleLoop: dataTmp ? dataTmpParse.isSingleLoop : true,
         playerAlive: false,

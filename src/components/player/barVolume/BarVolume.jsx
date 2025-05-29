@@ -13,16 +13,14 @@ function BarPlayer(props) {
 
     const volumeBarRef = useRef(null);
     return (
-<SplitRow
-       gridCols={"1fr 5vw 1fr"}
-       left={
+<div className={styles.gridContainer}>
         <SettingButton 
+        className={styles.left}
           callFun={() => downVolume(data.barCurrentVolume, setData)}
           msg={'🔈'}
         />
-       }
-       center={<div data-clickable
-          className={styles.centerBlockVolume}
+       <div data-clickable
+          className={styles.center}
           ref={volumeBarRef}
           onClick={(e) => updateProgress(e, data, setData)}
           onMouseDown={(e) => { handleMouseDown(e, setIsDraggingVolume) }}
@@ -62,7 +60,7 @@ function BarPlayer(props) {
           {coordsVolume.visible && (
             <div
               className={styles.tooltipVolume}
-              style={{ left: `${coordsVolume.x +  20}px`, top: `${coordsVolume.y - 20}px` }}
+              style={{ left: `${coordsVolume.x}px`, top: `${coordsVolume.y - 30}px` }}
             >
               音量：{coordsVolume.volume}%
             </div>
@@ -95,14 +93,13 @@ function BarPlayer(props) {
               }}
             ></div>
           </div>
-        </div>}
-       right={
+        </div>
         <SettingButton 
+        className={styles.right}
           callFun={() => upVolume(data.barCurrentVolume, setData)}
           msg={'🔊'}
         />
-       }
-        />
+        </div>
     );
     
   }

@@ -36,8 +36,8 @@ export const handleMouseMove = (e, volumeBarRef, data, setData, setCoordsVolume,
   let barCurrentVolume = updateProgress(e, volumeBarRef, data, setData); // 拖动时更新进度
   const rect = volumeBarRef.current.getBoundingClientRect();
   setCoordsVolume({
-    x: e.clientX - rect.left,
-    y: e.clientY - rect.top,
+    x: e.clientX,
+    y: e.clientY,
     volume: barCurrentVolume,
     visible: true,
   });
@@ -65,10 +65,11 @@ export const handleMouseUp = async (e, data, setData, coordsVolume, setCoordsVol
     }else {
       playFun = data.video.current
     }
-    playFun.setVolume(barCurrentVolume);
+    if (data.isPlaying) {
+      playFun.setVolume(barCurrentVolume);
+    }
     setData(prevData => ({
       ...prevData,
-      isPlaying: true,
       barCurrentVolume: barCurrentVolume
     }));
   }

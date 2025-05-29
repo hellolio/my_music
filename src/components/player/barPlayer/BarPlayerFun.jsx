@@ -36,8 +36,8 @@ export const handleMouseMove = (e, progressBarRef, data, setData, setCoords, isD
   let barCurrentProgressSec = updateProgress(e, progressBarRef, data, setData); // 拖动时更新进度
   const rect = progressBarRef.current.getBoundingClientRect();
   setCoords({
-    x: e.clientX- rect.left,
-    y: e.clientY - rect.top,
+    x: e.clientX,
+    y: e.clientY,
     sec: barCurrentProgressSec,
     visible: true,
   });

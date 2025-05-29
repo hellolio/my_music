@@ -79,12 +79,14 @@ export const leftClick = async (data, setData, allSongList) => {
       playFun = data.video.current
     }
   
-    
     // 当前没有播放
     if (!data.isPlaying){
-  
       if (data.playState===-1) {
         let song = await playFun.play(data.playlistId, data.audioSrc, data.totalDuration, 0, data.barCurrentVolume);
+        console.log("song:",song);
+        if (song === null){
+          return;
+        }
   
         if (isMusic) {
           data.lyrics = song.lyrics;
@@ -108,12 +110,10 @@ export const leftClick = async (data, setData, allSongList) => {
           isMusic: isMusic
         }));
       } else {
-        // await invoke('resume_music');
-        await playFun.resume()
+        await playFun.resume(data.barCurrentVolume)
       }
     }else{
         await playFun.pause()
-        // await invoke('pause_music');
     }
     setData(prevData => ({
       ...prevData,

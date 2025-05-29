@@ -13,7 +13,7 @@ use anyhow::{Error, Ok, Result};
 enum Command {
     Play,
     Pause,
-    Resume,
+    Resume(f32),
     Seek(u64, f32), // seconds
     Stop,
     Volume(f32)
@@ -80,53 +80,7 @@ impl AudioPlayer {
             sink.lock().unwrap().set_volume(volume*2.0);
 
             loop {
-                let tmp_msg = rx.try_recv().ok();
-                match tmp_msg {
-                    None => {}
-                    _ => {
-                        msg = tmp_msg;
-                    }
-                }
-                match msg {
-                    Some(Command::Play) => {
-                        sink.lock().unwrap().play();
-                        current_ts += sleep_time;
-                    }
-                    Some(Command::Pause) => {
-                        sink.lock().unwrap().pause();
-                    }
-                    Some(Command::Resume) => {
-                        sink.lock().unwrap().play();
-                        current_ts += sleep_time;
-                        msg = Some(Command::Play);
-                    }
-                    Some(Command::Seek(target_secs, volume)) => {
-                        let seek_ts = (target_secs * 1_000_000) as i64;
-                        println!("跳转播放到:{target_secs}");
 
-                        // 执行seek操作
-                        ictx.seek(seek_ts, 0..seek_ts)?;
-
-                        decoder.flush(); // 清除缓冲
-                        sink.lock().unwrap().stop(); // 清除播放
-                        *sink.lock().unwrap() = Sink::try_new(&stream_handle)?;
-                        current_ts = target_secs * 1000;
-                        sink.lock().unwrap().set_volume(volume*2.0);
-                        msg = Some(Command::Play);
-                    }
-                    Some(Command::Stop) => {
-                        sink.lock().unwrap().stop();
-                        println!("因为stop命令停止播放:{file_path}");
-                        break;
-                    }
-                    Some(Command::Volume(volume)) => {
-                        // sink.lock().unwrap().stop();
-                        println!("音量调整了。。。{volume}");
-                        sink.lock().unwrap().set_volume(volume*2.0);
-                        msg = Some(Command::Play);
-                    }
-                    None => {}
-                }
 
                 if let Some((stream, packet)) = ictx.packets().next() {
                     if stream.index() != stream_index {
@@ -201,6 +155,60 @@ impl AudioPlayer {
                     window.emit("player_progress", -1).unwrap();
                     break;
                 }
+
+                let tmp_msg = rx.try_recv().ok();
+                match tmp_msg {
+                    None => {}
+                    _ => {
+                        msg = tmp_msg;
+                    }
+                }
+                match msg {
+                    Some(Command::Play) => {
+                        sink.lock().unwrap().play();
+                        current_ts += sleep_time;
+                    }
+                    Some(Command::Pause) => {
+                        sink.lock().unwrap().pause();
+                    }
+                    Some(Command::Resume(volume)) => {
+                        sink.lock().unwrap().play();
+                        sink.lock().unwrap().set_volume(volume*2.0);
+                        current_ts += sleep_time;
+                        msg = Some(Command::Play);
+                    }
+                    Some(Command::Seek(target_secs, volume)) => {
+                        let seek_ts = (target_secs * 1_000_000) as i64;
+                        println!("跳转播放到:{target_secs}");
+
+                        // 执行seek操作
+                        ictx.seek(seek_ts, 0..seek_ts)?;
+
+                        decoder.flush(); // 清除缓冲
+                        sink.lock().unwrap().stop(); // 清除播放
+                        *sink.lock().unwrap() = Sink::try_new(&stream_handle)?;
+                        current_ts = target_secs * 1000;
+                        sink.lock().unwrap().set_volume(volume*2.0);
+                        msg = Some(Command::Play);
+                    }
+                    Some(Command::Stop) => {
+                        sink.lock().unwrap().stop();
+                        println!("因为stop命令停止播放:{file_path}");
+                        break;
+                    }
+                    Some(Command::Volume(volume)) => {
+                        // sink.lock().unwrap().stop();
+                        println!("音量调整了。。。{volume}");
+                        current_ts += sleep_time;
+                        sink.lock().unwrap().set_volume(volume*2.0);
+                        // msg = Some(Command::Play);
+                        msg = None;
+                    }
+                    None => {
+                        current_ts += sleep_time;
+                    }
+                }
+
                 if current_ts % 1000 == 0 {
                     window.emit("player_progress", current_ts)?;
                     // is_playing = true;
@@ -214,8 +222,8 @@ impl AudioPlayer {
         Ok(())
     }
 
-    pub fn music_resume(&self) {
-        self.send_control(Command::Resume);
+    pub fn music_resume(&self, volume: f32) {
+        self.send_control(Command::Resume(volume));
     }
 
     pub fn music_pause(&self) {

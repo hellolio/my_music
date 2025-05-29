@@ -93,7 +93,10 @@ fn delete_playlist(state: State<'_, Arc<AppState>>, playlist_id: i64) -> Result<
 }
 
 #[tauri::command]
-fn play_music(state: State<'_, Arc<AppState>>, window: Window, id: i64, file_path: &str, duration: u64, skip_secs: u64, volume: f32) -> Song {
+fn play_music(
+    state: State<'_, Arc<AppState>>, window: Window, 
+    id: i64, file_path: &str, duration: u64, skip_secs: u64, volume: f32
+) -> Result<Song, ()> {
     
     let mut p = state.player.lock().unwrap();
     p.music_play(window, file_path.to_string(), duration, skip_secs, volume);
@@ -109,9 +112,9 @@ fn play_music(state: State<'_, Arc<AppState>>, window: Window, id: i64, file_pat
             None=> {}
         }
         song_meta.lyrics = lyrics;
-        song_meta
+        Ok(song_meta)
     } else {
-        Song{ id: todo!(), title: todo!(), author: todo!(), is_collect: todo!(), is_follow: todo!(), lyrics: todo!(), lyrics_path: todo!(), audio_src: todo!(), total_duration: todo!(), bar_current_progress_sec: todo!(), is_playing: todo!() }
+        Err(())
     }
 }
 
@@ -129,9 +132,9 @@ fn control_volume(state: State<'_, Arc<AppState>>, volume: f32) {
 }
 
 #[tauri::command]
-fn resume_music(state: State<'_, Arc<AppState>>) {
+fn resume_music(state: State<'_, Arc<AppState>>, volume: f32) {
     let p = state.player.lock().unwrap();
-    p.music_resume();
+    p.music_resume(volume);
 }
 
 #[tauri::command]

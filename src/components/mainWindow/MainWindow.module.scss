@@ -103,13 +103,13 @@
 
   .b {
     order: 1;
-    flex: 0 0 auto; /* 宽度根据内容决定，不拉伸 */
+    // flex: 0 0 auto; /* 宽度根据内容决定，不拉伸 */
     width: 300px;
   }
 
   .c {
     order: 3;
-    flex: 0 0 auto; /* 宽度根据内容决定，不拉伸 */
+    // flex: 0 0 auto; /* 宽度根据内容决定，不拉伸 */
     width: 200px;
   }
 }

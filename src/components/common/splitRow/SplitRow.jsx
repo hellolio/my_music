@@ -3,8 +3,8 @@ import styles from './SplitRow.module.scss';
 
 const SplitRow = ({ gridCols, left, leftStyle,  center, centerStyle, right, rightStyle }) => {
   return (
-    <div className={`${styles.container}`}
-    style={{ '--grid-cols': gridCols }}
+    <div className={`${styles.threeColumnWrapper}`}
+    // style={{ '--grid-cols': gridCols }}
     >
       <div className={`${leftStyle} ${styles.left}`}>{left}</div>
       <div className={`${centerStyle} ${styles.center}`}>{center}</div>

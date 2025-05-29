@@ -7,7 +7,6 @@ import SongList from "../../songList/SongList";
 import SettingButton from "@/components/common/settingButton/SettingButton";
 import ModalComFloat from "@/components/common/modalComFloat/ModalComFloat";
 
-// import {leftClick, togglePlayPause, rightClick, cycleClick} from "./BtnPlayerFun"
 
 function BtnPlayer(props) {
   const {data, setData, allSongList, setAllSongList} = props;
@@ -16,7 +15,9 @@ function BtnPlayer(props) {
   useEffect(() => {
     if (data.playState===-1) {
       if (data.isSingleLoop) {
-        player.togglePlayPause(data, setData);
+        if (data.isPlaying){
+          player.togglePlayPause(data, setData);
+        }
       } else if (allSongList.length > 0){
         player.rightClick(data, setData, allSongList);
       }

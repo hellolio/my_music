@@ -1,5 +1,5 @@
 import { invoke } from "@tauri-apps/api/tauri";
-import { useState, useRef, useImperativeHandle, forwardRef} from "react";
+import { useImperativeHandle, forwardRef} from "react";
 
 import LyricsPlayer from "@/components/displayer/lyricsPlayer/LyricsPlayer";
 import TitlePlayer from "@/components/displayer/titlePlayer/TitlePlayer";
@@ -15,8 +15,12 @@ const Music = forwardRef((props, ref) => {
     };
 
     const play = async (id, filePath, duration, skipSecs, volume) => {
-      // await invoke('stop_music');
-      let song = await invoke('play_music', { id: id, filePath: filePath, duration: duration, skipSecs: skipSecs, volume: volume/100 });
+      let song = null;
+      try {
+        song = await invoke('play_music', { id: id, filePath: filePath, duration: duration, skipSecs: skipSecs, volume: volume/100 });
+      } catch (error) {
+        console.log(error)
+      }
       
       return song;
   };
@@ -25,8 +29,8 @@ const Music = forwardRef((props, ref) => {
       await invoke('pause_music');
     };
   
-    const resume = async () => {
-      await invoke('resume_music');
+    const resume = async (volume) => {
+      await invoke('resume_music', { volume: volume/100 });
     };
   
     const stop = async () => {

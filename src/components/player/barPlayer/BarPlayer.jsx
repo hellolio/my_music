@@ -71,10 +71,9 @@ function BarPlayer(props) {
       }
     }, [data, AB]);
     return (
-      <SplitRow 
-       gridCols={"1fr 60vw 1fr"}
-        left={
+      <div className={styles.gridContainer}>
             <SettingButton 
+            className={styles.left}
               callDoubleFun={() => {
                 if (AB.isAB === -1) {
                   setAB(prev => ({
@@ -92,10 +91,8 @@ function BarPlayer(props) {
               msg={`${AB.isAB >= 0 ? 'A:' + utils.formatTime(AB.A) : utils.formatTime(data.barCurrentProgressSec)}`}
               style={`${styles.leftBarProgress} ${AB.isAB >= 0 ? styles.leftBarProgressA : ''}`}
             />
-        }
-        center={
           <div data-clickable
-          className={styles.centerBlockProgress}
+          className={styles.center}
           ref={progressBarRef}
           onClick={(e) => updateProgress(e, data, setData)}  // 点击时更新进度
           onMouseDown={(e) => { handleMouseDown(e, setIsDragging); }}
@@ -106,11 +103,11 @@ function BarPlayer(props) {
           {coords.visible && (
             <div
               className={styles.tooltipProgress}
-              style={{ left: `${coords.x +  20}px`, top: `${coords.y - 20}px` }}
+              style={{ left: `${coords.x}px`, top: `${coords.y - 30}px` }}
             >
               进度：{utils.formatTime(coords.sec)}
             </div>
-          )}
+           )} 
     
           <div className={styles.centerBar}>
             {/* 进度条的填充部分 */}
@@ -122,9 +119,8 @@ function BarPlayer(props) {
             <div className={`${styles.centerBarBallAb} ${AB.isAB === 1 ? styles.centerBarBallAbB : ''}`} style={{ left: `${utils.calculatePercentage(AB.B, data.totalDuration)}%` }}></div>
           </div>
         </div>
-        }
-        right={
           <SettingButton 
+          className={styles.right}
           callDoubleFun={() => {
             if (AB.isAB === 0 && AB.A < data.barCurrentProgressSec) {
               setAB(prev => ({
@@ -142,8 +138,7 @@ function BarPlayer(props) {
           msg={`${AB.isAB >= 1 ? 'B:' + utils.formatTime(AB.B) : utils.formatTime(data.totalDuration)}`}
           style={`${styles.rightBarProgress} ${AB.isAB === 1 ? styles.rightBarProgressB : ''}`}
         />
-        }
-      />
+      </div>
     );
     
 }
