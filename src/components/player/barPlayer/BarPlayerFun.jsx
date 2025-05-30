@@ -64,7 +64,11 @@ export const handleMouseUp = async (e, data, setData, coords, setCoords, isDragg
       }else {
         playFun = data.video.current
       }
-      playFun.seek(barCurrentProgressSec, data.barCurrentVolume);
+      if (data.isPlaying) {
+        playFun.seek(barCurrentProgressSec, data.barCurrentVolume);
+      } else {
+        let song = await playFun.play(data.playlistId, data.audioSrc, data.totalDuration, barCurrentProgressSec, data.barCurrentVolume);
+      }
   
       setData(prevData => ({
         ...prevData,

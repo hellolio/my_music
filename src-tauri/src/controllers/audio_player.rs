@@ -48,8 +48,6 @@ impl AudioPlayer {
                 .expect("No audio stream found");
 
             let stream_index = input.index();
-            println!("stream_index:{stream_index}");
-            println!("duration:{duration}");
 
             let codec_params = input.parameters();
             let mut decoder = ffmpeg::codec::context::Context::from_parameters(codec_params)
@@ -65,23 +63,14 @@ impl AudioPlayer {
                     decoder.channel_layout(),
                     decoder.rate(),
                 )?;
-            
-            if skip_secs != 0 {
-                let skip_secs_tmp = skip_secs as i64 * 1_000_000;
-                ictx.seek(skip_secs_tmp, 0..skip_secs_tmp)?;
-            }
 
             let (_stream, stream_handle) = OutputStream::try_default()?;
             let sink = Arc::new(Mutex::new(Sink::try_new(&stream_handle)?));
             let mut current_ts: u64 = 0;
             let sleep_time = 10;
-            let mut msg = Some(Command::Play);
-
-            sink.lock().unwrap().set_volume(volume*2.0);
+            let mut msg = Some(Command::Seek(skip_secs, volume));
 
             loop {
-
-
                 if let Some((stream, packet)) = ictx.packets().next() {
                     if stream.index() != stream_index {
                         continue;
@@ -197,11 +186,9 @@ impl AudioPlayer {
                         break;
                     }
                     Some(Command::Volume(volume)) => {
-                        // sink.lock().unwrap().stop();
                         println!("音量调整了。。。{volume}");
                         current_ts += sleep_time;
                         sink.lock().unwrap().set_volume(volume*2.0);
-                        // msg = Some(Command::Play);
                         msg = None;
                     }
                     None => {

@@ -58,7 +58,7 @@ function MainWindow({data, setData, allSongList, setAllSongList, musicRef, video
 
         <div className={styles.player}>
           <div className={`${styles.a} ${styles.item}`}>
-            <BarPlayer data={data} setData={setData} />
+            <BarPlayer data={data} setData={setData} allSongList={allSongList}/>
           </div>
           <div className={`${styles.b} ${styles.item}`}>
             <BtnPlayer 

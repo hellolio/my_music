@@ -96,7 +96,6 @@ function App() {
         isPlaying: false,
         playState: -1,   // -1是当前没有播放或者播放线程结束，0是播放结束，但线程未结束，1是正在播放
         isSingleLoop: dataTmp ? dataTmpParse.isSingleLoop : true,
-        playerAlive: false,
         video: videoRef,
         music: musicRef,
         isMusic: true
@@ -114,10 +113,10 @@ function App() {
 
     return (
       <div id="app">
-  <div class={`${styles.resizeHandle} ${styles.resizeleft}`} data-direction="w"></div>
-  <div class={`${styles.resizeHandle} ${styles.resizeright}`} data-direction="e"></div>
-  <div class={`${styles.resizeHandle} ${styles.resizetop}`} data-direction="n"></div>
-  <div class={`${styles.resizeHandle} ${styles.resizebottom}`} data-direction="s"></div>
+        <div className={`${styles.resizeHandle} ${styles.resizeleft}`} data-direction="w"></div>
+        <div className={`${styles.resizeHandle} ${styles.resizeright}`} data-direction="e"></div>
+        <div className={`${styles.resizeHandle} ${styles.resizetop}`} data-direction="n"></div>
+        <div className={`${styles.resizeHandle} ${styles.resizebottom}`} data-direction="s"></div>
 
       <div ref={ref} style={{ position: 'relative' }}>
         {/* MainWindow 显示时可见 */}

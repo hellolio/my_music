@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import styles from "./BtnPlayer.module.scss";
 import * as player from "@/common/player"
 
@@ -8,25 +8,11 @@ import SettingButton from "@/components/common/settingButton/SettingButton";
 import ModalComFloat from "@/components/common/modalComFloat/ModalComFloat";
 
 
-function BtnPlayer(props) {
-  const {data, setData, allSongList, setAllSongList} = props;
+function BtnPlayer({data, setData, allSongList, setAllSongList} ) {
   const listBtnPlayerRef = useRef(null);
-
-  useEffect(() => {
-    if (data.playState===-1) {
-      if (data.isSingleLoop) {
-        if (data.isPlaying){
-          player.togglePlayPause(data, setData);
-        }
-      } else if (allSongList.length > 0){
-        player.rightClick(data, setData, allSongList);
-      }
-    } 
-  }, [data.playState]);
 
   // 是否显示播放list
   const [showSongList, setShowSongList] = useState(false);
-
 
   return (
     <div 

@@ -62,13 +62,21 @@ export const leftClick = async (data, setData, allSongList) => {
       totalDuration: audioMeta.total_duration,
       barCurrentProgressSec: 0,
       isPlaying: true,
-      playerAlive: true,
       isMusic: isMusic
     }));
   };
   
   
   export const togglePlayPause = async (data, setData) => {
+    togglePlayPausec(data, setData)
+    setData(prevData => ({
+      ...prevData,
+      isPlaying: !prevData.isPlaying
+    }));
+  };
+  
+
+  export const togglePlayPausec = async (data, setData) => {
     const isMusic = checkIsMusic(data.audioSrc);
     let playFun = undefined;
     let coverImagePath = "";
@@ -106,21 +114,18 @@ export const leftClick = async (data, setData, allSongList) => {
           barCurrentProgressSec: 0,
           playState: 1,
           isPlaying: true,
-          playerAlive: true,
           isMusic: isMusic
         }));
       } else {
         await playFun.resume(data.barCurrentVolume)
       }
     }else{
-        await playFun.pause()
+      await playFun.pause()
     }
-    setData(prevData => ({
-      ...prevData,
-      isPlaying: !data.isPlaying
-    }));
+
   };
-  
+
+
   export const rightClick = async (data, setData, allSongList) => {
     let currentSongIndex = allSongList.findIndex((item) => item.id === data.playlistId);
     let index = allSongList[currentSongIndex].songs.findIndex((song) => song.id === data.id);
@@ -170,7 +175,6 @@ export const leftClick = async (data, setData, allSongList) => {
         totalDuration: audioMeta.total_duration,
         barCurrentProgressSec: 0,
         isPlaying: true,
-        playerAlive: true,
         isMusic: isMusic
       }));
     }
@@ -220,7 +224,6 @@ export const playMusicFromList = async (song, data, setData, playlistId) => {
             totalDuration: song.total_duration,
             barCurrentProgressSec: 0,
             isPlaying: true,
-            playerAlive: true,
             isMusic: true,
         }));
     } else {
@@ -238,7 +241,6 @@ export const playMusicFromList = async (song, data, setData, playlistId) => {
             totalDuration: song.total_duration,
             barCurrentProgressSec: 0,
             isPlaying: true,
-            playerAlive: true,
             isMusic: false,
           }));
     }

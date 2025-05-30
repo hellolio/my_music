@@ -50,7 +50,6 @@ export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, data, 
                 totalDuration: musicList.songs[index].total_duration,
                 barCurrentProgressSec: 0,
                 isPlaying: false,
-                playerAlive: false
             }));
         }
     

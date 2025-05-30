@@ -1,5 +1,5 @@
-import * as utils from "../../../common/utils"
-import * as player from "../../../common/player"
+import * as utils from "@/common/utils"
+import * as player from "@/common/player"
 import styles from "./BarPlayer.module.scss"
 import { useState, useEffect, useRef } from "react";
 import { listen } from '@tauri-apps/api/event';
@@ -8,7 +8,7 @@ import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp} from ".
 
 
 function BarPlayer(props) {
-    const {data, setData} = props;
+    const {data, setData, allSongList} = props;
 
     const progressBarRef = useRef(null);
 
@@ -20,22 +20,37 @@ function BarPlayer(props) {
       A: -1,
       B: -1
     });
+    const [playNext, setPlayNext] =useState(false);
 
     useEffect(() => {
+      if (!playNext) { return }
+      if (data.isSingleLoop) {
+        console.log("data aa:",data);
+        player.togglePlayPausec(data, setData);
+        setPlayNext(false)
+      } else if (allSongList.length > 0){
+        player.rightClick(data, setData, allSongList);
+        setPlayNext(false)
+      }
+    }, [playNext])
+    
+    useEffect(() => {
+      console.log("aaaa", data)
       // 监听进度事件
       if (!isDragging) {
         const listenProgress = listen("player_progress", (event) => {
-          const newProgress = event.payload / 1000;  // 获取进度（这里假设是一个数字）
+          const newProgress = event.payload / 1000;
 
           if (event.payload === -1) {
             // 更新进度
             setData(prevData => ({
               ...prevData,
-              playerAlive: false,
               isPlaying: false,
               playState: -1,
               barCurrentProgressSec: 0
             }));
+            setPlayNext(true)
+
           } else {
 
             if (AB.isAB === 1 && AB.A != -1 && AB.B != -1){
