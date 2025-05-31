@@ -3,7 +3,7 @@ import styles from "./SongList.module.scss";
 import * as utils from "../../common/utils";
 import * as player from "../../common/player";
 import ShowMsg from "../showMsg/ShowMsg";
-import SettingButton from "@/components/common/SettingButton/SettingButton";
+import SettingButton from "@/components/common/settingButton/SettingButton";
 
 import {
   importMusic,
