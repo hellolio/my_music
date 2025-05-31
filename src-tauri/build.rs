@@ -1,7 +1,7 @@
 use std::{env, fs, path::PathBuf};
 
 fn main() {
-    copy_dll();
+    //copy_dll();
     tauri_build::build()
 }
 
