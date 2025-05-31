@@ -1,19 +1,26 @@
 import styles from "./FindLyrics.module.scss";
-import React, { useState } from "react";
-import { selectSavePath, saveLyrics, searchLyrics } from "./FindLyricsFun";
 import * as utils from "../../common/utils";
-
 import MyButton from "@/components/common/button/MyButton";
 import MyInput from "@/components/common/input/MyInput";
+import { useFindLyricsFun } from "./FindLyricsFun";
 
 export default function FindLyrics({ data, setData }) {
-  const [songTitle, setSongTitle] = useState("");
-  const [resultList, setResultList] = useState([]);
-
-  const [selectedRow, setSelectedRow] = useState(-1);
-
-  const [savePath, setSavePath] = useState("");
-  const [selected, setSelected] = useState(false);
+  const {
+    selectSavePath,
+    saveLyrics,
+    searchLyrics,
+    getDirectoryPath,
+    savePath,
+    setSavePath,
+    selected,
+    setSelected,
+    songTitle,
+    setSongTitle,
+    resultList,
+    setResultList,
+    selectedRow,
+    setSelectedRow,
+  } = useFindLyricsFun(data, setData);
 
   return (
     <div>
@@ -93,9 +100,7 @@ export default function FindLyrics({ data, setData }) {
         {}
         <div className={styles.leftControls}>
           <MyButton
-            callFun={() =>
-              selectSavePath(setSavePath, resultList, selectedRow, songTitle)
-            }
+            callFun={() => selectSavePath(setSavePath)}
             msg={"选择保存路径"}
             isConfirm={true}
           />
@@ -130,7 +135,8 @@ export default function FindLyrics({ data, setData }) {
                 savePath,
                 selected,
                 data,
-                setData
+                setData,
+                songTitle
               )
             }
             msg={"保存"}

@@ -3,6 +3,7 @@
 
 use std::{
     env, fs,
+    path::PathBuf,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc, Mutex,
@@ -78,6 +79,18 @@ fn import_music_to_db(
             }
             _ => {
                 if let Ok(mut song) = utils::get_audio_metadata(file) {
+                    let mut path_buf = PathBuf::from(file);
+                    path_buf.set_extension("lrc");
+                    path_buf.to_str().map(|s| s.to_string());
+                    println!("{:?}", path_buf);
+                    let lyrics = utils::get_audio_lyrics_qq(path_buf.to_str().unwrap());
+                    match lyrics {
+                        Ok(lyrics_context) => {
+                            song.lyrics_path = Some(path_buf);
+                            song.lyrics = lyrics_context;
+                        }
+                        Err(_) => {}
+                    }
                     let id = db::insert_song(&mut *conn, &song, id);
                     song.id = Some(id);
                     song_metas.push(song);

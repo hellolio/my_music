@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./SongList.module.scss";
 import * as utils from "../../common/utils";
 import * as player from "../../common/player";
@@ -17,7 +17,14 @@ import {
 } from "./SongListFun";
 import { div } from "framer-motion/client";
 
-const SongList = ({ data, setData, allSongList, setAllSongList }) => {
+const SongList = ({
+  data,
+  setData,
+  allSongList,
+  setAllSongList,
+  isEdit,
+  setIsEdit,
+}) => {
   const panelRef = useRef(null);
 
   const [selectedItems, setSelectedItems] = useState([]);
@@ -30,8 +37,6 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
 
   const [updatePlayListFlg, setUpdatePlayListFlg] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
-
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     getMusicListFormDB(
@@ -84,21 +89,27 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
 
               <SettingButton
                 callFun={() => {
-                  setIsOpen(!isOpen);
+                  setIsEdit(!isEdit);
                 }}
                 msg={"..."}
                 style={styles.setting}
               />
 
-              {isOpen && (
+              {isEdit && (
                 <div>
                   <SettingButton
-                    callFun={() => setShowDialog(true)}
+                    callFun={() => {
+                      setShowDialog(true);
+                      setIsEdit(false);
+                    }}
                     msg={"+添加歌单"}
                     style={styles.setting}
                   />
                   <SettingButton
-                    callFun={() => setShowConfirmDialog(true)}
+                    callFun={() => {
+                      setShowConfirmDialog(true);
+                      setIsEdit(false);
+                    }}
                     msg={"×删除歌单"}
                     style={styles.setting}
                   />
@@ -112,8 +123,10 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
             callFun={() =>
               importMusic(
                 data.playlistId,
+                setSelectedItems,
                 setUpdatePlayListFlg,
                 setAllSongList,
+                setAllCheck,
                 currentIndex
               )
             }
@@ -138,6 +151,7 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
                 setSelectedItems,
                 setUpdatePlayListFlg,
                 setAllSongList,
+                setAllCheck,
                 currentIndex
               )
             }

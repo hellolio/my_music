@@ -1,7 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import styles from "./BtnPlayer.module.scss";
 import * as player from "@/common/player";
-
 import SongList from "../../songList/SongList";
 import SettingButton from "@/components/common/settingButton/SettingButton";
 import ModalComFloat from "@/components/common/modalComFloat/ModalComFloat";
@@ -10,6 +9,11 @@ function BtnPlayer({ data, setData, allSongList, setAllSongList }) {
   const listBtnPlayerRef = useRef(null);
 
   const [showSongList, setShowSongList] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
+  useEffect(() => {
+    setIsEdit(false);
+  }, [showSongList]);
 
   return (
     <div className={styles.containerBtnPlayer} ref={listBtnPlayerRef}>
@@ -29,7 +33,12 @@ function BtnPlayer({ data, setData, allSongList, setAllSongList }) {
         callFun={() => player.rightClick(data, setData, allSongList)}
         msg={">>"}
       />
-      <SettingButton callFun={() => setShowSongList(!showSongList)} msg={"≡"} />
+      <SettingButton
+        callFun={() => {
+          setShowSongList(!showSongList);
+        }}
+        msg={"≡"}
+      />
 
       <ModalComFloat
         visible={showSongList}
@@ -41,6 +50,8 @@ function BtnPlayer({ data, setData, allSongList, setAllSongList }) {
             setData={setData}
             allSongList={allSongList}
             setAllSongList={setAllSongList}
+            isEdit={isEdit}
+            setIsEdit={setIsEdit}
           />
         }
       />

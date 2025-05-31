@@ -4,8 +4,10 @@ import { open } from "@tauri-apps/api/dialog";
 // 点击添加 导入音乐到数据库
 export const importMusic = async (
   playlistId,
+  setSelectedItems,
   setUpdatePlayListFlg,
   setAllSongList,
+  setAllCheck,
   currentIndex
 ) => {
   let selectedFiles = await open({
@@ -24,6 +26,8 @@ export const importMusic = async (
     )
   );
   setUpdatePlayListFlg(true);
+  setAllCheck(true);
+  setSelectedItems([]);
 };
 
 export const getMusicListFormDB = async (
@@ -109,6 +113,7 @@ export const deleteMusic = async (
   setSelectedItems,
   setUpdatePlayListFlg,
   setAllSongList,
+  setAllCheck,
   currentIndex
 ) => {
   await invoke("delete_music_from_db", { songs: selectedItems });
@@ -126,6 +131,7 @@ export const deleteMusic = async (
 
   setSelectedItems([]);
   setUpdatePlayListFlg(true);
+  setAllCheck(true);
 };
 
 // 切换到第 n 个歌单

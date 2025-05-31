@@ -241,7 +241,7 @@ export const playMusicFromList = async (song, data, setData, playlistId) => {
     console.log("song:", song);
     console.log("playlistId:", playlistId);
     // return
-    await data.music.current.play(
+    let new_song = await data.music.current.play(
       playlistId,
       song.audio_src,
       song.total_duration,
@@ -251,16 +251,16 @@ export const playMusicFromList = async (song, data, setData, playlistId) => {
     let coverImagePath = await data.music.current.get_cover(song.audio_src);
     setData((prevData) => ({
       ...prevData,
-      id: song.id,
-      title: song.title,
-      author: song.author,
+      id: new_song.id,
+      title: new_song.title,
+      author: new_song.author,
       coverImagePath: coverImagePath,
-      isCollect: song.is_collect,
-      isFollow: song.is_follow,
-      lyrics: song.lyrics,
-      lyricsPath: song.lyrics_path,
-      audioSrc: song.audio_src,
-      totalDuration: song.total_duration,
+      isCollect: new_song.is_collect,
+      isFollow: new_song.is_follow,
+      lyrics: new_song.lyrics,
+      lyricsPath: new_song.lyrics_path,
+      audioSrc: new_song.audio_src,
+      totalDuration: new_song.total_duration,
       barCurrentProgressSec: 0,
       isPlaying: true,
       isMusic: true,
