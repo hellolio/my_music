@@ -10,21 +10,20 @@ const Video = forwardRef(({ data, setData }, ref) => {
     playing,
     videoVolume,
     setPlayedSeconds,
-    setDuration,
+    handleFullscreen,
   } = useVideoFun(setData, ref);
 
   return (
-    <div className={styles.myVideo}>
+    <div className={styles.myVideo} onDoubleClick={() => handleFullscreen()}>
       <ReactPlayer
         ref={playerRef}
         url={videoSrc}
         playing={playing}
         volume={videoVolume}
         onProgress={(state) => setPlayedSeconds(state.playedSeconds)}
-        onDuration={(dur) => setDuration(dur)}
-        controls
+        controls={true}
         width="100%"
-        height="90%"
+        height="100%"
       />
     </div>
   );

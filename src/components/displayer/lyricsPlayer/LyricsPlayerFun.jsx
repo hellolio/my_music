@@ -4,7 +4,15 @@ import { open } from "@tauri-apps/api/dialog";
 import * as player from "@/common/player";
 
 export const importLyrics = async () => {
-  let selectedFile = await open({ multiple: false });
+  let selectedFile = await open({
+    multiple: false,
+    filters: [
+      {
+        name: "lyrics",
+        extensions: ["lrc"],
+      },
+    ],
+  });
   return selectedFile;
 };
 

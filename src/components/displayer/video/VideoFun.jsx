@@ -6,22 +6,7 @@ export const useVideoFun = (setData, ref) => {
   const [videoSrc, setVideoSrc] = useState("");
   const [playing, setPlaying] = useState(true);
   const [videoVolume, setVideoVolume] = useState(0.5);
-
   const [playedSeconds, setPlayedSeconds] = useState(0);
-  const [durationT, setDuration] = useState(0);
-
-  const play = async (id, filePath, duration, skipSecs, volume) => {
-    setPlaying(false);
-    setVideoSrc(convertFileSrc(filePath));
-    setVideoVolume(volume / 100);
-    setPlaying(true);
-    playerRef.current?.getInternalPlayer()?.play();
-    playerRef.current?.seekTo(skipSecs);
-    setData((prevData) => ({
-      ...prevData,
-      totalDuration: durationT,
-    }));
-  };
 
   useEffect(() => {
     setData((prevData) => ({
@@ -29,6 +14,26 @@ export const useVideoFun = (setData, ref) => {
       barCurrentProgressSec: Math.floor(playedSeconds),
     }));
   }, [playedSeconds]);
+
+  const play = async (id, filePath, duration, skipSecs, volume) => {
+    setVideoSrc(convertFileSrc(filePath));
+    setVideoVolume(volume / 100);
+    setPlaying(true);
+    playerRef.current?.getInternalPlayer()?.play();
+    playerRef.current?.seekTo(skipSecs);
+  };
+
+  const handleFullscreen = () => {
+    const videoElement = playerRef.current?.getInternalPlayer();
+
+    if (videoElement?.requestFullscreen) {
+      videoElement.requestFullscreen();
+    } else if (videoElement?.webkitEnterFullscreen) {
+      videoElement.webkitEnterFullscreen();
+    } else {
+      console.warn("Fullscreen API is not supported.");
+    }
+  };
 
   const pause = () => {
     playerRef.current?.getInternalPlayer()?.pause();
@@ -44,8 +49,9 @@ export const useVideoFun = (setData, ref) => {
     setPlaying(false);
   };
 
-  const seek = (sec) => {
+  const seek = (sec, volume) => {
     playerRef.current?.seekTo(sec);
+    setVideoVolume(volume / 100);
   };
 
   const setVolume = (volume) => {
@@ -67,6 +73,6 @@ export const useVideoFun = (setData, ref) => {
     playing,
     videoVolume,
     setPlayedSeconds,
-    setDuration,
+    handleFullscreen,
   };
 };

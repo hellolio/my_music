@@ -8,7 +8,9 @@ export const importMusic = async (
   setAllSongList,
   currentIndex
 ) => {
-  let selectedFiles = await open({ multiple: true });
+  let selectedFiles = await open({
+    multiple: true,
+  });
 
   let songs_new = await invoke("import_music_to_db", {
     fileNames: selectedFiles,

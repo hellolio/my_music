@@ -102,12 +102,12 @@ export const WindowSetting = ({
               msg={"⚙"}
             />
             <SettingButton
-              style={styles.settingBut}
+              // style={styles.settingBut}
               callFun={() => setShowFlg(2)}
               msg={"👕"}
             />
             <SettingButton
-              style={styles.settingBut}
+              // style={styles.settingBut}
               callFun={() => setShowFlg(3)}
               msg={"💡"}
             />

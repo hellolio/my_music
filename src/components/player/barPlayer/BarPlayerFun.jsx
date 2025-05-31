@@ -1,4 +1,4 @@
-import * as player from "../../../common/player";
+import * as player from "@/common/player";
 
 // 计算并设置进度
 export const updateProgress = (e, progressBarRef, data, setData) => {
@@ -17,7 +17,8 @@ export const updateProgress = (e, progressBarRef, data, setData) => {
 
   if (barCurrentProgressSec > data.totalDuration - 1) {
     barCurrentProgressSec = data.totalDuration - 1;
-  } else if (barCurrentProgressSec < 0) {
+  }
+  if (barCurrentProgressSec < 0) {
     barCurrentProgressSec = 0;
   }
   return barCurrentProgressSec;
@@ -44,7 +45,7 @@ export const handleMouseMove = (
   }
 
   let barCurrentProgressSec = updateProgress(e, progressBarRef, data, setData);
-  const rect = progressBarRef.current.getBoundingClientRect();
+  // const rect = progressBarRef.current.getBoundingClientRect();
   setCoords({
     x: e.clientX,
     y: e.clientY,
@@ -71,36 +72,47 @@ export const handleMouseUp = async (
   setIsDragging
 ) => {
   let barCurrentProgressSec = coords.sec;
+
   if (data.audioSrc === null || data.audioSrc === undefined) {
     return;
   }
 
   setCoords((prev) => ({ ...prev, visible: false }));
-  if (isDragging) {
-    const isMusic = player.checkIsMusic(data.audioSrc);
-    let playFun = undefined;
-    if (isMusic) {
-      playFun = data.music.current;
-    } else {
-      playFun = data.video.current;
-    }
-    if (data.isPlaying) {
-      playFun.seek(barCurrentProgressSec, data.barCurrentVolume);
-    } else {
-      let _ = await playFun.play(
-        data.playlistId,
-        data.audioSrc,
-        data.totalDuration,
-        barCurrentProgressSec,
-        data.barCurrentVolume
-      );
-    }
+  if (!isDragging) {
+    return;
+  }
+  setIsDragging(false);
+
+  const isMusic = player.checkIsMusic(data.audioSrc);
+  let playFun = undefined;
+  if (isMusic) {
+    playFun = data.music.current;
+  } else {
+    playFun = data.video.current;
+  }
+
+  if (data.isPlaying) {
+    playFun.seek(barCurrentProgressSec, data.barCurrentVolume);
 
     setData((prevData) => ({
       ...prevData,
-      isPlaying: true,
       barCurrentProgressSec: barCurrentProgressSec,
     }));
   }
-  setIsDragging(false);
+
+  if (!data.isPlaying) {
+    let song = await playFun.play(
+      data.playlistId,
+      data.audioSrc,
+      data.totalDuration,
+      barCurrentProgressSec,
+      data.barCurrentVolume
+    );
+    setData((prevData) => ({
+      ...prevData,
+      barCurrentProgressSec: barCurrentProgressSec,
+      isPlaying: true,
+      isMusic: isMusic,
+    }));
+  }
 };

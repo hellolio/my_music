@@ -10,20 +10,18 @@ export const useMusicFun = (ref) => {
   };
 
   const play = async (id, filePath, duration, skipSecs, volume) => {
-    let song = null;
     try {
-      song = await invoke("play_music", {
+      const song = await invoke("play_music", {
         id: id,
         filePath: filePath,
         duration: duration,
         skipSecs: skipSecs,
         volume: volume / 100,
       });
+      return song;
     } catch (error) {
       console.log(error);
     }
-
-    return song;
   };
 
   const pause = async () => {

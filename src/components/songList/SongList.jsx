@@ -31,6 +31,8 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
   const [updatePlayListFlg, setUpdatePlayListFlg] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
 
+  const [isOpen, setIsOpen] = useState(false);
+
   useEffect(() => {
     getMusicListFormDB(
       setCurrentIndex,
@@ -79,16 +81,29 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
                   </div>
                 );
               })}
+
               <SettingButton
-                callFun={() => setShowDialog(true)}
-                msg={"+添加歌单"}
+                callFun={() => {
+                  setIsOpen(!isOpen);
+                }}
+                msg={"..."}
                 style={styles.setting}
               />
-              <SettingButton
-                callFun={() => setShowConfirmDialog(true)}
-                msg={"×删除歌单"}
-                style={styles.setting}
-              />
+
+              {isOpen && (
+                <div>
+                  <SettingButton
+                    callFun={() => setShowDialog(true)}
+                    msg={"+添加歌单"}
+                    style={styles.setting}
+                  />
+                  <SettingButton
+                    callFun={() => setShowConfirmDialog(true)}
+                    msg={"×删除歌单"}
+                    style={styles.setting}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
