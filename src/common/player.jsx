@@ -37,15 +37,17 @@ export const leftClick = async (data, setData, allSongList) => {
   }
   var audioMeta = allSongList[currentSongIndex].songs[index];
 
-  if (audioMeta.audio_src === null || data.audio_src === undefined) {
-    return;
-  }
   if (data.isMusic) {
     await data.music.current.stop();
   } else {
     await data.video.current.stop();
   }
-
+  if (audioMeta === undefined || audioMeta === null) {
+    return;
+  }
+  if (audioMeta.audio_src === null || audioMeta.audio_src === undefined) {
+    return;
+  }
   const isMusic = checkIsMusic(audioMeta.audio_src);
   let playFun = undefined;
   let coverImagePath = "";
@@ -164,9 +166,6 @@ export const rightClick = async (data, setData, allSongList) => {
     index = index + 1;
   }
   var audioMeta = allSongList[currentSongIndex].songs[index];
-  if (audioMeta.audio_src === null || data.audio_src === undefined) {
-    return;
-  }
   if (data.isMusic) {
     await data.music.current.stop();
   } else {
@@ -174,6 +173,9 @@ export const rightClick = async (data, setData, allSongList) => {
   }
 
   if (audioMeta != undefined) {
+    if (audioMeta.audio_src === null || audioMeta.audio_src === undefined) {
+      return;
+    }
     const isMusic = checkIsMusic(audioMeta.audio_src);
     let playFun = undefined;
     let coverImagePath = "";

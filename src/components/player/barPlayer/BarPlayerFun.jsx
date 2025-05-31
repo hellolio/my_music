@@ -39,6 +39,10 @@ export const handleMouseMove = (
   setCoords,
   isDragging
 ) => {
+  if (data.audioSrc === null || data.audioSrc === undefined) {
+    return;
+  }
+
   let barCurrentProgressSec = updateProgress(e, progressBarRef, data, setData);
   const rect = progressBarRef.current.getBoundingClientRect();
   setCoords({
