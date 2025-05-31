@@ -73,7 +73,7 @@ export default function LyricBar({
 
   return (
     <div
-      className={`${styles.lyricBar}}`}
+      className={styles.lyricBar}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
