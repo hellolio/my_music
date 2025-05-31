@@ -1,7 +1,5 @@
 use super::db_song::Song;
 
-
-
 #[derive(serde::Serialize)]
 pub struct PlaylistSong {
     pub id: i64,

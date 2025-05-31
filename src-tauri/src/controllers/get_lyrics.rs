@@ -1,14 +1,13 @@
 use std::collections::HashMap;
 
+use anyhow::{Ok, Result};
 use base64::{engine::general_purpose, Engine};
 use rand::Rng;
 use reqwest::Client;
 use serde::Serialize;
 use serde_json::{json, Value};
-use anyhow::{Ok, Result};
 
 use crate::{common::decrypt_qq_lyrics, modles::songs_for_lyrics::SongsForLyrics};
-
 
 #[derive(Serialize)]
 struct Comm {
@@ -38,8 +37,7 @@ struct RequestData {
     req_0: HashMap<String, serde_json::Value>,
 }
 
-
-pub async fn get_qq_lyrics(keyword: String)-> Result<Vec<SongsForLyrics>> {
+pub async fn get_qq_lyrics(keyword: String) -> Result<Vec<SongsForLyrics>> {
     let url = "https://u.y.qq.com/cgi-bin/musicu.fcg";
 
     let comm = Comm {
@@ -63,8 +61,14 @@ pub async fn get_qq_lyrics(keyword: String)-> Result<Vec<SongsForLyrics>> {
     };
 
     let mut req_0 = HashMap::new();
-    req_0.insert("method".to_string(), serde_json::json!("DoSearchForQQMusicDesktop"));
-    req_0.insert("module".to_string(), serde_json::json!("music.search.SearchCgiService"));
+    req_0.insert(
+        "method".to_string(),
+        serde_json::json!("DoSearchForQQMusicDesktop"),
+    );
+    req_0.insert(
+        "module".to_string(),
+        serde_json::json!("music.search.SearchCgiService"),
+    );
     req_0.insert("param".to_string(), serde_json::json!(param));
 
     let request_data = RequestData { comm, req_0 };
@@ -79,11 +83,13 @@ pub async fn get_qq_lyrics(keyword: String)-> Result<Vec<SongsForLyrics>> {
         .header("Accept", "*/*")
         // .header("Accept-Encoding", "gzip, deflate")
         .header("Accept-Language", "zh-CN")
-        .header("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)")
+        .header(
+            "User-Agent",
+            "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)",
+        )
         .timeout(std::time::Duration::from_secs(4))
         .send()
-        .await?
-        ;
+        .await?;
 
     // 获取响应结果
     let status = response.status();
@@ -97,10 +103,18 @@ pub async fn get_qq_lyrics(keyword: String)-> Result<Vec<SongsForLyrics>> {
     if let Some(req_0) = json.get("req_0") {
         if let Some(data) = req_0.get("data") {
             if let Some(body) = data.get("body") {
-                let list = body.get("song").ok_or(anyhow::anyhow!("not found song"))?.get("list").and_then(Value::as_array).ok_or(anyhow::anyhow!("not found list"))?;
+                let list = body
+                    .get("song")
+                    .ok_or(anyhow::anyhow!("not found song"))?
+                    .get("list")
+                    .and_then(Value::as_array)
+                    .ok_or(anyhow::anyhow!("not found list"))?;
 
                 for i in list {
-                    let singer = i.get("singer").and_then(Value::as_array).ok_or(anyhow::anyhow!("not found singer"))?;
+                    let singer = i
+                        .get("singer")
+                        .and_then(Value::as_array)
+                        .ok_or(anyhow::anyhow!("not found singer"))?;
                     let mut artists = vec![];
                     for y in singer {
                         let artist = y.get("name").ok_or(anyhow::anyhow!("not found name"))?;
@@ -113,10 +127,18 @@ pub async fn get_qq_lyrics(keyword: String)-> Result<Vec<SongsForLyrics>> {
                     let id = i.get("id").ok_or(anyhow::anyhow!("not found id"))?;
                     let mid = i.get("mid").ok_or(anyhow::anyhow!("not found mid"))?;
                     let title = i.get("title").ok_or(anyhow::anyhow!("not found title"))?;
-                    let subtitle = i.get("subtitle").ok_or(anyhow::anyhow!("not found subtitle"))?;
-                    let album = i.get("album").ok_or(anyhow::anyhow!("not found album"))?.get("name").ok_or(anyhow::anyhow!("not found name"))?;
-                    let duration = i.get("interval").ok_or(anyhow::anyhow!("not found interval"))?;
-                    let songs_for_lyrics = SongsForLyrics{
+                    let subtitle = i
+                        .get("subtitle")
+                        .ok_or(anyhow::anyhow!("not found subtitle"))?;
+                    let album = i
+                        .get("album")
+                        .ok_or(anyhow::anyhow!("not found album"))?
+                        .get("name")
+                        .ok_or(anyhow::anyhow!("not found name"))?;
+                    let duration = i
+                        .get("interval")
+                        .ok_or(anyhow::anyhow!("not found interval"))?;
+                    let songs_for_lyrics = SongsForLyrics {
                         id: id.to_string().replace("\"", "").parse::<i64>().unwrap_or(0),
                         mid: mid.to_string().replace("\"", ""),
                         title: title.to_string().replace("\"", ""),
@@ -133,9 +155,13 @@ pub async fn get_qq_lyrics(keyword: String)-> Result<Vec<SongsForLyrics>> {
     Ok(songs)
 }
 
-
-pub async fn get_qq_lytics_by_id(album_name: &str, singer: &str, song_name: &str, duration: u32, id: i64) -> Result<String> {
-
+pub async fn get_qq_lytics_by_id(
+    album_name: &str,
+    singer: &str,
+    song_name: &str,
+    duration: u32,
+    id: i64,
+) -> Result<String> {
     let url = "https://u.y.qq.com/cgi-bin/musicu.fcg";
 
     let base64_album_name = general_purpose::STANDARD.encode(album_name);
@@ -189,7 +215,10 @@ pub async fn get_qq_lytics_by_id(album_name: &str, singer: &str, song_name: &str
         .header("Accept", "*/*")
         // .header("Accept-Encoding", "gzip, deflate")
         .header("Accept-Language", "zh-CN")
-        .header("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)")
+        .header(
+            "User-Agent",
+            "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)",
+        )
         .json(&data)
         .timeout(std::time::Duration::from_secs(10))
         .send()
@@ -199,10 +228,17 @@ pub async fn get_qq_lytics_by_id(album_name: &str, singer: &str, song_name: &str
     let body = response.text().await?;
     // 解析 JSON 字符串为 serde_json::Value
     let json: Value = serde_json::from_str(&body)?;
-    let lyrics_base64 = json.get("music.musichallSong.PlayLyricInfo.GetPlayLyricInfo").ok_or(anyhow::anyhow!("not found interval"))?.get("data").ok_or(anyhow::anyhow!("not found interval"))?.get("lyric").ok_or(anyhow::anyhow!("not found interval"))?.to_string().replace("\"", "");
-    
+    let lyrics_base64 = json
+        .get("music.musichallSong.PlayLyricInfo.GetPlayLyricInfo")
+        .ok_or(anyhow::anyhow!("not found interval"))?
+        .get("data")
+        .ok_or(anyhow::anyhow!("not found interval"))?
+        .get("lyric")
+        .ok_or(anyhow::anyhow!("not found interval"))?
+        .to_string()
+        .replace("\"", "");
+
     let lyrics = decrypt_qq_lyrics::decrypt_qq_lyrics(&lyrics_base64);
 
     lyrics
-
 }

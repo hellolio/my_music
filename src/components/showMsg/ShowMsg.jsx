@@ -1,23 +1,34 @@
-import React, { useState } from 'react';
-import styles from './ShowMsg.module.scss';
+import React, { useState } from "react";
+import styles from "./ShowMsg.module.scss";
 import MyButton from "@/components/common/button/MyButton";
 
-export default function ShowMsg({showMsgParam, inputValue, setInputValue, showDialog, setShowDialog, callFun, callFunParam}) {
+export default function ShowMsg({
+  showMsgParam,
+  inputValue,
+  setInputValue,
+  showDialog,
+  setShowDialog,
+  callFun,
+  callFunParam,
+}) {
   const [fadeOut, setFadeOut] = useState(false);
-  
+
   const handleCancle = () => {
     setFadeOut(true);
     setShowDialog(false);
-
-  }
+  };
 
   return (
     <div>
       <div
-        className={`${styles.dialogOverlay} ${fadeOut ? styles.dialogOverlayFadeOut : ''}`}
+        className={`${styles.dialogOverlay} ${
+          fadeOut ? styles.dialogOverlayFadeOut : ""
+        }`}
         onClick={() => handleCancle()}
       />
-      <div className={`${styles.dialog} ${fadeOut ? styles.dialogFadeOut : ''}`}>
+      <div
+        className={`${styles.dialog} ${fadeOut ? styles.dialogFadeOut : ""}`}
+      >
         <h3>{showMsgParam.title}</h3>
         {showMsgParam.isInput && (
           <input
@@ -28,14 +39,14 @@ export default function ShowMsg({showMsgParam, inputValue, setInputValue, showDi
           />
         )}
         <div className={styles.dialogButtons}>
-          <MyButton 
+          <MyButton
             callFun={() => callFun(callFunParam)}
-            msg={'确认'}
+            msg={"确认"}
             isConfirm={true}
           />
-          <MyButton 
+          <MyButton
             callFun={() => handleCancle()}
-            msg={'取消'}
+            msg={"取消"}
             isConfirm={false}
           />
         </div>

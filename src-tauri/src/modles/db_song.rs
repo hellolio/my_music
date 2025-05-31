@@ -6,7 +6,7 @@ use super::music_lyrics::Lyric;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Song {
-    pub id: Option<i64>,  // INSERT 时传 None 自动生成
+    pub id: Option<i64>, // INSERT 时传 None 自动生成
     pub title: String,
     pub author: Option<String>,
     pub is_collect: bool,

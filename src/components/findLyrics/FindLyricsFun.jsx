@@ -5,14 +5,11 @@ import { invoke } from "@tauri-apps/api/tauri";
 
 
 export const get_lyrics_targets = async (keyword) => {
-
     let lyrics_targets = await invoke('get_lyrics_targets', { keyword: keyword });
     return lyrics_targets;
-
 }
 
 export const get_lyrics = async (album, singer, songName, duration, id, savePath) => {
-
     let lyrics = await invoke('get_lyrics', {album: album, singer: singer, songName: songName, duration: duration, id: id, savePath: savePath});
     return lyrics;
 }

@@ -7,7 +7,7 @@ use crate::modles::{db_playlists::Playlists, db_song::Song};
 pub fn init_db() -> Result<Connection> {
     // 打开或创建数据库文件（自动处理）
     let conn = Connection::open("app.db")?;
-    
+
     // 智能建表（仅当表不存在时执行）
     conn.execute(
         "
@@ -58,8 +58,8 @@ pub fn insert_playlists(conn: &mut Connection, playlist_name: String) -> i64 {
         rusqlite::params![playlist_name],
     );
     match result {
-        Ok(_) => {conn.last_insert_rowid()}
-        Err(_) => {-1}
+        Ok(_) => conn.last_insert_rowid(),
+        Err(_) => -1,
     }
 }
 
@@ -71,8 +71,8 @@ pub fn delete_playlists(conn: &mut Connection, id: i64) -> i64 {
         rusqlite::params![id.to_string()],
     );
     match result {
-        Ok(_) => {conn.last_insert_rowid()}
-        Err(_) => {-1}
+        Ok(_) => conn.last_insert_rowid(),
+        Err(_) => -1,
     }
 }
 
@@ -101,12 +101,12 @@ pub fn insert_song(conn: &mut Connection, song: &Song, id: i64) -> i64 {
     );
     // let mut id = -1;
     match result {
-        Ok(_) => {conn.last_insert_rowid()}
-        Err(_) => {-1}
+        Ok(_) => conn.last_insert_rowid(),
+        Err(_) => -1,
     }
 }
 
-pub fn update_lyrics(conn: &mut Connection, lyrics_file: &str, id: i64) -> i64{
+pub fn update_lyrics(conn: &mut Connection, lyrics_file: &str, id: i64) -> i64 {
     let _ = conn.execute(
         "UPDATE songs 
         SET
@@ -114,17 +114,13 @@ pub fn update_lyrics(conn: &mut Connection, lyrics_file: &str, id: i64) -> i64{
         WHERE
             id = ?2
         ",
-        rusqlite::params![
-            Some(lyrics_file),
-            Some(id)
-        ],
+        rusqlite::params![Some(lyrics_file), Some(id)],
     );
     println!("更新歌词到数据库:{lyrics_file},{id}");
     conn.last_insert_rowid()
 }
 
-
-pub fn delete_song(conn: &mut Connection, id: i64) -> i64{
+pub fn delete_song(conn: &mut Connection, id: i64) -> i64 {
     let _ = conn.execute(
         "
         DELETE 
@@ -132,14 +128,12 @@ pub fn delete_song(conn: &mut Connection, id: i64) -> i64{
         WHERE
             id = ?1
         ",
-        rusqlite::params![
-            Some(id)
-        ],
+        rusqlite::params![Some(id)],
     );
     conn.last_insert_rowid()
 }
 
-pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlists>, rusqlite::Error>{
+pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlists>, rusqlite::Error> {
     let sql = "
     SELECT
         id,
@@ -149,20 +143,21 @@ pub fn get_playlists(conn: &Connection) -> Result<Vec<Playlists>, rusqlite::Erro
     ";
 
     let mut stmt = conn.prepare(sql)?;
-    let playlists = stmt.query_map([], |row| {
-        Ok(Playlists {
-            id: row.get(0)?,
-            name: row.get(1)?,
-        })
-    })?
-    .collect::<Result<Vec<_>, _>>()
-    .map_err(|e| e.to_string()).unwrap_or_default();
-    
+    let playlists = stmt
+        .query_map([], |row| {
+            Ok(Playlists {
+                id: row.get(0)?,
+                name: row.get(1)?,
+            })
+        })?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())
+        .unwrap_or_default();
+
     Ok(playlists)
 }
 
-
-pub fn get_song_all(conn: &Connection, id: i64) -> Result<Vec<Song>, rusqlite::Error>{
+pub fn get_song_all(conn: &Connection, id: i64) -> Result<Vec<Song>, rusqlite::Error> {
     let sql = "
     SELECT
         id,
@@ -182,30 +177,33 @@ pub fn get_song_all(conn: &Connection, id: i64) -> Result<Vec<Song>, rusqlite::E
     ";
 
     let mut stmt = conn.prepare(sql)?;
-    let songs = stmt.query_map([id], |row| {
-        Ok(Song {
-            id: row.get(0)?,
-            title: row.get(1)?,
-            author: row.get(2)?,
-            is_collect: row.get(3)?,
-            is_follow: row.get(4)?,
-            lyrics: vec![],
-            lyrics_path: row.get::<_, Option<String>>(5)?.map(PathBuf::from),
-            audio_src: row.get::<_, Option<String>>(6)?.map(PathBuf::from).unwrap_or_default(),
-            total_duration: row.get(7)?,
-            bar_current_progress_sec: row.get(8)?,
-            is_playing: row.get(9)?,
-        })
-    })?
-    .collect::<Result<Vec<_>, _>>()
-    .map_err(|e| e.to_string()).unwrap_or_default();
-    
+    let songs = stmt
+        .query_map([id], |row| {
+            Ok(Song {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                author: row.get(2)?,
+                is_collect: row.get(3)?,
+                is_follow: row.get(4)?,
+                lyrics: vec![],
+                lyrics_path: row.get::<_, Option<String>>(5)?.map(PathBuf::from),
+                audio_src: row
+                    .get::<_, Option<String>>(6)?
+                    .map(PathBuf::from)
+                    .unwrap_or_default(),
+                total_duration: row.get(7)?,
+                bar_current_progress_sec: row.get(8)?,
+                is_playing: row.get(9)?,
+            })
+        })?
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())
+        .unwrap_or_default();
+
     Ok(songs)
 }
 
-
-
-pub fn get_song_by_path(conn: &Connection, path: String, id: i64) -> Result<Song, rusqlite::Error>{
+pub fn get_song_by_path(conn: &Connection, path: String, id: i64) -> Result<Song, rusqlite::Error> {
     let sql = "
             SELECT
                 id,
@@ -224,26 +222,32 @@ pub fn get_song_by_path(conn: &Connection, path: String, id: i64) -> Result<Song
     ";
 
     let mut stmt = conn.prepare(sql)?;
-    let songs = stmt.query_map([path, id.to_string()], |row| {
-        Ok(Song {
-            id: row.get(0)?,
-            title: row.get(1)?,
-            author: row.get(2).ok(),
-            is_collect: row.get(3)?,
-            is_follow: row.get(4)?,
-            lyrics: vec![],
-            lyrics_path: row.get::<_, Option<String>>(5)?.map(PathBuf::from),
-            audio_src: row.get::<_, Option<String>>(6)?.map(PathBuf::from).unwrap_or_default(),
-            total_duration: row.get(7)?,
-            bar_current_progress_sec: row.get(8)?,
-            is_playing: row.get(9)?,
-        })
-    })?
-    .collect::<Result<Vec<_>, _>>();
+    let songs = stmt
+        .query_map([path, id.to_string()], |row| {
+            Ok(Song {
+                id: row.get(0)?,
+                title: row.get(1)?,
+                author: row.get(2).ok(),
+                is_collect: row.get(3)?,
+                is_follow: row.get(4)?,
+                lyrics: vec![],
+                lyrics_path: row.get::<_, Option<String>>(5)?.map(PathBuf::from),
+                audio_src: row
+                    .get::<_, Option<String>>(6)?
+                    .map(PathBuf::from)
+                    .unwrap_or_default(),
+                total_duration: row.get(7)?,
+                bar_current_progress_sec: row.get(8)?,
+                is_playing: row.get(9)?,
+            })
+        })?
+        .collect::<Result<Vec<_>, _>>();
     println!("{:?}", songs);
-    
-    let song:Result<Song, rusqlite::Error> = songs.and_then(|v|{
-        v.get(0).cloned().ok_or(rusqlite::Error::ExecuteReturnedResults)
+
+    let song: Result<Song, rusqlite::Error> = songs.and_then(|v| {
+        v.get(0)
+            .cloned()
+            .ok_or(rusqlite::Error::ExecuteReturnedResults)
     });
     song
 }

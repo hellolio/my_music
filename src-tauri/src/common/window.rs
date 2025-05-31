@@ -14,7 +14,6 @@ pub struct WindowState {
     pub window_height: u32,
 }
 
-
 fn window_state_path(app_handle: &tauri::AppHandle) -> PathBuf {
     let mut path = app_handle
         .path_resolver()

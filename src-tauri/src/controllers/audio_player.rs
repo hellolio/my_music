@@ -4,10 +4,10 @@ use std::{
     time::Duration,
 };
 
+use anyhow::{Error, Ok, Result};
 use ffmpeg_next as ffmpeg;
 use rodio::{OutputStream, Sink};
 use tauri::Window;
-use anyhow::{Error, Ok, Result};
 
 #[derive(Debug)]
 enum Command {
@@ -16,7 +16,7 @@ enum Command {
     Resume(f32),
     Seek(u64, f32), // seconds
     Stop,
-    Volume(f32)
+    Volume(f32),
 }
 
 pub struct AudioPlayer {
@@ -24,16 +24,28 @@ pub struct AudioPlayer {
 }
 
 impl AudioPlayer {
-    pub fn new() -> Self{
-        let audio_player = AudioPlayer {
-            tx: None,
-        };
+    pub fn new() -> Self {
+        let audio_player = AudioPlayer { tx: None };
         audio_player
     }
-    pub fn music_play(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32) {
+    pub fn music_play(
+        &mut self,
+        window: Window,
+        file_path: String,
+        duration: u64,
+        skip_secs: u64,
+        volume: f32,
+    ) {
         let _ = self.create_music_player(window, file_path, duration, skip_secs, volume);
     }
-    pub fn create_music_player(&mut self, window: Window, file_path: String, duration: u64, skip_secs: u64, volume: f32)-> Result<(), Error> {
+    pub fn create_music_player(
+        &mut self,
+        window: Window,
+        file_path: String,
+        duration: u64,
+        skip_secs: u64,
+        volume: f32,
+    ) -> Result<(), Error> {
         ffmpeg::init()?;
 
         let (tx, rx) = mpsc::channel::<Command>();
@@ -53,16 +65,15 @@ impl AudioPlayer {
             let mut decoder = ffmpeg::codec::context::Context::from_parameters(codec_params)
                 .unwrap()
                 .decoder()
-                .audio()
-                ?;
-                let mut resampler = ffmpeg::software::resampling::Context::get(
-                    decoder.format(),       // 源格式
-                    decoder.channel_layout(),
-                    decoder.rate(),
-                    ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed), // 目标格式: i16
-                    decoder.channel_layout(),
-                    decoder.rate(),
-                )?;
+                .audio()?;
+            let mut resampler = ffmpeg::software::resampling::Context::get(
+                decoder.format(), // 源格式
+                decoder.channel_layout(),
+                decoder.rate(),
+                ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed), // 目标格式: i16
+                decoder.channel_layout(),
+                decoder.rate(),
+            )?;
 
             let (_stream, stream_handle) = OutputStream::try_default()?;
             let sink = Arc::new(Mutex::new(Sink::try_new(&stream_handle)?));
@@ -86,11 +97,14 @@ impl AudioPlayer {
                     while decoder.receive_frame(&mut decoded).is_ok() {
                         let mut converted = ffmpeg::frame::Audio::empty();
                         // 处理 F32(Planar)
-                        if decoded.format() == ffmpeg::format::Sample::F32(ffmpeg::format::sample::Type::Planar) {
+                        if decoded.format()
+                            == ffmpeg::format::Sample::F32(ffmpeg::format::sample::Type::Planar)
+                        {
                             let channels = decoded.channels() as usize;
                             let samples_per_channel = decoded.samples();
 
-                            let mut interleaved = Vec::with_capacity(channels * samples_per_channel);
+                            let mut interleaved =
+                                Vec::with_capacity(channels * samples_per_channel);
 
                             for i in 0..samples_per_channel {
                                 for ch in 0..channels {
@@ -101,11 +115,13 @@ impl AudioPlayer {
                                         continue;
                                     }
                                     let s = samples[i];
-                                    let s_i16 = (s * i16::MAX as f32).clamp(i16::MIN as f32, i16::MAX as f32) as i16;
+                                    let s_i16 = (s * i16::MAX as f32)
+                                        .clamp(i16::MIN as f32, i16::MAX as f32)
+                                        as i16;
                                     interleaved.push(s_i16);
                                 }
                             }
-                        
+
                             let source = rodio::buffer::SamplesBuffer::new(
                                 channels as u16,
                                 decoded.rate() as u32,
@@ -116,7 +132,9 @@ impl AudioPlayer {
                         }
 
                         // 检查是否需要重采样
-                        if decoder.format() != ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed) {
+                        if decoder.format()
+                            != ffmpeg::format::Sample::I16(ffmpeg::format::sample::Type::Packed)
+                        {
                             resampler.run(&decoded, &mut converted)?;
                             // 使用 converted
                         } else {
@@ -138,8 +156,7 @@ impl AudioPlayer {
 
                         sink.lock().unwrap().append(source);
                     }
-                }
-                else if sink.lock().unwrap().empty() {
+                } else if sink.lock().unwrap().empty() {
                     println!("自动的播放完成：{file_path}");
                     window.emit("player_progress", -1).unwrap();
                     break;
@@ -162,7 +179,7 @@ impl AudioPlayer {
                     }
                     Some(Command::Resume(volume)) => {
                         sink.lock().unwrap().play();
-                        sink.lock().unwrap().set_volume(volume*2.0);
+                        sink.lock().unwrap().set_volume(volume * 2.0);
                         current_ts += sleep_time;
                         msg = Some(Command::Play);
                     }
@@ -177,7 +194,7 @@ impl AudioPlayer {
                         sink.lock().unwrap().stop(); // 清除播放
                         *sink.lock().unwrap() = Sink::try_new(&stream_handle)?;
                         current_ts = target_secs * 1000;
-                        sink.lock().unwrap().set_volume(volume*2.0);
+                        sink.lock().unwrap().set_volume(volume * 2.0);
                         msg = Some(Command::Play);
                     }
                     Some(Command::Stop) => {
@@ -188,7 +205,7 @@ impl AudioPlayer {
                     Some(Command::Volume(volume)) => {
                         println!("音量调整了。。。{volume}");
                         current_ts += sleep_time;
-                        sink.lock().unwrap().set_volume(volume*2.0);
+                        sink.lock().unwrap().set_volume(volume * 2.0);
                         msg = None;
                     }
                     None => {
@@ -238,5 +255,4 @@ impl AudioPlayer {
             println!("Audio send_control");
         }
     }
-
 }

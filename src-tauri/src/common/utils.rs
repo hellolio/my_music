@@ -1,13 +1,18 @@
-use std::{env, fs::File, io::{self, BufRead, Write}, path::{Path, PathBuf}};
-use quick_xml::{events::Event, Reader};
-use tauri::regex::Regex;
-use ffmpeg_next as ffmpeg;
 use anyhow::{Context, Result};
+use ffmpeg_next as ffmpeg;
 use lofty::{Probe, TaggedFileExt};
+use quick_xml::{events::Event, Reader};
+use std::{
+    env,
+    fs::File,
+    io::{self, BufRead, Write},
+    path::{Path, PathBuf},
+};
+use tauri::regex::Regex;
 use uuid::Uuid;
 
 use crate::modles::{db_song::Song, music_lyrics::Lyric};
-use encoding_rs::{UTF_8, GBK, SHIFT_JIS, GB18030};
+use encoding_rs::{GB18030, GBK, SHIFT_JIS, UTF_8};
 
 // 判断是否像是可读文本（中文或英文）
 fn is_meaningful(s: &str) -> bool {
@@ -18,20 +23,22 @@ fn is_meaningful(s: &str) -> bool {
         return false;
     }
     // 中文（常用区）或 英文字母
-    let has_chinese = clean.chars().any(|c| ('\u{4E00}'..='\u{9FFF}').contains(&c));
+    let has_chinese = clean
+        .chars()
+        .any(|c| ('\u{4E00}'..='\u{9FFF}').contains(&c));
     let alpha_count = clean.chars().filter(|c| c.is_ascii_alphabetic()).count();
     has_chinese || alpha_count > 3
 }
 
-fn ret_org(bytes: &[u8]) -> Vec<u8>{
-   // 把这串 UTF-8 字节转成 Rust 字符串（乱码）
-   let wrong_str = String::from_utf8_lossy(&bytes);
-   println!("误解码后的乱码字符串: {}", wrong_str);
+fn ret_org(bytes: &[u8]) -> Vec<u8> {
+    // 把这串 UTF-8 字节转成 Rust 字符串（乱码）
+    let wrong_str = String::from_utf8_lossy(&bytes);
+    println!("误解码后的乱码字符串: {}", wrong_str);
 
-   // 将这个字符串按照 Latin-1（每个 char -> byte）取出原始字节
-   let raw_bytes: Vec<u8> = wrong_str.chars().map(|c| c as u8).collect();
-   println!("还原出的原始 GBK 字节: {:?}", raw_bytes);
-   return raw_bytes;
+    // 将这个字符串按照 Latin-1（每个 char -> byte）取出原始字节
+    let raw_bytes: Vec<u8> = wrong_str.chars().map(|c| c as u8).collect();
+    println!("还原出的原始 GBK 字节: {:?}", raw_bytes);
+    return raw_bytes;
 }
 
 fn try_decode(bytes: &[u8], n: u8) -> String {
@@ -43,16 +50,19 @@ fn try_decode(bytes: &[u8], n: u8) -> String {
         ("GB18030", GB18030),
     ];
 
-    for (t, e) in encoding{
+    for (t, e) in encoding {
         // 遍历编码列表，依次尝试解码
         let s = e.decode(&bytes).0;
 
-        if String::from_utf8_lossy(s.as_bytes()).to_string().contains('�'){
+        if String::from_utf8_lossy(s.as_bytes())
+            .to_string()
+            .contains('�')
+        {
             println!("无效的UTF-8编码，from_utf8_lossy: {}", s);
-        }else if !is_meaningful(&s) {
+        } else if !is_meaningful(&s) {
             println!("无效的UTF-8编码，is_meaningful: {}", s);
             let b = ret_org(bytes);
-            if n != 2{
+            if n != 2 {
                 return try_decode(&b, 2);
             }
         } else {
@@ -71,7 +81,6 @@ fn try_decode(bytes: &[u8], n: u8) -> String {
 }
 
 pub fn get_audio_metadata(path_str: &str) -> Result<Song> {
-
     let ictx = ffmpeg::format::input(path_str)?;
     // 获取格式上下文中的 metadata
     let metadata = ictx.metadata();
@@ -80,14 +89,17 @@ pub fn get_audio_metadata(path_str: &str) -> Result<Song> {
     let artist = try_decode(metadata.get("artist").unwrap_or("Unknown").as_bytes(), 1);
 
     let path = Path::new(path_str);
-    if title == "Unknown".to_string(){
-        title = path.file_name().map(|name| name.to_string_lossy().into_owned()).unwrap_or("Unknown".to_string());
+    if title == "Unknown".to_string() {
+        title = path
+            .file_name()
+            .map(|name| name.to_string_lossy().into_owned())
+            .unwrap_or("Unknown".to_string());
     }
 
     let duration_us = ictx.duration(); // 单位是微秒（i64）
     let duration = duration_us as u64 / 1_000_000; // 转成秒
 
-    Ok(Song{
+    Ok(Song {
         id: None,
         title: title,
         author: Some(artist),
@@ -102,16 +114,16 @@ pub fn get_audio_metadata(path_str: &str) -> Result<Song> {
     })
 }
 
-pub fn get_audio_lyrics(lyrics_file: &str) -> Result<Vec<Lyric>>{
+pub fn get_audio_lyrics(lyrics_file: &str) -> Result<Vec<Lyric>> {
     let path = Path::new(lyrics_file);
     let file = File::open(path)?;
     let reader = io::BufReader::new(file);
 
     let mut lyrics = Vec::new();
-    let mut metadata = Vec::new();  // 用于存储元数据
+    let mut metadata = Vec::new(); // 用于存储元数据
 
     let timestamp_re = Regex::new(r"\[(\d{2}):(\d{2})\.(\d{3})\]")?;
-    let metadata_re = Regex::new(r"\[(\w+):(.+)\]")?;  // 匹配元数据格式 [key:value]
+    let metadata_re = Regex::new(r"\[(\w+):(.+)\]")?; // 匹配元数据格式 [key:value]
 
     let mut is_metadata = true;
     for line in reader.lines() {
@@ -131,25 +143,21 @@ pub fn get_audio_lyrics(lyrics_file: &str) -> Result<Vec<Lyric>>{
                 text,
             });
             is_metadata = false;
-        } else if let Some(captures) = metadata_re.captures(&line){
+        } else if let Some(captures) = metadata_re.captures(&line) {
             if is_metadata {
                 // 如果是元数据，提取并存储
                 let key = &captures[1];
                 let value = &captures[2];
                 metadata.push((key.to_string(), value.to_string()));
             }
-
         }
     }
 
     // metadata暂时不返回，后面再说
     Ok(lyrics)
-
 }
 
-
-
-pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>>{
+pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>> {
     let path = Path::new(lyrics_file);
     let file = File::open(path)?;
     let reader = io::BufReader::new(file);
@@ -193,7 +201,6 @@ pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>>{
     }
 
     Ok(lyrics)
-
 }
 
 fn get_temp_image_path() -> PathBuf {
@@ -203,21 +210,25 @@ fn get_temp_image_path() -> PathBuf {
     temp_path
 }
 
-pub fn get_cover_from_music(input_path: &str) -> Result<String>{
+pub fn get_cover_from_music(input_path: &str) -> Result<String> {
     let tagged_file = Probe::open(input_path)?.read()?;
 
     let out_image_path = get_temp_image_path();
 
     let mut cover_image = "".to_string();
 
-    if let Some(pictures) = tagged_file.primary_tag().and_then(|tag| Some(tag.pictures())) {
+    if let Some(pictures) = tagged_file
+        .primary_tag()
+        .and_then(|tag| Some(tag.pictures()))
+    {
         if let Some(picture) = pictures.first() {
             let mut file = File::create(&out_image_path)?;
             file.write_all(picture.data())?;
             println!("封面图已保存");
-            cover_image = out_image_path.to_str()
-            .context("无法将路径转换为字符串")?
-            .to_string()
+            cover_image = out_image_path
+                .to_str()
+                .context("无法将路径转换为字符串")?
+                .to_string()
         } else {
             println!("未找到封面图");
             cover_image = "".to_string();

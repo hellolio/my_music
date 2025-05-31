@@ -1,29 +1,37 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{env, fs, sync::{atomic::{AtomicBool, Ordering}, Arc, Mutex}};
+use std::{
+    env, fs,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc, Mutex,
+    },
+};
 
-use tauri::{Manager, PhysicalPosition, PhysicalSize, State, Window, WindowEvent};
 use rusqlite::Connection;
+use tauri::{Manager, PhysicalPosition, PhysicalSize, State, Window, WindowEvent};
 
-
-
+use common::{
+    utils,
+    window::{self},
+};
 use controllers::{audio_player::AudioPlayer, get_lyrics};
-use modles::{db_song::Song, music_lyrics::Lyric, music_play_list_song::PlaylistSong, songs_for_lyrics::SongsForLyrics};
-use common::{utils, window::{self}};
 use database::db;
+use modles::{
+    db_song::Song, music_lyrics::Lyric, music_play_list_song::PlaylistSong,
+    songs_for_lyrics::SongsForLyrics,
+};
 
-mod controllers;
 mod common;
+mod controllers;
 mod database;
 mod modles;
 
-
-
 pub struct AppState {
-    pub db: Mutex<Connection>,             // 数据库连接（线程安全）
-    pub player: Arc<Mutex<AudioPlayer>>,   // 应用配置
-    is_desktop_mode: Arc<AtomicBool>,      // 是否记住桌面大小和位置
+    pub db: Mutex<Connection>,           // 数据库连接（线程安全）
+    pub player: Arc<Mutex<AudioPlayer>>, // 应用配置
+    is_desktop_mode: Arc<AtomicBool>,    // 是否记住桌面大小和位置
 }
 
 #[tauri::command]
@@ -34,16 +42,16 @@ fn add_lyrics(state: State<'_, Arc<AppState>>, lyrics_file: &str, id: i64) -> Ve
         Ok(lyrics) => {
             let _ = db::update_lyrics(&mut *conn, lyrics_file, id);
             lyrics
-        },
+        }
         Err(_) => {
             println!("歌词加载失败");
             vec![]
-        },
+        }
     }
 }
 
 #[tauri::command]
-fn delete_music_from_db(state: State<'_, Arc<AppState>>, songs: Vec<Song>){
+fn delete_music_from_db(state: State<'_, Arc<AppState>>, songs: Vec<Song>) {
     let mut conn = state.db.lock().unwrap();
     for song in songs {
         db::delete_song(&mut *conn, song.id.unwrap());
@@ -51,7 +59,11 @@ fn delete_music_from_db(state: State<'_, Arc<AppState>>, songs: Vec<Song>){
 }
 
 #[tauri::command]
-fn import_music_to_db(state: State<'_, Arc<AppState>>, file_names: Vec<&str>, id: i64) -> Vec<Song>{
+fn import_music_to_db(
+    state: State<'_, Arc<AppState>>,
+    file_names: Vec<&str>,
+    id: i64,
+) -> Vec<Song> {
     let mut conn = state.db.lock().unwrap();
     let mut song_metas = vec![];
     for file in file_names {
@@ -63,7 +75,7 @@ fn import_music_to_db(state: State<'_, Arc<AppState>>, file_names: Vec<&str>, id
                 println!("歌曲已经存在了:{:?}", song);
             }
             _ => {
-                if let Ok(mut song) = utils::get_audio_metadata(file){
+                if let Ok(mut song) = utils::get_audio_metadata(file) {
                     let id = db::insert_song(&mut *conn, &song, id);
                     song.id = Some(id);
                     song_metas.push(song);
@@ -77,14 +89,14 @@ fn import_music_to_db(state: State<'_, Arc<AppState>>, file_names: Vec<&str>, id
 }
 
 #[tauri::command]
-fn create_playlist(state: State<'_, Arc<AppState>>, name: String) -> Result<(), String>{
+fn create_playlist(state: State<'_, Arc<AppState>>, name: String) -> Result<(), String> {
     let mut conn = state.db.lock().unwrap();
     let _ = db::insert_playlists(&mut *conn, name);
     Ok(())
 }
 
 #[tauri::command]
-fn delete_playlist(state: State<'_, Arc<AppState>>, playlist_id: i64) -> Result<(), String>{
+fn delete_playlist(state: State<'_, Arc<AppState>>, playlist_id: i64) -> Result<(), String> {
     let mut conn = state.db.lock().unwrap();
     let _ = db::delete_playlists(&mut *conn, playlist_id);
     Ok(())
@@ -92,22 +104,27 @@ fn delete_playlist(state: State<'_, Arc<AppState>>, playlist_id: i64) -> Result<
 
 #[tauri::command]
 fn play_music(
-    state: State<'_, Arc<AppState>>, window: Window, 
-    id: i64, file_path: &str, duration: u64, skip_secs: u64, volume: f32
+    state: State<'_, Arc<AppState>>,
+    window: Window,
+    id: i64,
+    file_path: &str,
+    duration: u64,
+    skip_secs: u64,
+    volume: f32,
 ) -> Result<Song, ()> {
-    
     let mut p = state.player.lock().unwrap();
     p.music_play(window, file_path.to_string(), duration, skip_secs, volume);
 
     let conn = state.db.lock().unwrap();
     println!("{}, {}", file_path, id);
-    if let Ok(mut song_meta) = db::get_song_by_path(&*conn, file_path.to_string(), id){
+    if let Ok(mut song_meta) = db::get_song_by_path(&*conn, file_path.to_string(), id) {
         let mut lyrics = vec![];
         match song_meta.lyrics_path.clone() {
             Some(path) => {
-               lyrics = utils::get_audio_lyrics_qq(path.to_str().unwrap_or("")).unwrap_or_default();
+                lyrics =
+                    utils::get_audio_lyrics_qq(path.to_str().unwrap_or("")).unwrap_or_default();
             }
-            None=> {}
+            None => {}
         }
         song_meta.lyrics = lyrics;
         Ok(song_meta)
@@ -115,7 +132,6 @@ fn play_music(
         Err(())
     }
 }
-
 
 #[tauri::command]
 fn pause_music(state: State<'_, Arc<AppState>>) {
@@ -154,48 +170,56 @@ fn get_song_all(state: State<'_, Arc<AppState>>) -> Vec<PlaylistSong> {
     let mut playlist_songs: Vec<PlaylistSong> = vec![];
     match playlists {
         Ok(playlists) => {
-                println!("歌单列表：{:?}", playlists);
-                for playlist in &playlists {
+            println!("歌单列表：{:?}", playlists);
+            for playlist in &playlists {
                 println!("当前歌单列表：{:?}", playlist);
-                let songs_result = db::get_song_all(&*conn, playlist.id.unwrap_or_default()).unwrap_or_default();
+                let songs_result =
+                    db::get_song_all(&*conn, playlist.id.unwrap_or_default()).unwrap_or_default();
                 let playlist_song = PlaylistSong {
                     id: playlist.id.unwrap_or_default(),
                     name: playlist.name.clone(),
-                    songs: songs_result
+                    songs: songs_result,
                 };
                 playlist_songs.push(playlist_song);
             }
             playlist_songs
-
-        },
-        Err(_) => {vec![]},
+        }
+        Err(_) => {
+            vec![]
+        }
     }
-
 }
-
 
 #[tauri::command]
 async fn get_lyrics_targets(keyword: String) -> Vec<SongsForLyrics> {
-    let songs = get_lyrics::get_qq_lyrics(keyword).await.unwrap_or_else(|e|{
-        println!("get_qq_lytics_list is err: {e}");
-        vec![]
-    });
+    let songs = get_lyrics::get_qq_lyrics(keyword)
+        .await
+        .unwrap_or_else(|e| {
+            println!("get_qq_lytics_list is err: {e}");
+            vec![]
+        });
     return songs;
 }
 
-
 #[tauri::command]
-async fn get_lyrics(album: &str, singer: &str, song_name: &str, duration: u32, id: i64, save_path: &str) -> Result<Vec<Lyric>, String> {
-    let lyrics = get_lyrics::get_qq_lytics_by_id(album, singer, song_name, duration, id).await.map_err(|e|{
-        e.to_string()
-    });
+async fn get_lyrics(
+    album: &str,
+    singer: &str,
+    song_name: &str,
+    duration: u32,
+    id: i64,
+    save_path: &str,
+) -> Result<Vec<Lyric>, String> {
+    let lyrics = get_lyrics::get_qq_lytics_by_id(album, singer, song_name, duration, id)
+        .await
+        .map_err(|e| e.to_string());
     match lyrics {
-        Ok(l)=>{
-            let _ = fs::write(save_path,&l);
+        Ok(l) => {
+            let _ = fs::write(save_path, &l);
             let show_lyrics = utils::get_audio_lyrics_qq(save_path).unwrap_or_default();
             return Ok(show_lyrics);
         }
-        Err(e) => {Err(e.to_string())},
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -206,7 +230,9 @@ fn get_cover_from_music(input_path: &str) -> String {
 
 #[tauri::command]
 fn set_is_desktop_mode(state: State<'_, Arc<AppState>>, is_desktop_mode: bool) {
-    state.is_desktop_mode.store(is_desktop_mode, Ordering::Relaxed);
+    state
+        .is_desktop_mode
+        .store(is_desktop_mode, Ordering::Relaxed);
 }
 
 #[tauri::command]
@@ -216,7 +242,7 @@ fn set_always_on_top(window: Window, window_on_top: bool) {
 
 fn main() {
     add_bin_to_path();
-    let state = AppState{
+    let state = AppState {
         db: Mutex::new(db::init_db().expect("数据库初始化失败")),
         player: Arc::new(Mutex::new(AudioPlayer::new())),
         is_desktop_mode: Arc::new(AtomicBool::new(false)),
@@ -244,36 +270,46 @@ fn main() {
             Ok(())
         })
         .manage(Arc::new(state))
-        
         .on_window_event(|event| {
             let window = event.window();
             let app_handle = window.app_handle();
 
-            let is_desktop_mode = app_handle.state::<Arc<AppState>>().is_desktop_mode.load(Ordering::Relaxed);
+            let is_desktop_mode = app_handle
+                .state::<Arc<AppState>>()
+                .is_desktop_mode
+                .load(Ordering::Relaxed);
             if !is_desktop_mode {
                 match event.event() {
                     WindowEvent::Resized(_) | WindowEvent::Moved(_) => {
                         let position = window.outer_position().unwrap_or_default();
                         let size = window.outer_size().unwrap_or_default();
                         let mut selected_remeber_size = true;
-                        if let Some(window_state_old) = window::load_window_state(&window.app_handle().app_handle()) {
+                        if let Some(window_state_old) =
+                            window::load_window_state(&window.app_handle().app_handle())
+                        {
                             selected_remeber_size = window_state_old.selected_remeber_size;
                         };
                         let window_state = window::WindowState {
                             selected_remeber_size,
-                            window_x: if position.x <100  {0} else {position.x as u32},
-                            window_y: if position.y <100 {0} else {position.y as u32},
-                            window_width: if size.width < 200 {200} else {size.width},
-                            window_height: if size.height < 400 {200} else {size.height},
+                            window_x: if position.x < 100 {
+                                0
+                            } else {
+                                position.x as u32
+                            },
+                            window_y: if position.y < 100 {
+                                0
+                            } else {
+                                position.y as u32
+                            },
+                            window_width: if size.width < 200 { 200 } else { size.width },
+                            window_height: if size.height < 400 { 200 } else { size.height },
                         };
-                        window::save_window_state(&window.app_handle(),&window_state);
-                }
+                        window::save_window_state(&window.app_handle(), &window_state);
+                    }
                     _ => {}
                 }
             }
-
         })
-
         .invoke_handler(tauri::generate_handler![
             play_music,
             pause_music,

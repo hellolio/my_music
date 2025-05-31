@@ -1,17 +1,12 @@
-use std::{
-    env,
-    fs,
-    path::PathBuf,
-};
+use std::{env, fs, path::PathBuf};
 
 fn main() {
     copy_dll();
     tauri_build::build()
 }
 
-
 /// 拷贝必要的dll文件到target/debug路径
-fn copy_dll(){
+fn copy_dll() {
     // 要拷贝的 DLL 列表
     let files = [
         "avcodec-61.dll",
@@ -22,7 +17,7 @@ fn copy_dll(){
         "swresample-5.dll",
         "swscale-8.dll",
     ];
-    let now_path= env::current_dir().unwrap();
+    let now_path = env::current_dir().unwrap();
 
     // 获取 target/debug 目录（从 OUT_DIR 向上3级）
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());

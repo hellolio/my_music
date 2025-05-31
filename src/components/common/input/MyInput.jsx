@@ -1,7 +1,14 @@
-import styles from './MyInput.module.scss';
+import styles from "./MyInput.module.scss";
 
-export default function MyInput({type, value, setValue, placeholder, style, onFocus, onBlur}) {
-
+export default function MyInput({
+  type,
+  value,
+  setValue,
+  placeholder,
+  style,
+  onFocus,
+  onBlur,
+}) {
   return (
     <input
       className={`${style} ${styles.myInput}`}

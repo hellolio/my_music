@@ -1,5 +1,3 @@
-
-
 #[derive(serde::Serialize)]
 pub struct MusicMeta {
     pub name: String,

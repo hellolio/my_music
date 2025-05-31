@@ -1,26 +1,72 @@
-import { open } from "@tauri-apps/api/dialog";
-import { convertFileSrc } from '@tauri-apps/api/tauri';
+import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { useState, useEffect, useRef, useImperativeHandle } from "react";
 
+export const useVideoFun = (setData, ref) => {
+  const playerRef = useRef(null);
+  const [videoSrc, setVideoSrc] = useState("");
+  const [playing, setPlaying] = useState(true);
+  const [videoVolume, setVideoVolume] = useState(0.5);
 
+  const [playedSeconds, setPlayedSeconds] = useState(0);
+  const [durationT, setDuration] = useState(0);
 
-export const handleChooseVideo = async (setVideoSrc, data, setData) => {
-
-    let selectedFile = await open({ multiple: false });
-    setData(prevData => ({
-        ...prevData,
-        audioSrc: selectedFile,
+  const play = async (id, filePath, duration, skipSecs, volume) => {
+    setPlaying(false);
+    setVideoSrc(convertFileSrc(filePath));
+    setVideoVolume(volume / 100);
+    setPlaying(true);
+    playerRef.current?.getInternalPlayer()?.play();
+    playerRef.current?.seekTo(skipSecs);
+    setData((prevData) => ({
+      ...prevData,
+      totalDuration: durationT,
     }));
-    setVideoSrc(convertFileSrc(data.audioSrc));
-}
+  };
 
+  useEffect(() => {
+    setData((prevData) => ({
+      ...prevData,
+      barCurrentProgressSec: Math.floor(playedSeconds),
+    }));
+  }, [playedSeconds]);
 
+  const pause = () => {
+    playerRef.current?.getInternalPlayer()?.pause();
+  };
 
+  const resume = () => {
+    playerRef.current?.getInternalPlayer()?.play();
+  };
 
-// export const handleProgress = (state, setPlayedSeconds) => {
-//
-//     setPlayedSeconds(state.playedSeconds);
-//   };
+  const stop = () => {
+    playerRef.current?.getInternalPlayer()?.pause();
+    setVideoSrc("");
+    setPlaying(false);
+  };
 
-// export const handleDuration = (dur, setDuration) => {
-//     setDuration(dur);
-//   };
+  const seek = (sec) => {
+    playerRef.current?.seekTo(sec);
+  };
+
+  const setVolume = (volume) => {
+    setVideoVolume(volume / 100);
+  };
+
+  useImperativeHandle(ref, () => ({
+    play: play,
+    pause: pause,
+    resume: resume,
+    stop: stop,
+    setVolume: setVolume,
+    seek: seek,
+  }));
+
+  return {
+    playerRef,
+    videoSrc,
+    playing,
+    videoVolume,
+    setPlayedSeconds,
+    setDuration,
+  };
+};
