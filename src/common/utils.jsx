@@ -2,8 +2,6 @@ import { join } from "@tauri-apps/api/path";
 import { readTextFile, writeFile } from "@tauri-apps/api/fs";
 import { appConfigDir } from "@tauri-apps/api/path";
 
-import { convertFileSrc } from "@tauri-apps/api/tauri";
-
 export const formatTime = (seconds) => {
   const hours = Math.floor(seconds / 3600); // 获取小时数
   const minutes = Math.floor((seconds - hours * 3600) / 60); // 获取分钟数

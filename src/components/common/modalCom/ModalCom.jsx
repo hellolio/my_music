@@ -1,5 +1,5 @@
 import styles from "./ModalCom.module.scss";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ModalCom({
   visible,

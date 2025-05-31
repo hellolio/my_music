@@ -10,21 +10,20 @@
   border-radius: 4px;
   cursor: pointer;
   margin: 1px 5px 1px 5px;
-  }
-  
-  .setting {
-    background: transparent;
-    border: none;
-    outline: none;
-  }
-  
-  .setting:hover {
-    background-color: theme.$button-confirm-background-color-hover;
-    color: theme.$button-confirm-color;
-    transform: scale(1.1);
-  }
-  
-  .setting:active {
-    transform: scale(0.99);
-  }
-  
+}
+
+.setting {
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+.setting:hover {
+  background-color: theme.$button-confirm-background-color-hover;
+  color: theme.$button-confirm-color;
+  transform: scale(1.1);
+}
+
+.setting:active {
+  transform: scale(0.99);
+}

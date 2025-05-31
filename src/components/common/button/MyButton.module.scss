@@ -10,33 +10,32 @@
   border-radius: 4px;
   cursor: pointer;
   margin: 1px 5px 1px 5px;
-  }
-  
-  .confirm {
-    background-color: theme.$button-confirm-background-color;
-  }
-  
-  .confirm:hover {
-    background-color: theme.$button-confirm-background-color-hover;
-    color: theme.$button-confirm-color;
-    transform: scale(1.1);
-  }
+}
 
-  .confirm:active {
-    transform: scale(0.99);
-  }
-  
-  .cancle {
-    background-color: theme.$button-cancle-background-color;
-  }
-  
-  .cancle:hover {
-    background-color: theme.$button-cancle-background-color-hover;
-    color: theme.$button-confirm-color;
-    transform: scale(1.1);
-  }
-  
-  .cancle:active {
-    transform: scale(0.99);
-  }
-  
+.confirm {
+  background-color: theme.$button-confirm-background-color;
+}
+
+.confirm:hover {
+  background-color: theme.$button-confirm-background-color-hover;
+  color: theme.$button-confirm-color;
+  transform: scale(1.1);
+}
+
+.confirm:active {
+  transform: scale(0.99);
+}
+
+.cancle {
+  background-color: theme.$button-cancle-background-color;
+}
+
+.cancle:hover {
+  background-color: theme.$button-cancle-background-color-hover;
+  color: theme.$button-confirm-color;
+  transform: scale(1.1);
+}
+
+.cancle:active {
+  transform: scale(0.99);
+}

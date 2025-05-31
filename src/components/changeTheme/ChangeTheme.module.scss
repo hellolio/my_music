@@ -13,7 +13,7 @@
   justify-content: center;
   align-items: flex-start;
   background-color: theme.$window-background-color-mask;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
@@ -24,58 +24,59 @@
   transform: translateY(0);
 }
 
-  .modalContent {
-    background-color: theme.$window-background-color;
-    padding: 10px;
-    border-radius: 8px;
-    width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.modalContent {
+  background-color: theme.$window-background-color;
+  padding: 10px;
+  border-radius: 8px;
+  width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 
-  }
+}
 
-  .postControls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-  
-  .leftControls {
-    flex: 1;
-  }
-  .left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-  
-  .savePathLabel {
+.postControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 
-    overflow-x: auto;
-    white-space: nowrap;
-    max-width: 100%;
-    display: inline-block;
-  }
-  
-  .rightControls {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-    width: 100%;
-    justify-content: flex-end;
-  }
+.leftControls {
+  flex: 1;
+}
 
-  .hiddenColorInput {
-    appearance: none;
-    border: none;
-    width: 30px;
-    height: 30px;
-    padding: 0;
-    border-radius: 10px;
-    cursor: pointer;
-    background: none;
-  }
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.savePathLabel {
+
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.rightControls {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  width: 100%;
+  justify-content: flex-end;
+}
+
+.hiddenColorInput {
+  appearance: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  background: none;
+}

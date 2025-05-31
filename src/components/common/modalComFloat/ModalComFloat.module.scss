@@ -13,7 +13,7 @@
   justify-content: center;
   align-items: flex-start;
   background-color: theme.$window-background-color-mask;
-  box-shadow: -2px 0 5px rgba(0,0,0,0.1);
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(5px);
 
   transform: scaleY(0);
@@ -28,13 +28,13 @@
   transform: scaleY(1)
 }
 
-  .modalContent {
-    background-color: theme.$window-background-color;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 80%;
-    max-width: 500px;
-    height: 50%;
-    color: theme.$font-color-white;
-  }
+.modalContent {
+  background-color: theme.$window-background-color;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 500px;
+  height: 50%;
+  color: theme.$font-color-white;
+}

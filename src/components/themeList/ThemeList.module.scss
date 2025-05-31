@@ -10,6 +10,7 @@
     color: theme.$hover-font-color;
     transform: theme.$hover-transform;
 }
+
 .row:active {
     transform: scale(0.95);
 }

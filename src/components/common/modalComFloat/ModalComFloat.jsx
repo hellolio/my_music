@@ -1,6 +1,6 @@
 import styles from "./ModalComFloat.module.scss";
 import ReactDOM from "react-dom";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ModalComFloat({
   visible,

@@ -1,93 +1,94 @@
 @use '@/base/theme-config.scss' as theme;
 
-  .search {
-    margin-top: 5px;
-    margin-bottom: 10px;
-  }
-  
+.search {
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
 
-  .postControls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
+
+.postControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.leftControls {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+  min-width: 0;
+}
+
+.savePathLabel {
+  flex: 1;
+  overflow-x: auto;
+  white-space: nowrap;
+  max-width: 100%;
+  display: inline-block;
+}
+
+.rightControls {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.resultListWrapper {
+  width: 100%;
+  border-radius: 4px;
+  background-color: theme.$window-background-color;
+
+  table {
+    table-layout: fixed;
     width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-  
-  .leftControls {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    gap: 8px;
-    min-width: 0;
-  }
-  
-  .savePathLabel {
-    flex: 1;
-    overflow-x: auto;
-    white-space: nowrap;
-    max-width: 100%;
-    display: inline-block;
-  }
-  
-  .rightControls {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-family: theme.$font-family;
   }
 
-  .resultListWrapper {
-    width: 100%;
-    border-radius: 4px;
-    background-color: theme.$window-background-color;
-  
-    table {
-      table-layout: fixed;
-      width: 100%;
-      border-collapse: collapse;
-      border-spacing: 0;
-      font-family: theme.$font-family;
-    }
-  
-    th, td {
-      padding: 4px;
-      height: 20px;
-      border: none;
-    }
-  
-    th {
+  th,
+  td {
+    padding: 4px;
+    height: 20px;
+    border: none;
+  }
 
-      color: theme.$font-color-blue;
-    }
+  th {
+
+    color: theme.$font-color-blue;
   }
-  
-  .resultList {
-    max-height: 200px;
-    min-height: 30px;
-    height: 30%;
-    overflow-y: auto;
-  }
+}
+
+.resultList {
+  max-height: 200px;
+  min-height: 30px;
+  height: 30%;
+  overflow-y: auto;
+}
 
 .rowOverHidden {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-  
-  .resultRow:last-child {
-    border-bottom: none;
-  }
-  
-  .resultRow:hover {
 
-    color: theme.$hover-font-color;
-    cursor: pointer;
-    transform: theme.$hover-transform;
-  }
+.resultRow:last-child {
+  border-bottom: none;
+}
 
-  .selectedRow{
-    background-color: theme.$selected-background-color;
-    color: theme.$selected-font-color;
-  }
+.resultRow:hover {
+
+  color: theme.$hover-font-color;
+  cursor: pointer;
+  transform: theme.$hover-transform;
+}
+
+.selectedRow {
+  background-color: theme.$selected-background-color;
+  color: theme.$selected-font-color;
+}

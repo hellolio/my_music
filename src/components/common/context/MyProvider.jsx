@@ -1,5 +1,5 @@
 // Context.js
-import React, { createContext, useState } from "react";
+import { createContext, useState } from "react";
 
 export const Context = createContext([]);
 

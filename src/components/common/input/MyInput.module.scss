@@ -1,16 +1,15 @@
 @use '@/base/theme-config.scss' as theme;
 
-  .myInput {
-    border: 1px solid #444744;
-    background-color: #393535c8;
-    color: #ffffff;
-    border-radius: 6px;
-    text-align: center; 
-  }
+.myInput {
+  border: 1px solid #444744;
+  background-color: #393535c8;
+  color: #ffffff;
+  border-radius: 6px;
+  text-align: center;
+}
 
-  
-  .myInput:focus {
-    outline: none;
-    border-color: #58b7ce;
-    box-shadow: 0 0 4px #499cb093;
-  }
+.myInput:focus {
+  outline: none;
+  border-color: #58b7ce;
+  box-shadow: 0 0 4px #499cb093;
+}

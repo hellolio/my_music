@@ -1,4 +1,3 @@
-
 $body-background-color: #505252b8;
 $body-background-color-black: #000000;
 
@@ -28,9 +27,11 @@ $button-cancle-background-color-hover: rgb(81, 74, 74);
 $button-cancle-color: rgb(201, 197, 197);
 
 
-$center-bar-rate-background-color:#c0bcbc;
-$center-bar-rate-end-background-color:#686871;
+$center-bar-rate-background-color: #c0bcbc;
+$center-bar-rate-end-background-color: #686871;
 
-$transition5: (all 0.5s);
+$transition5: (
+    all 0.5s
+);
 
 $font-family: 'KaiTi', 'STKaiti', '楷体', '楷体_GB2312', serif;

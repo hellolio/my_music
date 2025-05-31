@@ -1,5 +1,3 @@
-import * as utils from "@/common/utils";
-
 export const checkIsMusic = (filename) => {
   const audioExtensions = ["mp3", "wav", "ogg", "flac", "aac", "m4a", "wma"];
   const videoExtensions = [

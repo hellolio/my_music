@@ -1,54 +1,54 @@
+.settingList {
+  left: 20px;
 
-  .settingList {
-    left: 20px;
+}
 
-  }
+.themeList {
+  left: 50px;
+}
 
-  .themeList {
-    left: 50px;
-  }
+.helpList {
+  left: 100px;
+}
 
-  .helpList {
-    left: 100px;
-  }
+.songSearchList {
+  left: 25%;
+  width: 50%;
+}
 
-  .songSearchList {
-    left: 25%;
-    width: 50%;
-  }
-  
-  .window {
-    background-color:rgba(64, 59, 59, 0);
-    z-index: 1001;
-    position: relative;
-    height: 25px;
-  }
-  .window::after {
-    filter: blur(10px);
-  }
-  
-  .windowControlsLeft {
-    display: flex;
-    gap: 7px;         
-    z-index: 9999;
-  }
-  
-  .windowControlsCenter {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .searchKeyInput {
-    border: 0;
-    width: 100%;
-    height: 100%;
-    margin: 2px;
-    
-  }
+.window {
+  background-color: rgba(64, 59, 59, 0);
+  z-index: 1001;
+  position: relative;
+  height: 25px;
+}
 
-  .windowControlsRight {
-    display: flex;
-    gap: 7px;                
-    z-index: 9999;
-  }
+.window::after {
+  filter: blur(10px);
+}
+
+.windowControlsLeft {
+  display: flex;
+  gap: 7px;
+  z-index: 9999;
+}
+
+.windowControlsCenter {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+
+.searchKeyInput {
+  border: 0;
+  width: 100%;
+  height: 100%;
+  margin: 2px;
+
+}
+
+.windowControlsRight {
+  display: flex;
+  gap: 7px;
+  z-index: 9999;
+}
