@@ -38,7 +38,7 @@ export const WindowSetting = ({data, setData, allSongList, setAllSongList, setIs
   appWindow.onResized(() => {
     appWindow.isMaximized().then((maximized) => {
       setisMaximize(maximized);
-      // 根据状态切换按钮图标
+
     });
   });
   

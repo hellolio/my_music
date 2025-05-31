@@ -15,7 +15,7 @@
   background-color: theme.$window-background-color-mask;
   box-shadow: -2px 0 5px rgba(0,0,0,0.1);
   backdrop-filter: blur(5px);
-  // transform: translateY(-100%);
+
   transform: scaleY(0);
   transform-origin: top;
   transition: transform 0.3s ease-in-out;
@@ -23,11 +23,11 @@
 }
 
 .modal.visible {
-  // transform: translateY(0);
+
   opacity: 1;
   transform: scaleY(1)
 }
-  /* 弹窗内容 */
+
   .modalContent {
     background-color: theme.$window-background-color;
     padding: 10px;

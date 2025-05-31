@@ -35,7 +35,7 @@ export default function FindLyrics({data, setData}) {
               </div>
             </div>
             <div className={styles.resultListWrapper}>
-            {/* 表头部分 */}
+            {}
             <table className={styles.resultListTable}>
               <thead>
                 <tr>
@@ -47,7 +47,7 @@ export default function FindLyrics({data, setData}) {
               </thead>
             </table>
 
-            {/* 内容部分 */}
+            {}
             <div className={styles.resultList}>
               <table className={styles.resultListTable}>
                 <tbody>
@@ -71,16 +71,13 @@ export default function FindLyrics({data, setData}) {
           </div>
 
               <div className={`${styles.postControls}`}>
-                {/* 左侧区域 */}
+                {}
                 <div className={styles.leftControls}>
                   <MyButton 
                     callFun={() => selectSavePath(setSavePath, resultList, selectedRow, songTitle)}
                     msg={'选择保存路径'}
                     isConfirm={true}
                   />
-                  {/* <label htmlFor="savePath" className={styles.savePathLabel}>
-                    {savePath}
-                  </label> */}
                   <MyInput 
                     type={'text'}
                     value={savePath}
@@ -98,7 +95,7 @@ export default function FindLyrics({data, setData}) {
                   type="checkbox"
                   readOnly
                   checked={selected}
-                  // onChange={() => setSelected(!selected)}
+
                 />
 
                   <label htmlFor="savePath" className={styles.savePathLabel}

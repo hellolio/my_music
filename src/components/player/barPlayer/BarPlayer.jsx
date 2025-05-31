@@ -16,7 +16,7 @@ function BarPlayer(props) {
     const [isDragging, setIsDragging] = useState(false);
 
     const [AB, setAB] = useState({
-      isAB: -1,  // -1说明不是AB模式，0是AB模式并且当前是设置A，1是AB模式并且当前是设置B，2是AB模式并且当前是设置完成正在执行AB模式
+      isAB: -1,
       A: -1,
       B: -1
     });
@@ -35,14 +35,13 @@ function BarPlayer(props) {
     }, [playNext])
     
     useEffect(() => {
-      console.log("aaaa", data)
-      // 监听进度事件
+
       if (!isDragging) {
         const listenProgress = listen("player_progress", (event) => {
           const newProgress = event.payload / 1000;
 
           if (event.payload === -1) {
-            // 更新进度
+
             setData(prevData => ({
               ...prevData,
               isPlaying: false,
@@ -66,9 +65,9 @@ function BarPlayer(props) {
               }
             }
 
-            // 计算百分比
+
             const newProgressP = newProgress / data.totalDuration;
-            // 更新进度
+
               setData(prevData => ({
                 ...prevData,
                 isPlaying: true,
@@ -77,9 +76,9 @@ function BarPlayer(props) {
               }));
           }
         });
-        // 清理监听器
+
         return () => {
-          listenProgress.then((unlisten) => unlisten());  // 组件卸载时清理监听器
+          listenProgress.then((unlisten) => unlisten());
         }; 
       }
     }, [data, AB]);
@@ -107,11 +106,11 @@ function BarPlayer(props) {
           <div data-clickable
           className={styles.center}
           ref={progressBarRef}
-          onClick={(e) => updateProgress(e, data, setData)}  // 点击时更新进度
+          onClick={(e) => updateProgress(e, data, setData)}
           onMouseDown={(e) => { handleMouseDown(e, setIsDragging); }}
-          onMouseMove={(e) => handleMouseMove(e, progressBarRef, data, setData, setCoords, isDragging)}  // 移动时更新进度
-          onMouseUp={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging, AB, setAB)}  // 松开时结束拖动
-          onMouseLeave={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging, AB, setAB)} // 离开时结束拖动
+          onMouseMove={(e) => handleMouseMove(e, progressBarRef, data, setData, setCoords, isDragging)}
+          onMouseUp={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging, AB, setAB)}
+          onMouseLeave={(e) => handleMouseUp(e, data, setData, coords, setCoords, isDragging, setIsDragging, AB, setAB)}
         >
           {coords.visible && (
             <div
@@ -123,10 +122,10 @@ function BarPlayer(props) {
            )} 
     
           <div className={styles.centerBar}>
-            {/* 进度条的填充部分 */}
+            {}
             <div className={styles.centerBarRate} style={{ width: `${utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
             <div className={styles.centerBarRateEnd} style={{ width: `${100 - utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
-            {/* 进度条上的小圆球 */}
+            {}
             <div className={styles.centerBarBall} style={{ left: `${utils.calculatePercentage(data.barCurrentProgressSec, data.totalDuration)}%` }}></div>
             <div className={`${styles.centerBarBallAb} ${AB.isAB >= 0 ? styles.centerBarBallAbA : ''}`} style={{ left: `${utils.calculatePercentage(AB.A, data.totalDuration)}%` }}></div>
             <div className={`${styles.centerBarBallAb} ${AB.isAB === 1 ? styles.centerBarBallAbB : ''}`} style={{ left: `${utils.calculatePercentage(AB.B, data.totalDuration)}%` }}></div>

@@ -5,7 +5,7 @@ export const Context = createContext([]);
 
 export const MyProvider = ({ children }) => {
 
-    // 所有歌单list
+
     const [allSongList, setAllSongList] = useState([]);
 
   return (

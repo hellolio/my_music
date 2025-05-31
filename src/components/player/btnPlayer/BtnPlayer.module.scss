@@ -1,7 +1,7 @@
 .containerBtnPlayer {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 1fr; /* 子元素平均宽度 */
+  grid-auto-columns: 1fr;
   justify-content: center;
   align-items: center;
   gap: 12px;
@@ -25,8 +25,8 @@
 .rightBtnPlayer:hover,
 .cycleBtnPlayer:hover,
 .listBtnPlayer:hover {
-  transform: scale(1.2); /* 放大一点 */
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697); /* 阴影效果 */
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.697);
 }
 
 .cycleBtnPlayer:active,
@@ -34,7 +34,7 @@
 .centerBtnPlayer:active,
 .rightBtnPlayer:active,
 .listBtnPlayer:active {
-  transform: scale(0.99); /* 点击时缩小 */
+  transform: scale(0.99);
 }
 
 .songList {

@@ -2,7 +2,7 @@ import * as player from "../../../common/player"
 
 // 计算并设置进度
 export const updateProgress = (e, volumeBarRef, data, setData) =>  {
-    // 获取进度条容器的宽度
+
     let progressBarWidth = e.currentTarget.clientWidth;
 
     if (!volumeBarRef.current) {
@@ -11,8 +11,8 @@ export const updateProgress = (e, volumeBarRef, data, setData) =>  {
     const rect = volumeBarRef.current.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
 
-    // 获取点击或拖动的位置
-    // 计算百分比位置
+
+
     let barCurrentVolume = Math.round((offsetX / progressBarWidth) * 100);
     if (barCurrentVolume <= 0) {
       barCurrentVolume = 0;
@@ -27,13 +27,13 @@ export const updateProgress = (e, volumeBarRef, data, setData) =>  {
 // 鼠标按下事件，开始拖动
 export const handleMouseDown = (e, setIsDraggingVolume) => {
   setIsDraggingVolume(true);
-  // 禁止选中文本等默认行为
+
   e.preventDefault();
 };
 
 // 鼠标移动事件，拖动进度
 export const handleMouseMove = (e, volumeBarRef, data, setData, setCoordsVolume, isDraggingVolume) => {
-  let barCurrentVolume = updateProgress(e, volumeBarRef, data, setData); // 拖动时更新进度
+  let barCurrentVolume = updateProgress(e, volumeBarRef, data, setData);
   const rect = volumeBarRef.current.getBoundingClientRect();
   setCoordsVolume({
     x: e.clientX,
@@ -57,7 +57,7 @@ export const handleMouseUp = async (e, data, setData, coordsVolume, setCoordsVol
 
   setCoordsVolume((prev) => ({ ...prev, visible: false }));
   if (isDraggingVolume){
-    // await invoke('control_volume', { volume: barCurrentVolume/100 });
+
     const isMusic = player.checkIsMusic(data.audioSrc);
     let playFun = undefined;
     if (isMusic){

@@ -4,7 +4,7 @@ import { open } from "@tauri-apps/api/dialog";
 
 export const importMusic = async (musicListImportState, setMusicListImportState) =>{
 
-  // 获取当前文件的状态
+
   let selectedFiles = await open({ multiple: true });
 
   let musicListImportState_new = await invoke('import_music_to_db', { fileNames: selectedFiles });

@@ -5,7 +5,7 @@
     margin-bottom: 10px;
   }
   
-  /* 按钮容器样式 */
+
   .postControls {
     display: flex;
     justify-content: space-between;
@@ -21,7 +21,7 @@
     align-items: center;
     flex: 1;
     gap: 8px;
-    min-width: 0; /* 允许子项缩小 */
+    min-width: 0;
   }
   
   .savePathLabel {
@@ -35,7 +35,7 @@
   .rightControls {
     display: flex;
     gap: 8px;
-    flex-shrink: 0; /* 保证按钮不会被压缩 */
+    flex-shrink: 0;
   }
 
   .resultListWrapper {
@@ -58,7 +58,7 @@
     }
   
     th {
-      // background-color: rgba(82, 78, 78);
+
       color: theme.$font-color-blue;
     }
   }
@@ -71,8 +71,8 @@
   }
 
 .rowOverHidden {
-  white-space: nowrap;       /* 不换行 */
-  overflow: hidden;          /* 超出隐藏 */
+  white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
 }
   
@@ -81,7 +81,7 @@
   }
   
   .resultRow:hover {
-    // background-color: theme.$hover-background-color;
+
     color: theme.$hover-font-color;
     cursor: pointer;
     transform: theme.$hover-transform;

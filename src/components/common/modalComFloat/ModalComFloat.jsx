@@ -14,7 +14,7 @@ export default function ModalComFloat({visible, setVisible, panelRef, children})
           }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        // 清理函数
+
         return () => {
           document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -29,6 +29,6 @@ export default function ModalComFloat({visible, setVisible, panelRef, children})
           {children}
         </div>
       </div>,
-        document.body // 指定挂载点
+        document.body
     )
 }

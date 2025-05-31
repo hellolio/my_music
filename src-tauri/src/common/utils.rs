@@ -3,7 +3,7 @@ use quick_xml::{events::Event, Reader};
 use tauri::regex::Regex;
 use ffmpeg_next as ffmpeg;
 use anyhow::{Context, Result};
-use lofty::{AudioFile, Probe, TaggedFileExt};
+use lofty::{Probe, TaggedFileExt};
 use uuid::Uuid;
 
 use crate::modles::{db_song::Song, music_lyrics::Lyric};
@@ -24,11 +24,11 @@ fn is_meaningful(s: &str) -> bool {
 }
 
 fn ret_org(bytes: &[u8]) -> Vec<u8>{
-   // 第一步：把这串 UTF-8 字节转成 Rust 字符串（乱码）
+   // 把这串 UTF-8 字节转成 Rust 字符串（乱码）
    let wrong_str = String::from_utf8_lossy(&bytes);
    println!("误解码后的乱码字符串: {}", wrong_str);
 
-   // 第二步：将这个字符串按照 Latin-1（每个 char -> byte）取出原始字节
+   // 将这个字符串按照 Latin-1（每个 char -> byte）取出原始字节
    let raw_bytes: Vec<u8> = wrong_str.chars().map(|c| c as u8).collect();
    println!("还原出的原始 GBK 字节: {:?}", raw_bytes);
    return raw_bytes;
@@ -46,8 +46,6 @@ fn try_decode(bytes: &[u8], n: u8) -> String {
     for (t, e) in encoding{
         // 遍历编码列表，依次尝试解码
         let s = e.decode(&bytes).0;
-        let s1 = e.decode(&bytes).1;
-        let s2 = e.decode(&bytes).2;
 
         if String::from_utf8_lossy(s.as_bytes()).to_string().contains('�'){
             println!("无效的UTF-8编码，from_utf8_lossy: {}", s);
@@ -89,9 +87,6 @@ pub fn get_audio_metadata(path_str: &str) -> Result<Song> {
     let duration_us = ictx.duration(); // 单位是微秒（i64）
     let duration = duration_us as u64 / 1_000_000; // 转成秒
 
-    println!("title:{title}");
-    println!("artist:{artist}");
-    println!("音频总时长: {:.2} 秒", duration);
     Ok(Song{
         id: None,
         title: title,
@@ -197,7 +192,6 @@ pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>>{
         buf.clear();
     }
 
-    // metadata暂时不返回，后面再说
     Ok(lyrics)
 
 }
@@ -211,8 +205,6 @@ fn get_temp_image_path() -> PathBuf {
 
 pub fn get_cover_from_music(input_path: &str) -> Result<String>{
     let tagged_file = Probe::open(input_path)?.read()?;
-    // let mut out_image_path = PathBuf::from(input_path);
-    // out_image_path.set_extension("jpg");
 
     let out_image_path = get_temp_image_path();
 

@@ -5,7 +5,7 @@ import { open } from "@tauri-apps/api/dialog";
 // 点击添加 导入音乐到数据库
 export const importMusic = async (playlistId, setUpdatePlayListFlg, setAllSongList, currentIndex) =>{
   
-    // 获取当前文件的状态
+
     let selectedFiles = await open({ multiple: true });
   
     let songs_new = await invoke('import_music_to_db', { fileNames: selectedFiles, id: playlistId });
@@ -35,7 +35,7 @@ export const getMusicListFormDB = async (setCurrentIndex, setAllSongList, data, 
             if (index === -1) {
                 index = 0;
             }
-            // 应用启动时，取缓存的歌为当前歌曲
+
             setData(prevData => ({
                 ...prevData,
                 id: musicList.songs[index].id,
@@ -93,7 +93,7 @@ export const deleteMusic = async (selectedItems, setSelectedItems, setUpdatePlay
         )
     )
 
-    setSelectedItems([]);  // 删除后清空选中的项
+    setSelectedItems([]);
     setUpdatePlayListFlg(true);
 };
 

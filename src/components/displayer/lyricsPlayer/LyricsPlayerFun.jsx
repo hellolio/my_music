@@ -4,7 +4,7 @@ import { open } from "@tauri-apps/api/dialog";
 import * as player from "../../../common/player"
 
 export const importLyrics = async () =>{
-  // 获取当前文件的状态
+
   let selectedFile = await open({ multiple: false });
   return selectedFile;
 }

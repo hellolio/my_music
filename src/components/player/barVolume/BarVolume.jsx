@@ -7,7 +7,7 @@ import {updateProgress, handleMouseDown, handleMouseMove, handleMouseUp, upVolum
 
 function BarPlayer(props) {
     const {data, setData} = props;
-    const [isDraggingVolume, setIsDraggingVolume] = useState(false); // 是否正在拖动
+    const [isDraggingVolume, setIsDraggingVolume] = useState(false);
     const [coordsVolume, setCoordsVolume] = useState({ x: 0, y: 0, volume:0, visible: false });
 
     const volumeBarRef = useRef(null);

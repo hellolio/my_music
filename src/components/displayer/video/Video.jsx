@@ -8,7 +8,7 @@ const Video = forwardRef((props, ref) => {
   const playerRef = useRef(null);
   const [videoSrc, setVideoSrc] = useState("");
   const [playing, setPlaying] = useState(true);
-  const [videoVolume, setVideoVolume] = useState(0.5); // 默认音量为 50%
+  const [videoVolume, setVideoVolume] = useState(0.5);
 
   const [playedSeconds, setPlayedSeconds] = useState(0);
   const [durationT, setDuration] = useState(0);

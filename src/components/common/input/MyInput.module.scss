@@ -1,6 +1,6 @@
 @use '@/base/theme-config.scss' as theme;
 
-  /* 输入框样式 */
+
   .myInput {
     border: 1px solid #444744;
     background-color: #393535c8;
@@ -12,6 +12,6 @@
   
   .myInput:focus {
     outline: none;
-    border-color: #58b7ce; /* 聚焦时绿色边框 */
-    box-shadow: 0 0 4px #499cb093; /* 绿色光晕 */
+    border-color: #58b7ce;
+    box-shadow: 0 0 4px #499cb093;
   }

@@ -1,7 +1,7 @@
 
   .settingList {
     left: 20px;
-    // width: 100px;
+
   }
 
   .themeList {
@@ -28,14 +28,14 @@
   }
   
   .windowControlsLeft {
-    display: flex;              /* 启用 Flexbox 布局 */
+    display: flex;
     gap: 7px;         
     z-index: 9999;
   }
   
   .windowControlsCenter {
     text-align: center;
-    display: flex;              /* 启用 Flexbox 布局 */
+    display: flex;
     justify-content: center;
   }
   
@@ -48,7 +48,7 @@
   }
 
   .windowControlsRight {
-    display: flex;              /* 启用 Flexbox 布局 */
+    display: flex;
     gap: 7px;                
     z-index: 9999;
   }

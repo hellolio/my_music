@@ -1,6 +1,6 @@
 @use '@/base/theme-config.scss' as theme;
 
-/* 遮罩层 */
+
 .dialogOverlay {
   position: fixed;
   top: 0;
@@ -16,7 +16,7 @@
   animation: fadeOut 0.1s ease-in forwards;
 }
 
-/* 动画 */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -26,7 +26,7 @@
   }
 }
 
-/* 消失动画 */
+
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -36,7 +36,7 @@
   }
 }
 
-/* 弹窗样式 */
+
 .dialog {
   position: fixed;
   top: 50%;

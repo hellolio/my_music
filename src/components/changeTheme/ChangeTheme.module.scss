@@ -23,7 +23,7 @@
 .modal.visible {
   transform: translateY(0);
 }
-  /* 弹窗内容 */
+
   .modalContent {
     background-color: theme.$window-background-color;
     padding: 10px;
@@ -34,7 +34,7 @@
   }
 
   
-  /* 按钮容器样式 */
+
   .postControls {
     display: flex;
     justify-content: space-between;
@@ -52,11 +52,11 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    min-width: 0; /* 允许子项缩小 */
+    min-width: 0;
   }
   
   .savePathLabel {
-    // flex: 1;
+
     overflow-x: auto;
     white-space: nowrap;
     max-width: 100%;
@@ -66,13 +66,13 @@
   .rightControls {
     display: flex;
     gap: 8px;
-    flex-shrink: 0; /* 保证按钮不会被压缩 */
-    width: 100%; /* 确保容器的宽度是 100% */
-    justify-content: flex-end; /* 将子元素推到右侧 */
+    flex-shrink: 0;
+    width: 100%;
+    justify-content: flex-end;
   }
 
   .hiddenColorInput {
-    appearance: none; /* 去掉默认样式 */
+    appearance: none;
     border: none;
     width: 30px;
     height: 30px;

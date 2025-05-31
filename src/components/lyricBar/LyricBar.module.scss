@@ -42,10 +42,10 @@
   
   @keyframes scrollText {
     0% {
-      transform: translateX(0); /* 一开始就从左侧开始 */
+      transform: translateX(0);
     }
     100% {
-      transform: translateX(-100%); /* 滚动到左侧完全出去 */
+      transform: translateX(-100%);
     }
   }
 
@@ -57,12 +57,12 @@
     position: absolute;
     top: 0%;
     right: 0%;
-    z-index: 10; /* 保证浮在其他元素上方 */
+    z-index: 10;
     display: flex;
     flex-direction: row;
-    justify-content: flex-start; /* 靠左 */
-    align-items: center;         /* 垂直居中 */
-    gap: 8px;                    /* 按钮之间的间距 */
-    margin-left: 10px;           /* 靠左边一点点内边距 */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
   }
 

@@ -13,7 +13,7 @@ export default function ModalCom({visible, setVisible, parentRef, style, childre
           }
         };
         document.addEventListener('mousedown', handleClickOutside);
-        // 清理函数
+
         return () => {
           document.removeEventListener('mousedown', handleClickOutside);
         };

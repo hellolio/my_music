@@ -13,7 +13,7 @@ import { WindowSetting } from "@/components/windowSetting/WindowSetting";
 
 function MainWindow({data, setData, allSongList, setAllSongList, musicRef, videoRef, setIsDesktopMode}) {
 
-  // 切换到某个歌单
+
   const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
     if (data.isMusic) {

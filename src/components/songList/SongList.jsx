@@ -12,11 +12,11 @@ import { div } from 'framer-motion/client';
 const SongList = ({ data, setData, allSongList, setAllSongList }) => {
   const panelRef = useRef(null);
 
-  // 用来保存选中的复选框的 id
+
   const [selectedItems, setSelectedItems] = useState([]);
   const [allCheck, setAllCheck] = useState(true);
 
-  // 切换到某个歌单
+
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const [showDialog, setShowDialog] = useState(false);
@@ -25,7 +25,7 @@ const SongList = ({ data, setData, allSongList, setAllSongList }) => {
   const [updatePlayListFlg, setUpdatePlayListFlg] = useState(false);
   const [playlistName, setPlaylistName] = useState('');
 
-  // 初次加载的时候从数据库获取歌曲列表
+
   useEffect(() => {
     getMusicListFormDB(setCurrentIndex, setAllSongList, data, setData, setUpdatePlayListFlg);
   }, [updatePlayListFlg]);

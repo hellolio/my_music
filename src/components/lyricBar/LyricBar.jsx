@@ -37,15 +37,15 @@ export default function LyricBar({ data, setData, allSongList, setAllSongList, i
   const lyricRef = useRef(null);
   const [shouldScroll, setShouldScroll] = useState(false);
 
-    // 当前高亮行索引
+
     const [currentLyric, setCurrentLyric] = useState("aaa");
 
-    // 根据时间更新高亮行
+
     useEffect(() => {
       if (!data.lyrics.length) {
         setCurrentLyric("暂无歌词")
       }else {
-        // 找到第一个时间超过 barCurrentProgressSec 的索引
+
         const index = data.lyrics.findIndex((e) => e.time > data.barCurrentProgressSec);
         setCurrentLyric(`${data.lyrics[index].text}`)
 

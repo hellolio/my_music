@@ -6,7 +6,6 @@ import { motion } from 'framer-motion';
 import MainWindow  from "@/components/mainWindow/MainWindow";
 import LyricBar from "@/components/lyricBar/LyricBar";
 import styles from './App.module.scss';
-// import { appWindow } from '@tauri-apps/api/window';
 
 function App() {
 
@@ -14,19 +13,6 @@ function App() {
     const musicRef = useRef();
     const videoRef = useRef();
     
-
-
-
-    // document.querySelectorAll('.resize-handle').forEach((el) => {
-    //   el.addEventListener('mousedown', async () => {
-    //     const direction = el.dataset.direction; // 不需要类型断言
-    //     if (direction) {
-    //       await appWindow.startResizing(direction);
-    //     }
-    //   });
-    // });
-
-
     useEffect(() => {
       const el = ref.current;
       if (!el) return;

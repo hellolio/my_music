@@ -17,7 +17,7 @@ export default function ChangeTheme({data, setData, settingData, setSettingData}
     return (
       <div>
         <div className={`${styles.postControls}`}>
-          {/* 左侧区域 */}
+          {}
           <div className={`${styles.leftControls} ${styles.left}`}>
             <MyButton 
               callFun={() => selectSavePath(setSavePath)}
@@ -41,7 +41,7 @@ export default function ChangeTheme({data, setData, settingData, setSettingData}
             type="checkbox"
             readOnly
             checked={selected}
-            // onChange={() => setSelected(!selected)}
+
           />
 
             <label htmlFor="savePath" 

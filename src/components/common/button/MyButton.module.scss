@@ -1,9 +1,9 @@
 @use '@/base/theme-config.scss' as theme;
 
 .myButton {
-  display: flex;              /* 使用 flexbox 布局 */
-  justify-content: center;    /* 水平居中 */
-  align-items: center;        /* 垂直居中 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 1px 5px;
   color: theme.$button-confirm-color;
   border: none;

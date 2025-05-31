@@ -10,7 +10,7 @@ use rusqlite::Connection;
 
 use controllers::{audio_player::AudioPlayer, get_lyrics};
 use modles::{db_song::Song, music_lyrics::Lyric, music_play_list_song::PlaylistSong, songs_for_lyrics::SongsForLyrics};
-use common::{utils, window::{self, load_window_state}};
+use common::{utils, window::{self}};
 use database::db;
 
 mod controllers;
@@ -21,9 +21,9 @@ mod modles;
 
 
 pub struct AppState {
-    pub db: Mutex<Connection>,      // 数据库连接（线程安全）
+    pub db: Mutex<Connection>,             // 数据库连接（线程安全）
     pub player: Arc<Mutex<AudioPlayer>>,   // 应用配置
-    is_desktop_mode: Arc<AtomicBool>,         // 是否记住桌面大小和位置
+    is_desktop_mode: Arc<AtomicBool>,      // 是否记住桌面大小和位置
 }
 
 #[tauri::command]
@@ -79,7 +79,6 @@ fn import_music_to_db(state: State<'_, Arc<AppState>>, file_names: Vec<&str>, id
 #[tauri::command]
 fn create_playlist(state: State<'_, Arc<AppState>>, name: String) -> Result<(), String>{
     let mut conn = state.db.lock().unwrap();
-    println!("aaaaaa:create_playlist");
     let _ = db::insert_playlists(&mut *conn, name);
     Ok(())
 }
@@ -87,7 +86,6 @@ fn create_playlist(state: State<'_, Arc<AppState>>, name: String) -> Result<(), 
 #[tauri::command]
 fn delete_playlist(state: State<'_, Arc<AppState>>, playlist_id: i64) -> Result<(), String>{
     let mut conn = state.db.lock().unwrap();
-    println!("aaaaaa:delete_playlist");
     let _ = db::delete_playlists(&mut *conn, playlist_id);
     Ok(())
 }
@@ -173,17 +171,6 @@ fn get_song_all(state: State<'_, Arc<AppState>>) -> Vec<PlaylistSong> {
         Err(_) => {vec![]},
     }
 
-    // for song in songs_result.iter_mut() {
-    //     let mut lyrics = vec![];
-    //     match song.lyrics_path.clone() {
-    //         Some(path) => {
-    //             lyrics = utils::get_audio_lyrics(path.to_str().unwrap_or("")).unwrap_or_default();
-    //         }
-    //         None=> {}
-    //     }
-    //     song.lyrics = lyrics;
-
-    // }
 }
 
 
