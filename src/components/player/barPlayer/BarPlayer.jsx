@@ -138,9 +138,7 @@ function BarPlayer(props) {
             coords,
             setCoords,
             isDragging,
-            setIsDragging,
-            AB,
-            setAB
+            setIsDragging
           )
         }
         onMouseLeave={(e) =>
@@ -151,9 +149,7 @@ function BarPlayer(props) {
             coords,
             setCoords,
             isDragging,
-            setIsDragging,
-            AB,
-            setAB
+            setIsDragging
           )
         }
       >

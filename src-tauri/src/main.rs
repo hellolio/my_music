@@ -28,6 +28,8 @@ mod controllers;
 mod database;
 mod modles;
 
+const PROJECT_ROOT: &str = env!("CARGO_MANIFEST_DIR");
+
 pub struct AppState {
     pub db: Mutex<Connection>,           // 数据库连接（线程安全）
     pub player: Arc<Mutex<AudioPlayer>>, // 应用配置
@@ -170,9 +172,7 @@ fn get_song_all(state: State<'_, Arc<AppState>>) -> Vec<PlaylistSong> {
     let mut playlist_songs: Vec<PlaylistSong> = vec![];
     match playlists {
         Ok(playlists) => {
-            println!("歌单列表：{:?}", playlists);
             for playlist in &playlists {
-                println!("当前歌单列表：{:?}", playlist);
                 let songs_result =
                     db::get_song_all(&*conn, playlist.id.unwrap_or_default()).unwrap_or_default();
                 let playlist_song = PlaylistSong {
@@ -335,5 +335,18 @@ fn main() {
 }
 
 fn add_bin_to_path() {
-    std::env::set_var("MY_DLL_PATH", "./bin/");
+    // let current_path = env::current_dir().unwrap();
+    println!("PROJECT_ROOT is: {PROJECT_ROOT}");
+    std::env::set_var("MY_DLL_PATH", format!("{PROJECT_ROOT}/bin/"));
+
+    // 获取当前可执行文件目录（bin 目录）
+    let exe_path = env::current_exe().unwrap();
+    let exe_dir = exe_path.parent().unwrap();
+
+    // 构造新的 PATH，加入 bin 路径
+    let current_path = env::var("PATH").unwrap_or_default();
+    let new_path = format!("{};{}", exe_dir.display(), current_path);
+    env::set_var("PATH", &new_path);
+
+    dotenvy::dotenv().ok();
 }

@@ -50,7 +50,7 @@ fn try_decode(bytes: &[u8], n: u8) -> String {
         ("GB18030", GB18030),
     ];
 
-    for (t, e) in encoding {
+    for (_t, e) in encoding {
         // 遍历编码列表，依次尝试解码
         let s = e.decode(&bytes).0;
 
@@ -114,7 +114,7 @@ pub fn get_audio_metadata(path_str: &str) -> Result<Song> {
     })
 }
 
-pub fn get_audio_lyrics(lyrics_file: &str) -> Result<Vec<Lyric>> {
+pub fn _get_audio_lyrics(lyrics_file: &str) -> Result<Vec<Lyric>> {
     let path = Path::new(lyrics_file);
     let file = File::open(path)?;
     let reader = io::BufReader::new(file);

@@ -17,7 +17,7 @@ fn copy_dll() {
         "swresample-5.dll",
         "swscale-8.dll",
     ];
-    let now_path = env::current_dir().unwrap();
+    let current_path = env::current_dir().unwrap();
 
     // 获取 target/debug 目录（从 OUT_DIR 向上3级）
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
@@ -28,10 +28,10 @@ fn copy_dll() {
         .to_path_buf();
 
     for file in files.iter() {
-        let src = now_path.join("bin").join(file);
+        let src = current_path.join("bin").join(file);
         let dest = target_dir.join(file);
 
-        println!("cargo:warning=Copying {:?} to {:?}", src, dest);
+        println!("cargo:info=Copying {:?} to {:?}", src, dest);
         fs::copy(src, &dest).expect(&format!("Failed to copy {:?}", file));
     }
 }

@@ -64,11 +64,12 @@ export const handleMouseUp = async (
   coords,
   setCoords,
   isDragging,
-  setIsDragging,
-  AB,
-  setAB
+  setIsDragging
 ) => {
   let barCurrentProgressSec = coords.sec;
+  if (data.audioSrc === null || data.audioSrc === undefined) {
+    return;
+  }
 
   setCoords((prev) => ({ ...prev, visible: false }));
   if (isDragging) {
@@ -82,7 +83,7 @@ export const handleMouseUp = async (
     if (data.isPlaying) {
       playFun.seek(barCurrentProgressSec, data.barCurrentVolume);
     } else {
-      let song = await playFun.play(
+      let _ = await playFun.play(
         data.playlistId,
         data.audioSrc,
         data.totalDuration,

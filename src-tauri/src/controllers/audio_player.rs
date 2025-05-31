@@ -42,7 +42,7 @@ impl AudioPlayer {
         &mut self,
         window: Window,
         file_path: String,
-        duration: u64,
+        _duration: u64,
         skip_secs: u64,
         volume: f32,
     ) -> Result<(), Error> {
@@ -252,7 +252,6 @@ impl AudioPlayer {
     fn send_control(&self, control: Command) {
         if let Some(tx) = &self.tx {
             tx.send(control).unwrap_or_default();
-            println!("Audio send_control");
         }
     }
 }

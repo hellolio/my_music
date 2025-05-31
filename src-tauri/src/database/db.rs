@@ -242,7 +242,6 @@ pub fn get_song_by_path(conn: &Connection, path: String, id: i64) -> Result<Song
             })
         })?
         .collect::<Result<Vec<_>, _>>();
-    println!("{:?}", songs);
 
     let song: Result<Song, rusqlite::Error> = songs.and_then(|v| {
         v.get(0)

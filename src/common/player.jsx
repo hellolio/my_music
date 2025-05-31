@@ -37,6 +37,9 @@ export const leftClick = async (data, setData, allSongList) => {
   }
   var audioMeta = allSongList[currentSongIndex].songs[index];
 
+  if (audioMeta.audio_src === null || data.audio_src === undefined) {
+    return;
+  }
   if (data.isMusic) {
     await data.music.current.stop();
   } else {
@@ -83,6 +86,9 @@ export const leftClick = async (data, setData, allSongList) => {
 };
 
 export const togglePlayPause = async (data, setData) => {
+  if (data.audioSrc === null || data.audioSrc === undefined) {
+    return;
+  }
   togglePlayPausec(data, setData);
   setData((prevData) => ({
     ...prevData,
@@ -158,7 +164,9 @@ export const rightClick = async (data, setData, allSongList) => {
     index = index + 1;
   }
   var audioMeta = allSongList[currentSongIndex].songs[index];
-
+  if (audioMeta.audio_src === null || data.audio_src === undefined) {
+    return;
+  }
   if (data.isMusic) {
     await data.music.current.stop();
   } else {

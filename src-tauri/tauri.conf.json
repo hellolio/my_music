@@ -3,7 +3,7 @@
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:1420",
+    "devPath": "http://localhost:1314",
     "distDir": "../dist"
   },
   "package": {
@@ -65,13 +65,13 @@
         "icons/icon.ico"
       ],
       "resources": [
-        "bin/avdevice-61.dll",
-        "bin/avfilter-10.dll",
-        "bin/avcodec-61.dll",
-        "bin/avformat-61.dll",
-        "bin/avutil-59.dll",
-        "bin/swresample-5.dll",
-        "bin/swscale-8.dll"
+        "avdevice-61.dll",
+        "avfilter-10.dll",
+        "avcodec-61.dll",
+        "avformat-61.dll",
+        "avutil-59.dll",
+        "swresample-5.dll",
+        "swscale-8.dll"
       ]
     }
   }

@@ -92,8 +92,6 @@ pub async fn get_qq_lyrics(keyword: String) -> Result<Vec<SongsForLyrics>> {
         .await?;
 
     // 获取响应结果
-    let status = response.status();
-    println!("status:{status}");
     let body = response.text().await?;
     // 解析 JSON 字符串为 serde_json::Value
     let json: Value = serde_json::from_str(&body)?;
