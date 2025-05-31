@@ -96,9 +96,21 @@ export const WindowSetting = ({
       <SplitRow
         left={
           <div className={styles.windowControlsLeft}>
-            <SettingButton callFun={() => setShowFlg(1)} msg={"⚙"} />
-            <SettingButton callFun={() => setShowFlg(2)} msg={"👕"} />
-            <SettingButton callFun={() => setShowFlg(3)} msg={"💡"} />
+            <SettingButton
+              style={styles.settingBut}
+              callFun={() => setShowFlg(1)}
+              msg={"⚙"}
+            />
+            <SettingButton
+              style={styles.settingBut}
+              callFun={() => setShowFlg(2)}
+              msg={"👕"}
+            />
+            <SettingButton
+              style={styles.settingBut}
+              callFun={() => setShowFlg(3)}
+              msg={"💡"}
+            />
           </div>
         }
         center={
@@ -115,13 +127,26 @@ export const WindowSetting = ({
         }
         right={
           <div className={styles.windowControlsRight}>
-            <SettingButton callFun={() => setIsDesktopMode(true)} msg={"↬"} />
-            <SettingButton callFun={() => minWindow()} msg={"-"} />
             <SettingButton
+              style={styles.settingBut}
+              callFun={() => setIsDesktopMode(true)}
+              msg={"↬"}
+            />
+            <SettingButton
+              style={styles.settingBut}
+              callFun={() => minWindow()}
+              msg={"-"}
+            />
+            <SettingButton
+              style={styles.settingBut}
               callFun={() => maxWindow()}
               msg={isMaximize ? "◱" : "□"}
             />
-            <SettingButton callFun={() => closeWindow()} msg={"×"} />
+            <SettingButton
+              style={styles.settingBut}
+              callFun={() => closeWindow()}
+              msg={"×"}
+            />
           </div>
         }
       />

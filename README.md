@@ -2,6 +2,11 @@
 
 简单的音乐播放器，无聊玩玩
 
+- 图标均为颜文字
+- 可自定义皮肤
+- 可播放部分格式视频
+- 未播放时内存占用 5m
+
 计划：
 
 - [x] 基本播放
@@ -20,16 +25,15 @@
 - [ ] 动感光波
 - [ ] 歌词翻译
 - [ ] 换构架到 tauri2，以支持多平台（特别是移动端）
-- [ ] bug 改善
-- [ ] 插件支持主流音乐网站登录（可能支持可能不支持，看心情）
+- [ ] bug 改善 (進行中)
 
 bug list：
 
 - 调整窗口大小时会崩溃
-- 鼠标移动到窗口边缘时很难变成调整窗口大小的模式
 - 调整播放进度偶尔崩溃
 - 切换歌曲时，壁纸会闪烁
 - 初次修改壁纸后，点击应用没有反应，需要切换歌曲才行
+- 第一次播放時，進度條不刷新
 
 Windows 下载：[my-music_latest](https://github.com/hellolio/my_music/releases)
 
@@ -37,6 +41,6 @@ Windows 下载：[my-music_latest](https://github.com/hellolio/my_music/releases
 ![1](markdown/pc1.png)
 ![2](markdown/pc2.png)
 ![3](markdown/pc3.png)
-![4](markdown/mobile1.png)
-![5](markdown/mobile2.png)
-![6](markdown/mobile3.png)
+![4](markdown/pc4.png)
+![5](markdown/pc5.png)
+![6](markdown/pc6.png)

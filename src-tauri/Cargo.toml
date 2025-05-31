@@ -1,6 +1,6 @@
 [package]
 name = "my-music"
-version = "0.4.3"
+version = "0.4.5"
 description = "A music App"
 authors = ["hellolio"]
 edition = "2021"
