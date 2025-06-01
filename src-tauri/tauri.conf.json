@@ -63,15 +63,6 @@
       "identifier": "com.my-music.app",
       "icon": [
         "icons/icon.ico"
-      ],
-      "resources": [
-        "avdevice-61.dll",
-        "avfilter-10.dll",
-        "avcodec-61.dll",
-        "avformat-61.dll",
-        "avutil-59.dll",
-        "swresample-5.dll",
-        "swscale-8.dll"
       ]
     }
   }
