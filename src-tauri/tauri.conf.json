@@ -62,7 +62,9 @@
       "targets": "all",
       "identifier": "com.my-music.app",
       "icon": [
-        "icons/icon.ico"
+        "icons/icon.icns",
+        "icons/icon.ico",
+        "icons/icon.png"
       ]
     }
   }
