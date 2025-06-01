@@ -63,8 +63,6 @@
       "identifier": "com.my-music.app",
       "icon": [
         "icons/icon.ico"
-      ],
-      "resources": [
       ]
     }
   }
