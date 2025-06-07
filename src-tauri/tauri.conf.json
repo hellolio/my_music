@@ -8,7 +8,16 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["deb", "rpm", "app", "dmg", "msi", "nsis"],
+    "linux": {
+      "deb": {},
+      "rpm": {}
+    },
+
+    "windows": {
+      "nsis": {}
+    },
+
     "icon": [
       "icons/icon.icns",
       "icons/icon.ico",

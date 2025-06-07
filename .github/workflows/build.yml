@@ -1,0 +1,202 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+
+env:
+  # 控制 Rust 构建工具 Cargo 的输出颜色
+  CARGO_TERM_COLOR: always
+  # 编译平台
+  PLATFORM_EXTS: |
+    src-tauri/target/release/bundle/**/*.dmg
+    src-tauri/target/release/bundle/**/*.msi
+    src-tauri/target/release/bundle/**/*.deb
+    src-tauri/target/release/bundle/**/*.rpm
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            platform: macos
+          - os: ubuntu-22.04
+            platform: linux
+          - os: windows-latest
+            platform: windows
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # =============================
+      # Node
+      # =============================
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # =============================
+      # Rust
+      # =============================
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      # ===============================
+      # macOS – dependencies
+      # ===============================
+      - name: Install dependencies (macOS)
+        if: matrix.platform == 'macos'
+        run: |
+          brew install pkg-config nasm yasm
+          curl -LO https://ffmpeg.org/releases/ffmpeg-7.1.tar.xz
+          tar -xf ffmpeg-7.1.tar.xz
+          cd ffmpeg-7.1
+          ./configure \
+            --prefix=$HOME/ffmpeg-7 \
+            --enable-shared \
+            --disable-static \
+            --enable-pthreads \
+            --enable-version3
+          make -j$(sysctl -n hw.ncpu)
+          make install
+
+          echo "PKG_CONFIG_PATH=$HOME/ffmpeg-7/lib/pkgconfig" >> $GITHUB_ENV
+          echo "CPATH=$HOME/ffmpeg-7/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$HOME/ffmpeg-7/lib" >> $GITHUB_ENV
+          echo "PATH=$HOME/ffmpeg-7/bin:$PATH" >> $GITHUB_ENV
+
+      # ===============================
+      # Linux – dependencies
+      # ===============================
+      - name: Install dependencies (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update -y
+          sudo apt-get upgrade -y
+          DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
+            pkg-config \
+            nasm \
+            yasm \
+            build-essential \
+            file \
+            xz-utils \
+            gzip \
+            libgtk-3-dev \
+            libglib2.0-dev \
+            libwebkit2gtk-4.1-dev \
+            libsoup-3.0-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            libasound2-dev \
+            libunwind-dev \
+            gstreamer1.0-plugins-base \
+            gstreamer1.0-plugins-good \
+            gstreamer1.0-libav
+
+          curl -LO https://ffmpeg.org/releases/ffmpeg-7.1.tar.xz
+          tar -xf ffmpeg-7.1.tar.xz
+          cd ffmpeg-7.1
+          ./configure \
+            --prefix=$HOME/ffmpeg-7 \
+            --enable-shared \
+            --disable-static \
+            --enable-pthreads \
+            --enable-version3
+          make -j$(nproc)
+          make install
+
+          echo "PKG_CONFIG_PATH=$HOME/ffmpeg-7/lib/pkgconfig" >> $GITHUB_ENV
+          echo "CPATH=$HOME/ffmpeg-7/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$HOME/ffmpeg-7/lib" >> $GITHUB_ENV
+          echo "PATH=$HOME/ffmpeg-7/bin:$PATH" >> $GITHUB_ENV
+
+      # ===============================
+      # Windows – dependencies
+      # ===============================
+      - name: Install dependencies (Windows)
+        if: matrix.platform == 'windows'
+        shell: bash
+        run: |
+          # choco install ffmpeg --version=7.1 -y
+          # choco pin add -n=ffmpeg
+
+          if [ ! -d /c/vcpkg ]; then
+            git clone https://github.com/microsoft/vcpkg.git /c/vcpkg
+          fi
+
+          /c/vcpkg/bootstrap-vcpkg.bat
+          /c/vcpkg/vcpkg install ffmpeg --triplet x64-windows-static-md
+
+          echo "VCPKG_ROOT=C:\vcpkg" >> $GITHUB_ENV
+          echo "VCPKG_DEFAULT_TRIPLET=x64-windows-static-md" >> $GITHUB_ENV
+
+      # =============================
+      # Sync version (only tag)
+      # =============================
+      - name: Extract version from tag
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          echo "APP_VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Sync version to package.json
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          npm version $APP_VERSION --no-git-tag-version
+
+      - name: Sync version to tauri.conf.json
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          jq --arg v "$APP_VERSION" '.version=$v' \
+            src-tauri/tauri.conf.json > src-tauri/tauri.conf.json.tmp
+          mv src-tauri/tauri.conf.json.tmp src-tauri/tauri.conf.json
+          sed -i.bak "s/^version = \".*\"/version = \"$APP_VERSION\"/" src-tauri/Cargo.toml
+
+      # =============================
+      # Build Tauri
+      # =============================
+      - name: Build Tauri app
+        run: |
+          npm install
+          npm run tauri build
+
+      # =============================
+      # Rename artifacts
+      # =============================
+      - name: Add platform suffix to all files
+        shell: bash
+        run: |
+          shopt -s globstar || true
+          for pattern in $PLATFORM_EXTS; do
+            for f in $pattern; do
+              [ -f "$f" ] || continue
+              base="${f%.*}"
+              ext="${f##*.}"
+              mv "$f" "${base}-${{ matrix.platform }}.$ext"
+            done
+          done
+
+      # =============================
+      # Upload artifacts
+      # =============================
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-${{ matrix.platform }}
+          path: ${{ env.PLATFORM_EXTS }}
+          if-no-files-found: error
