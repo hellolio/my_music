@@ -1,5 +1,5 @@
 import { join } from "@tauri-apps/api/path";
-import { readTextFile, writeFile } from "@tauri-apps/api/fs";
+import { readTextFile, writeFile } from "@tauri-apps/plugin-fs";
 import { appConfigDir } from "@tauri-apps/api/path";
 
 export const formatTime = (seconds) => {

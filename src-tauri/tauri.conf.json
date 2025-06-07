@@ -1,71 +1,45 @@
 {
-  "$schema": "https://schema.tauri.app/config/1",
+  "$schema": "https://schema.tauri.app/config/2",
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:1314",
-    "distDir": "../dist"
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:1314"
   },
-  "package": {
-    "productName": "my-music",
-    "version": "0.4.5"
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/icon.icns",
+      "icons/icon.ico",
+      "icons/icon.png"
+    ]
   },
-  "tauri": {
-    "allowlist": {
-      "window": {
-        "maximize": true,
-        "unmaximize": true,
-        "minimize": true,
-        "close": true,
-        "setSize": true,
-        "setPosition": true,
-        "startDragging": true
+  "productName": "my-music",
+  "mainBinaryName": "my-music",
+  "version": "0.4.5",
+  "identifier": "com.my-music.app",
+  "plugins": {},
+  "app": {
+    "security": {
+      "assetProtocol": {
+        "scope": [
+          "**"
+        ],
+        "enable": true
       },
-      "all": false,
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "protocol": {
-        "asset": true,
-        "assetScope": ["**"]
-      },
-      "path": {
-        "all": true
-      },
-      "dialog": {
-        "open": true,
-        "save": true,
-        "message": true
-      },
-      "fs": {
-        "readFile": true,
-        "writeFile": true,
-        "scope": ["**"]
-      }
+      "csp": "default-src 'self'; media-src *; img-src *; script-src 'self';; connect-src ipc: http://ipc.localhost"
     },
     "windows": [
       {
         "title": "my-music",
-        "minWidth": 200,  
+        "minWidth": 200,
         "minHeight": 200,
         "decorations": false,
         "resizable": true,
-        "transparent": true
+        "transparent": true,
+        "useHttpsScheme": true
       }
-    ],
-    "security": {
-       "csp": "default-src 'self'; media-src *; img-src *; script-src 'self';"
-    },
-    "bundle": {
-      "active": true,
-      "targets": "all",
-      "identifier": "com.my-music.app",
-      "icon": [
-        "icons/icon.icns",
-        "icons/icon.ico",
-        "icons/icon.png"
-      ]
-    }
+    ]
   }
 }

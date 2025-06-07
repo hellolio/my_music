@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import styles from "./HelpList.module.scss";
-import { open } from "@tauri-apps/api/shell";
+import { open } from "@tauri-apps/plugin-shell";
 
 export const HelpList = ({ data, setData }) => {
   const SettingRef = useRef(null);

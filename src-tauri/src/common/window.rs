@@ -2,8 +2,9 @@ use serde::{Deserialize, Serialize};
 use std::{
     fs::{self, File},
     io::{Read, Write},
-    path::PathBuf,
+    path::{self, PathBuf},
 };
+use tauri::Manager;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct WindowState {
@@ -16,7 +17,7 @@ pub struct WindowState {
 
 fn window_state_path(app_handle: &tauri::AppHandle) -> PathBuf {
     let mut path = app_handle
-        .path_resolver()
+        .path()
         .app_config_dir()
         .expect("Failed to get app config dir");
     path.push("window_state.json");

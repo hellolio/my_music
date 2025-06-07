@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { appWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { motion } from "framer-motion";
 
 import MainWindow from "@/components/mainWindow/MainWindow";
 import LyricBar from "@/components/lyricBar/LyricBar";
 import styles from "./App.module.scss";
+const appWindow = getCurrentWebviewWindow()
 
 function App() {
   const ref = useRef(null);
