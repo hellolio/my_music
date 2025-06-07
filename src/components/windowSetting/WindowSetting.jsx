@@ -1,6 +1,6 @@
 import styles from "./WindowSetting.module.scss";
 import { useState, useEffect, useRef } from "react";
-import { appWindow } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 
 import { SettingList } from "@/components/settingList/SettingList";
 import { ThemeList } from "@/components/themeList/ThemeList";
@@ -11,6 +11,7 @@ import SettingButton from "@/components/common/settingButton/SettingButton";
 import MyInput from "@/components/common/input/MyInput";
 import { Context } from "@/components/common/context/MyProvider";
 import ModalCom from "@/components/common/modalCom/ModalCom";
+const appWindow = getCurrentWebviewWindow()
 
 export const WindowSetting = ({
   data,

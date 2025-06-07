@@ -1,5 +1,5 @@
-import { open } from "@tauri-apps/api/dialog";
-import { invoke } from "@tauri-apps/api/tauri";
+import { open } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
 
 export const get_lyrics_targets = async (keyword) => {
   let lyrics_targets = await invoke("get_lyrics_targets", { keyword: keyword });

@@ -1,5 +1,5 @@
-import { invoke } from "@tauri-apps/api/tauri";
-import { open } from "@tauri-apps/api/dialog";
+import { invoke } from "@tauri-apps/api/core";
+import { open } from "@tauri-apps/plugin-dialog";
 
 // 点击添加 导入音乐到数据库
 export const importMusic = async (

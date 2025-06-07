@@ -1,17 +1,15 @@
 {
-  "$schema": "https://schema.tauri.app/config/1",
-  "tauri": {
-    "bundle": {
-      "identifier": "com.my-music.app",
-      "resources": {
-        "dll/avdevice-61.dll": "./",
-        "dll/avfilter-10.dll": "./",
-        "dll/avcodec-61.dll": "./",
-        "dll/avformat-61.dll": "./",
-        "dll/avutil-59.dll": "./",
-        "dll/swresample-5.dll": "./",
-        "dll/swscale-8.dll": "./"
-      }
+  "$schema": "https://schema.tauri.app/config/2",
+  "identifier": "com.my-music.app",
+  "bundle": {
+    "resources": {
+      "dll/avdevice-61.dll": "./",
+      "dll/avfilter-10.dll": "./",
+      "dll/avcodec-61.dll": "./",
+      "dll/avformat-61.dll": "./",
+      "dll/avutil-59.dll": "./",
+      "dll/swresample-5.dll": "./",
+      "dll/swscale-8.dll": "./"
     }
   }
 }

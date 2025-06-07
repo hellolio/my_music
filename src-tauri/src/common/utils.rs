@@ -1,15 +1,14 @@
 use anyhow::{Context, Result};
 use ffmpeg_next as ffmpeg;
-use lofty::{Probe, TaggedFileExt};
+use lofty::{prelude::TaggedFileExt, probe};
 use quick_xml::{events::Event, Reader};
+use regex::Regex;
 use std::{
     env,
     fs::File,
     io::{self, BufRead, Write},
     path::{Path, PathBuf},
 };
-use tauri::regex::Regex;
-use uuid::Uuid;
 
 use crate::modles::{db_song::Song, music_lyrics::Lyric};
 use encoding_rs::{GB18030, GBK, SHIFT_JIS, UTF_8};
@@ -162,7 +161,7 @@ pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>> {
     let file = File::open(path)?;
     let reader = io::BufReader::new(file);
     let mut xml_reader = Reader::from_reader(reader);
-    xml_reader.trim_text(true);
+    // xml_reader.trim_text(true);
 
     let mut buf = Vec::new();
     let mut lyrics = Vec::new();
@@ -205,13 +204,13 @@ pub fn get_audio_lyrics_qq(lyrics_file: &str) -> Result<Vec<Lyric>> {
 
 fn get_temp_image_path() -> PathBuf {
     let mut temp_path = env::temp_dir();
-    let filename = format!("cover_{}.jpg", Uuid::new_v4());
+    let filename = format!("cover_{}.jpg", uuid::Uuid::new_v4());
     temp_path.push(filename);
     temp_path
 }
 
 pub fn get_cover_from_music(input_path: &str) -> Result<String> {
-    let tagged_file = Probe::open(input_path)?.read()?;
+    let tagged_file = probe::Probe::open(input_path)?.read()?;
 
     let out_image_path = get_temp_image_path();
 

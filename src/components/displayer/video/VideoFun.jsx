@@ -1,4 +1,4 @@
-import { convertFileSrc } from "@tauri-apps/api/tauri";
+import { convertFileSrc } from "@tauri-apps/api/core";
 import { useState, useEffect, useRef, useImperativeHandle } from "react";
 
 export const useVideoFun = (setData, ref) => {

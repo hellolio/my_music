@@ -10,7 +10,7 @@ use std::{
 use anyhow::{Error, Ok, Result};
 use ffmpeg_next as ffmpeg;
 use rodio::{OutputStream, Sink};
-use tauri::Window;
+use tauri::{Emitter, Window};
 
 #[derive(Debug)]
 enum Command {

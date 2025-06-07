@@ -1,12 +1,14 @@
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core";
 
 import styles from "./LyricBar.module.scss";
 import { useState, useEffect, useRef } from "react";
-import { appWindow, PhysicalSize } from "@tauri-apps/api/window";
+import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
+import { PhysicalSize } from "@tauri-apps/api/dpi";
 import * as utils from "@/common/utils";
 import * as player from "@/common/player";
 
 import SettingButton from "@/components/common/settingButton/SettingButton";
+const appWindow = getCurrentWebviewWindow();
 
 export default function LyricBar({
   data,

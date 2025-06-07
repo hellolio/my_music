@@ -1,5 +1,5 @@
 // import { invoke } from "@tauri-apps/api/tauri";
-import { open } from "@tauri-apps/api/dialog";
+import { open } from "@tauri-apps/plugin-dialog";
 
 export const importMusic = async (
   musicListImportState,
