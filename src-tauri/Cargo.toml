@@ -29,7 +29,7 @@ encoding_rs = "0.8"
 chardetng = "0.1"
 id3 = "1.16.3"
 
-reqwest = { version = "0.12.19", features = ["json"] }
+reqwest = { version = "0.12.20", features = ["json"] }
 tokio = { version = "1.45.1", features = ["full"] }
 rand = "0.9.1"
 base64 = "0.22.1"

@@ -353,7 +353,6 @@ pub fn run() {
 
 fn add_bin_to_path() {
     // let current_path = env::current_dir().unwrap();
-    println!("PROJECT_ROOT is: {PROJECT_ROOT}");
     std::env::set_var("MY_DLL_PATH", format!("{PROJECT_ROOT}/bin/"));
 
     // 获取当前可执行文件目录（bin 目录）
