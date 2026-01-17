@@ -57,6 +57,21 @@ jobs:
           toolchain: stable
           override: true
 
+      - name: Detect latest FFmpeg version
+        id: ffmpeg
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          LATEST=$(
+            curl -s https://ffmpeg.org/releases/ \
+            | sed -nE 's/.*ffmpeg-([0-9]+\.[0-9]+(\.[0-9]+)?)\.tar\.xz.*/\1/p' \
+            | sort -V \
+            | tail -1
+          )
+
+          echo "FFMPEG_VERSION=$LATEST" >> "$GITHUB_ENV"
+
       # ===============================
       # macOS – dependencies
       # ===============================
@@ -64,11 +79,13 @@ jobs:
         if: matrix.platform == 'macos'
         run: |
           brew install pkg-config nasm yasm
-          curl -LO https://ffmpeg.org/releases/ffmpeg-7.1.tar.xz
-          tar -xf ffmpeg-7.1.tar.xz
-          cd ffmpeg-7.1
+
+          curl -LO https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.xz
+          tar -xf ffmpeg-$FFMPEG_VERSION.tar.xz
+          mv ffmpeg-$FFMPEG_VERSION ffmpeg
+          cd ffmpeg
           ./configure \
-            --prefix=$HOME/ffmpeg-7 \
+            --prefix=$HOME/ffmpeg \
             --enable-shared \
             --disable-static \
             --enable-pthreads \
@@ -76,10 +93,10 @@ jobs:
           make -j$(sysctl -n hw.ncpu)
           make install
 
-          echo "PKG_CONFIG_PATH=$HOME/ffmpeg-7/lib/pkgconfig" >> $GITHUB_ENV
-          echo "CPATH=$HOME/ffmpeg-7/include" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=$HOME/ffmpeg-7/lib" >> $GITHUB_ENV
-          echo "PATH=$HOME/ffmpeg-7/bin:$PATH" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=$HOME/ffmpeg/lib/pkgconfig" >> $GITHUB_ENV
+          echo "CPATH=$HOME/ffmpeg/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$HOME/ffmpeg/lib" >> $GITHUB_ENV
+          echo "PATH=$HOME/ffmpeg/bin:$PATH" >> $GITHUB_ENV
 
       # ===============================
       # Linux – dependencies
@@ -109,11 +126,12 @@ jobs:
             gstreamer1.0-plugins-good \
             gstreamer1.0-libav
 
-          curl -LO https://ffmpeg.org/releases/ffmpeg-7.1.tar.xz
-          tar -xf ffmpeg-7.1.tar.xz
-          cd ffmpeg-7.1
+          curl -LO https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.xz
+          tar -xf ffmpeg-$FFMPEG_VERSION.tar.xz
+          mv ffmpeg-$FFMPEG_VERSION ffmpeg
+          cd ffmpeg
           ./configure \
-            --prefix=$HOME/ffmpeg-7 \
+            --prefix=$HOME/ffmpeg \
             --enable-shared \
             --disable-static \
             --enable-pthreads \
@@ -121,10 +139,10 @@ jobs:
           make -j$(nproc)
           make install
 
-          echo "PKG_CONFIG_PATH=$HOME/ffmpeg-7/lib/pkgconfig" >> $GITHUB_ENV
-          echo "CPATH=$HOME/ffmpeg-7/include" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=$HOME/ffmpeg-7/lib" >> $GITHUB_ENV
-          echo "PATH=$HOME/ffmpeg-7/bin:$PATH" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=$HOME/ffmpeg/lib/pkgconfig" >> $GITHUB_ENV
+          echo "CPATH=$HOME/ffmpeg/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$HOME/ffmpeg/lib" >> $GITHUB_ENV
+          echo "PATH=$HOME/ffmpeg/bin:$PATH" >> $GITHUB_ENV
 
       # ===============================
       # Windows – dependencies
@@ -133,8 +151,6 @@ jobs:
         if: matrix.platform == 'windows'
         shell: bash
         run: |
-          # choco install ffmpeg --version=7.1 -y
-          # choco pin add -n=ffmpeg
 
           if [ ! -d /c/vcpkg ]; then
             git clone https://github.com/microsoft/vcpkg.git /c/vcpkg
