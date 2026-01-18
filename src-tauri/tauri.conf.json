@@ -8,9 +8,8 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["deb", "rpm", "appimage", "app", "dmg", "msi", "nsis"],
+    "targets": ["deb", "rpm", "app", "dmg", "msi", "nsis"],
     "linux": {
-      "appimage": {},
       "deb": {},
       "rpm": {}
     },
