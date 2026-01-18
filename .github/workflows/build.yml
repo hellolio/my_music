@@ -1,11 +1,20 @@
 name: Build and Release
 
 on:
+  # MR 中有 push / 新建 / reopen
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+  # master 分支有 commit
   push:
     branches:
       - master
-    tags:
-      - "v*"
+
 
 permissions:
   contents: write
