@@ -28,9 +28,10 @@
   "mainBinaryName": "my-music",
   "version": "0.4.5",
   "identifier": "com.my-music.app",
-  "plugins": {},
+  "plugins": {"fs": {}},
   "app": {
     "security": {
+      "capabilities": ["migrated"],
       "assetProtocol": {
         "scope": [
           "**"
@@ -41,6 +42,7 @@
     },
     "windows": [
       {
+        "devtools": true,
         "title": "my-music",
         "minWidth": 200,
         "minHeight": 200,

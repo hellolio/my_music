@@ -13,7 +13,7 @@ export const getCommonSettingFun = (
 
   useEffect(() => {
     let _ = readWindowState().then((result) => {
-      setSelectedRemeber(result.selected_remeber_size);
+      setSelectedRemeber(!!result?.selected_remeber_size);
     });
   }, []);
 

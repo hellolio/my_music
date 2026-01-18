@@ -24,7 +24,8 @@
 - [ ] 专业模式
 - [ ] 动感光波
 - [ ] 歌词翻译
-- [ ] 换构架到 tauri2，以支持多平台（特别是移动端）
+- [ ] 换构架到 tauri3，以支持多平台（特别是移动端）
+- [ ] 前端切换至typescript
 - [ ] bug 改善 (進行中)
 
 bug list：
@@ -35,7 +36,7 @@ bug list：
 - 初次修改壁纸后，点击应用没有反应，需要切换歌曲才行
 - 第一次播放時，進度條不刷新
 
-Windows 下载：[my-music_latest](https://github.com/hellolio/my_music/releases)
+下载：[my-music latest](https://github.com/hellolio/my_music/releases)
 
 界面效果：
 ![1](markdown/pc1.png)
