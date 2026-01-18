@@ -81,6 +81,8 @@ jobs:
             | tail -1
           )
 
+          echo "Latest FFmpeg version: $LATEST"
+
           echo "FFMPEG_VERSION=$LATEST" >> "$GITHUB_ENV"
 
       # ===============================
@@ -195,7 +197,7 @@ jobs:
       - name: Build Tauri app
         run: |
           npm install
-          npm run tauri build
+          npm run tauri build --release
 
       # =============================
       # Rename artifacts
