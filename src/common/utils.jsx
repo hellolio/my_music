@@ -1,5 +1,5 @@
+import { invoke } from "@tauri-apps/api/core";
 import { join } from "@tauri-apps/api/path";
-import { readTextFile, writeFile } from "@tauri-apps/plugin-fs";
 import { appConfigDir } from "@tauri-apps/api/path";
 
 export const formatTime = (seconds) => {
@@ -16,6 +16,15 @@ export const formatTime = (seconds) => {
   }`;
 };
 
+export async function readAppConfig(path) {
+  const content = await invoke("read_app_config");
+  return content;
+};
+
+export async function writeAppConfig(contents) {
+  await invoke("write_app_config", { contents: contents });
+};
+
 export const calculatePercentage = (part, total) => {
   if (total === 0) {
     return 0; // 防止除以零
@@ -30,14 +39,15 @@ export async function getWindowStatePath() {
 export async function readWindowState() {
   const path = await getWindowStatePath();
   try {
-    const content = await readTextFile(path);
-    return JSON.parse(content);
+    const content = await readAppConfig(path);
+    return content;
   } catch (e) {
+    console.error("Error reading window state:", e);
     return null;
   }
 }
 
 export async function writeWindowState(window_state) {
   const path = await getWindowStatePath();
-  await writeFile({ path, contents: JSON.stringify(window_state, null, 2) });
+  await writeAppConfig(path, JSON.stringify(window_state, null, 2));
 }

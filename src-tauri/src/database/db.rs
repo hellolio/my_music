@@ -1,12 +1,19 @@
 use std::path::PathBuf;
 
 use rusqlite::{Connection, Result};
+use tauri::{AppHandle, Manager};
 
 use crate::modles::{db_playlists::Playlists, db_song::Song};
 
-pub fn init_db() -> Result<Connection> {
+pub fn init_db(app: &AppHandle) -> Result<Connection> {
+    let mut path = app
+        .path()
+        .app_config_dir()
+        .expect("Failed to get app config dir");
+    path.push("app.db");
+
     // 打开或创建数据库文件（自动处理）
-    let conn = Connection::open("app.db")?;
+    let conn = Connection::open(path)?;
 
     // 智能建表（仅当表不存在时执行）
     conn.execute(
