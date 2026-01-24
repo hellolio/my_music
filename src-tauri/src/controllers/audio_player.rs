@@ -18,6 +18,17 @@ use tokio::time::Instant;
 
 use mimalloc::MiMalloc;
 
+
+use std::sync::Once;
+
+static FFMPEG_INIT: Once = Once::new();
+
+fn ensure_ffmpeg_init() {
+    FFMPEG_INIT.call_once(|| {
+        ffmpeg::init().expect("ffmpeg init failed");
+    });
+}
+
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
@@ -32,11 +43,12 @@ enum Command {
 
 pub struct AudioPlayer {
     tx: Option<mpsc::Sender<Command>>,
+    handle: Option<std::thread::JoinHandle<()>>,
 }
 
 impl AudioPlayer {
     pub fn new() -> Self {
-        Self { tx: None }
+        Self { tx: None, handle: None }
     }
 
     pub fn music_play(
@@ -46,12 +58,19 @@ impl AudioPlayer {
         skip_secs: u64,
         volume: f32,
     ) -> Result<()> {
-        ffmpeg::init()?;
+        ensure_ffmpeg_init();
+        self.music_stop(); // 确保旧线程彻底退出
 
         let (tx, rx) = mpsc::channel();
         self.tx = Some(tx);
 
-        create_music_player(window, file_path, skip_secs, volume, rx)?;
+        let handle = thread::spawn(move || {
+            if let Err(e) = run_player(window, file_path, skip_secs, volume, rx) {
+                eprintln!("audio thread error: {e:?}");
+            }
+        });
+
+        self.handle = Some(handle);
         Ok(())
     }
 
@@ -73,10 +92,16 @@ impl AudioPlayer {
         }
     }
 
-    pub fn music_stop(&self) {
+    pub fn music_stop(&mut self) {
         if let Some(tx) = &self.tx {
             let _ = tx.send(Command::Stop);
         }
+
+        if let Some(handle) = self.handle.take() {
+            let _ = handle.join();
+        }
+
+        self.tx = None;
     }
 
     pub fn music_volume(&self, volume: f32) {
@@ -84,21 +109,6 @@ impl AudioPlayer {
             let _ = tx.send(Command::Volume(volume));
         }
     }
-}
-
-fn create_music_player(
-    window: Window,
-    file_path: String,
-    skip_secs: u64,
-    volume: f32,
-    rx: Receiver<Command>,
-) -> Result<()> {
-    thread::spawn(move || {
-        if let Err(e) = run_player(window, file_path, skip_secs, volume, rx) {
-            eprintln!("audio thread error: {e:?}");
-        }
-    });
-    Ok(())
 }
 
 fn run_player(
@@ -161,7 +171,7 @@ fn run_player(
 
     loop {
         // 控制消息
-        match rx.try_recv() {
+        match rx.recv_timeout(Duration::from_millis(20)) {
             Ok(cmd) => {
                 match cmd {
                     Command::Pause => {
@@ -203,23 +213,23 @@ fn run_player(
                     Command::Stop => {
                         println!("playback pausStoped");
                         sink.lock().unwrap().clear();
-                        window.emit("player_progress", -1).ok();
+                        // window.emit("player_progress", -1).ok();
                         return Ok(());
                     }
 
                 }
             }
 
-            Err(mpsc::TryRecvError::Empty) => {
-                // 当前没有控制消息，正常继续播放循环
+            Err(mpsc::RecvTimeoutError::Timeout) => {
+                // 正常播放流程
             }
-
-            Err(mpsc::TryRecvError::Disconnected) => {
+            Err(mpsc::RecvTimeoutError::Disconnected) => {
                 sink.lock().unwrap().clear();
                 window.emit("player_progress", -1).ok();
                 println!("command channel disconnected, stopping playback");
                 return Ok(());
             }
+
         }
 
         if !playing {
