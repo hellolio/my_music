@@ -5,6 +5,7 @@ on:
   pull_request:
     branches:
       - master
+      - dev
     types:
       - opened
       - synchronize
@@ -14,7 +15,6 @@ on:
   push:
     branches:
       - master
-      # - dev
     tags:
       - "v*"
 
