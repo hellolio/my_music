@@ -325,9 +325,8 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: my-music ${{ github.ref_name }}
-          body: |
-            ${{ github.ref_name }} is out!!!
-            - 支持 Windows / macOS / Linux
+          body_path: CHANGELOG.md
+          generate_release_notes: true
           files: |
             artifacts/**/*
         env:
