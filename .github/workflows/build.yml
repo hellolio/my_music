@@ -1,20 +1,17 @@
 name: Build and Release
 
 on:
-  # MR 中有 push / 新建 / reopen
   pull_request:
     branches:
-      - master
+      - main
     types:
       - opened
       - synchronize
       - reopened
 
-  # master 分支有 commit
   push:
     branches:
-      - master
-      - dev
+      - main
     tags:
       - "v*"
 
@@ -325,9 +322,8 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: my-music ${{ github.ref_name }}
-          body: |
-            ${{ github.ref_name }} is out!!!
-            - 支持 Windows / macOS / Linux
+          body_path: CHANGELOG.md
+          generate_release_notes: true
           files: |
             artifacts/**/*
         env:

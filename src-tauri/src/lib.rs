@@ -197,8 +197,8 @@ fn resume_music(state: State<'_, Arc<AppState>>, volume: f32) {
 
 #[tauri::command]
 fn stop_music(state: State<'_, Arc<AppState>>) {
-    let p = state.player.lock().unwrap();
-    p.music_stop();
+    let mut player = state.player.lock().unwrap();
+    player.music_stop();
 }
 
 #[tauri::command]

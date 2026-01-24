@@ -11,6 +11,7 @@ pub fn init_db(app: &AppHandle) -> Result<Connection> {
         .app_config_dir()
         .expect("Failed to get app config dir");
     path.push("app.db");
+    println!("数据库路径：{:?}", path);
 
     // 打开或创建数据库文件（自动处理）
     let conn = Connection::open(path)?;
