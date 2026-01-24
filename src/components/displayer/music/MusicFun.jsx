@@ -6,6 +6,7 @@ export const useMusicFun = (ref) => {
     const cover_image_path = await invoke("get_cover_from_music", {
       inputPath: inputPath,
     });
+    console.log("cover_image_path:", cover_image_path);
     return cover_image_path;
   };
 

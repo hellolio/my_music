@@ -18,14 +18,16 @@
 - [x] 顶部搜索框，搜索列表中的歌曲，选中后播放
 - [x] 记住桌面位置和尺寸
 - [x] 桌面模式
-- [ ] 部分文件导入元数据读取乱码
+- [ ] 部分文件导入元数据读取乱码 比如：周杰伦-兰亭序[高保真].wav
 - [x] 换肤
 - [ ] 格式转换
 - [ ] 专业模式
 - [ ] 动感光波
 - [ ] 歌词翻译
-- [ ] 换构架到 tauri2，以支持多平台（特别是移动端）
+- [ ] 换构架到 tauri3，以支持多平台（特别是移动端）
+- [ ] 前端切换至typescript
 - [ ] bug 改善 (進行中)
+- [ ] 设置菜单，歌曲列表等单独弹窗，主页面和各种菜单可同时操作
 
 bug list：
 
@@ -35,7 +37,7 @@ bug list：
 - 初次修改壁纸后，点击应用没有反应，需要切换歌曲才行
 - 第一次播放時，進度條不刷新
 
-Windows 下载：[my-music_latest](https://github.com/hellolio/my_music/releases)
+下载：[my-music latest](https://github.com/hellolio/my_music/releases)
 
 界面效果：
 ![1](markdown/pc1.png)

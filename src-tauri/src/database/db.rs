@@ -1,12 +1,19 @@
 use std::path::PathBuf;
 
 use rusqlite::{Connection, Result};
+use tauri::{AppHandle, Manager};
 
 use crate::modles::{db_playlists::Playlists, db_song::Song};
 
-pub fn init_db() -> Result<Connection> {
+pub fn init_db(app: &AppHandle) -> Result<Connection> {
+    let mut path = app
+        .path()
+        .app_config_dir()
+        .expect("Failed to get app config dir");
+    path.push("app.db");
+
     // 打开或创建数据库文件（自动处理）
-    let conn = Connection::open("app.db")?;
+    let conn = Connection::open(path)?;
 
     // 智能建表（仅当表不存在时执行）
     conn.execute(
@@ -93,8 +100,8 @@ pub fn insert_song(conn: &mut Connection, song: &Song, id: i64) -> i64 {
             song.is_follow,
             song.lyrics_path.as_ref().and_then(|p| p.to_str()),
             song.audio_src.to_str(),
-            song.total_duration,
-            song.bar_current_progress_sec,
+            song.total_duration as i64,
+            song.bar_current_progress_sec as i64,
             song.is_playing,
             id.to_string()
         ],
@@ -191,8 +198,8 @@ pub fn get_song_all(conn: &Connection, id: i64) -> Result<Vec<Song>, rusqlite::E
                     .get::<_, Option<String>>(6)?
                     .map(PathBuf::from)
                     .unwrap_or_default(),
-                total_duration: row.get(7)?,
-                bar_current_progress_sec: row.get(8)?,
+                total_duration: row.get::<_, i64>(7)?.try_into().unwrap(),
+                bar_current_progress_sec: row.get::<_, i64>(8)?.try_into().unwrap(),
                 is_playing: row.get(9)?,
             })
         })?
@@ -236,8 +243,8 @@ pub fn get_song_by_path(conn: &Connection, path: String, id: i64) -> Result<Song
                     .get::<_, Option<String>>(6)?
                     .map(PathBuf::from)
                     .unwrap_or_default(),
-                total_duration: row.get(7)?,
-                bar_current_progress_sec: row.get(8)?,
+                total_duration: row.get::<_, i64>(7)?.try_into().unwrap(),
+                bar_current_progress_sec: row.get::<_, i64>(8)?.try_into().unwrap(),
                 is_playing: row.get(9)?,
             })
         })?

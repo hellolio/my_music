@@ -18,7 +18,7 @@ export const SettingList = ({ data, setData }) => {
   const settingDataTmpParse = JSON.parse(settingDataTmp);
   const [settingData, setSettingData] = useState({
     isChange: true,
-    useMusicCover: settingDataTmp ? settingDataTmpParse.useMusicCover : true,
+    useMusicCover: settingDataTmp ? settingDataTmpParse.useMusicCover : false,
     coverImagePath: settingDataTmp ? settingDataTmpParse.coverImagePath : "",
     selectedRemeberSize: settingDataTmp
       ? settingDataTmpParse.selectedRemeberSize

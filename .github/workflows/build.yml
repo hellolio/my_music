@@ -1,9 +1,20 @@
 name: Build and Release
 
 on:
+  # MR 中有 push / 新建 / reopen
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+  # master 分支有 commit
   push:
     branches:
       - master
+      - dev
     tags:
       - "v*"
 
@@ -17,6 +28,7 @@ env:
   PLATFORM_EXTS: |
     src-tauri/target/release/bundle/**/*.dmg
     src-tauri/target/release/bundle/**/*.msi
+    src-tauri/target/release/bundle/**/*.exe
     src-tauri/target/release/bundle/**/*.deb
     src-tauri/target/release/bundle/**/*.rpm
 
@@ -57,6 +69,23 @@ jobs:
           toolchain: stable
           override: true
 
+      - name: Detect latest FFmpeg version
+        id: ffmpeg
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          LATEST=$(
+            curl -s https://ffmpeg.org/releases/ \
+            | sed -nE 's/.*ffmpeg-([0-9]+\.[0-9]+(\.[0-9]+)?)\.tar\.xz.*/\1/p' \
+            | sort -V \
+            | tail -1
+          )
+
+          echo "Latest FFmpeg version: $LATEST"
+
+          echo "FFMPEG_VERSION=$LATEST" >> "$GITHUB_ENV"
+
       # ===============================
       # macOS – dependencies
       # ===============================
@@ -64,11 +93,13 @@ jobs:
         if: matrix.platform == 'macos'
         run: |
           brew install pkg-config nasm yasm
-          curl -LO https://ffmpeg.org/releases/ffmpeg-7.1.tar.xz
-          tar -xf ffmpeg-7.1.tar.xz
-          cd ffmpeg-7.1
+
+          curl -LO https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.xz
+          tar -xf ffmpeg-$FFMPEG_VERSION.tar.xz
+          mv ffmpeg-$FFMPEG_VERSION ffmpeg
+          cd ffmpeg
           ./configure \
-            --prefix=$HOME/ffmpeg-7 \
+            --prefix=$HOME/ffmpeg \
             --enable-shared \
             --disable-static \
             --enable-pthreads \
@@ -76,10 +107,10 @@ jobs:
           make -j$(sysctl -n hw.ncpu)
           make install
 
-          echo "PKG_CONFIG_PATH=$HOME/ffmpeg-7/lib/pkgconfig" >> $GITHUB_ENV
-          echo "CPATH=$HOME/ffmpeg-7/include" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=$HOME/ffmpeg-7/lib" >> $GITHUB_ENV
-          echo "PATH=$HOME/ffmpeg-7/bin:$PATH" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=$HOME/ffmpeg/lib/pkgconfig" >> $GITHUB_ENV
+          echo "CPATH=$HOME/ffmpeg/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$HOME/ffmpeg/lib" >> $GITHUB_ENV
+          echo "PATH=$HOME/ffmpeg/bin:$PATH" >> $GITHUB_ENV
 
       # ===============================
       # Linux – dependencies
@@ -87,6 +118,7 @@ jobs:
       - name: Install dependencies (Linux)
         if: matrix.platform == 'linux'
         run: |
+          export APPIMAGE_EXTRACT_AND_RUN=1
           sudo apt-get update -y
           sudo apt-get upgrade -y
           DEBIAN_FRONTEND=noninteractive sudo apt-get install -y \
@@ -97,23 +129,34 @@ jobs:
             file \
             xz-utils \
             gzip \
+            xvfb \
+            dbus-x11 \
+            libgtk-3-0 \
             libgtk-3-dev \
+            libglib2.0-0 \
             libglib2.0-dev \
+            libwebkit2gtk-4.1-0 \
             libwebkit2gtk-4.1-dev \
+            libsoup-3.0-0 \
             libsoup-3.0-dev \
+            libappindicator3-1 \
             libappindicator3-dev \
+            librsvg2-common \
             librsvg2-dev \
             libasound2-dev \
             libunwind-dev \
+            fonts-dejavu-core \
+            gsettings-desktop-schemas \
             gstreamer1.0-plugins-base \
             gstreamer1.0-plugins-good \
             gstreamer1.0-libav
 
-          curl -LO https://ffmpeg.org/releases/ffmpeg-7.1.tar.xz
-          tar -xf ffmpeg-7.1.tar.xz
-          cd ffmpeg-7.1
+          curl -LO https://ffmpeg.org/releases/ffmpeg-$FFMPEG_VERSION.tar.xz
+          tar -xf ffmpeg-$FFMPEG_VERSION.tar.xz
+          mv ffmpeg-$FFMPEG_VERSION ffmpeg
+          cd ffmpeg
           ./configure \
-            --prefix=$HOME/ffmpeg-7 \
+            --prefix=$HOME/ffmpeg \
             --enable-shared \
             --disable-static \
             --enable-pthreads \
@@ -121,10 +164,10 @@ jobs:
           make -j$(nproc)
           make install
 
-          echo "PKG_CONFIG_PATH=$HOME/ffmpeg-7/lib/pkgconfig" >> $GITHUB_ENV
-          echo "CPATH=$HOME/ffmpeg-7/include" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=$HOME/ffmpeg-7/lib" >> $GITHUB_ENV
-          echo "PATH=$HOME/ffmpeg-7/bin:$PATH" >> $GITHUB_ENV
+          echo "PKG_CONFIG_PATH=$HOME/ffmpeg/lib/pkgconfig:/usr/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig" >> $GITHUB_ENV
+          echo "CPATH=$HOME/ffmpeg/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$HOME/ffmpeg/lib" >> $GITHUB_ENV
+          echo "PATH=$HOME/ffmpeg/bin:$PATH" >> $GITHUB_ENV
 
       # ===============================
       # Windows – dependencies
@@ -133,8 +176,6 @@ jobs:
         if: matrix.platform == 'windows'
         shell: bash
         run: |
-          # choco install ffmpeg --version=7.1 -y
-          # choco pin add -n=ffmpeg
 
           if [ ! -d /c/vcpkg ]; then
             git clone https://github.com/microsoft/vcpkg.git /c/vcpkg
@@ -168,7 +209,47 @@ jobs:
       - name: Build Tauri app
         run: |
           npm install
-          npm run tauri build
+          npm run tauri build --release
+
+
+      - name: Create portable Linux bundle
+        if: matrix.platform == 'linux'
+        shell: bash
+        run: |
+          set -e
+
+          BIN=src-tauri/target/release/my-music
+          OUT=my-music-linux-x86_64
+
+          mkdir -p $OUT/lib
+
+          # 1. 拷贝主程序
+          cp "$BIN" "$OUT/"
+
+          # 2. 收集动态依赖（排除 glibc / loader）
+          ldd "$BIN" \
+            | awk '/=> \// { print $3 }' \
+            | grep -v -E 'libc\.so|ld-linux' \
+            | xargs -I{} cp -v {} "$OUT/lib/"
+
+          # 3. 启动脚本
+          cat > "$OUT/run.sh" <<'EOF'
+          #!/usr/bin/env bash
+          DIR="$(cd "$(dirname "$0")" && pwd)"
+          export LD_LIBRARY_PATH="$DIR/lib:$LD_LIBRARY_PATH"
+          export WEBKIT_DISABLE_DMABUF_RENDERER=1
+          exec "$DIR/my-music"
+          EOF
+
+          chmod +x "$OUT/run.sh"
+
+          # 4. 打包
+          tar -czf my-music-linux-x86_64.tar.gz "$OUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-music-linux-portable
+          path: my-music-linux-x86_64.tar.gz
 
       # =============================
       # Rename artifacts

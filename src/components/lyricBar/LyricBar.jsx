@@ -38,7 +38,7 @@ export default function LyricBar({
       resizeWindow(500, 100);
     } else {
       let _ = utils.readWindowState().then((result) => {
-        resizeWindow(result.window_width, result.window_height);
+        resizeWindow(result?.window_width ?? 500, result?.window_height ??600);
       });
     }
   }, [isDesktopMode]);

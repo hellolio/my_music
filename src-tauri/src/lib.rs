@@ -11,7 +11,7 @@ use std::{
 };
 
 use rusqlite::Connection;
-use tauri::{Manager, PhysicalPosition, PhysicalSize, State, Window, WindowEvent};
+use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, State, Window, WindowEvent};
 
 use common::{
     utils,
@@ -23,6 +23,8 @@ use modles::{
     db_song::Song, music_lyrics::Lyric, music_play_list_song::PlaylistSong,
     songs_for_lyrics::SongsForLyrics,
 };
+
+use crate::common::window::WindowState;
 
 mod common;
 mod controllers;
@@ -128,10 +130,10 @@ fn play_music(
     volume: f32,
 ) -> Result<Song, ()> {
     let mut p = state.player.lock().unwrap();
-    p.music_play(window, file_path.to_string(), duration, skip_secs, volume);
+    let _ = p.music_play(window, file_path.to_string(), skip_secs, volume);
 
     let conn = state.db.lock().unwrap();
-    println!("{}, {}", file_path, id);
+    println!("file_path:{}, id:{}, duration:{}", file_path, id, duration);
     if let Ok(mut song_meta) = db::get_song_by_path(&*conn, file_path.to_string(), id) {
         let mut lyrics = vec![];
         match song_meta.lyrics_path.clone() {
@@ -153,6 +155,33 @@ fn pause_music(state: State<'_, Arc<AppState>>) {
     let p = state.player.lock().unwrap();
     p.music_pause();
 }
+
+
+#[tauri::command]
+fn read_app_config(app: AppHandle) -> window::WindowState {
+    window::load_window_state(&app).unwrap_or(window::WindowState {
+        selected_remeber_size: true,
+        window_x: 0,
+        window_y: 0,
+        window_width: 800,
+        window_height: 600,
+    })
+}
+
+
+#[tauri::command]
+fn write_app_config(app: AppHandle, contents: &str) {
+    let incoming: WindowState = serde_json::from_str(contents).map_err(|e| e.to_string()).unwrap_or(window::WindowState {
+        selected_remeber_size: true,
+        window_x: 0,
+        window_y: 0,
+        window_width: 800,
+        window_height: 600,
+    });
+
+    window::save_window_state(&app, &incoming);
+}
+
 
 #[tauri::command]
 fn control_volume(state: State<'_, Arc<AppState>>, volume: f32) {
@@ -253,19 +282,21 @@ fn set_always_on_top(window: Window, window_on_top: bool) {
     let _ = window.set_always_on_top(window_on_top);
 }
 
-#[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     add_bin_to_path();
-    let state = AppState {
-        db: Mutex::new(db::init_db().expect("数据库初始化失败")),
-        player: Arc::new(Mutex::new(AudioPlayer::new())),
-        is_desktop_mode: Arc::new(AtomicBool::new(false)),
-    };
+
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_fs::init())
         .setup(|app| {
+
+            let state = AppState {
+                db: Mutex::new(db::init_db(&app.app_handle()).expect("数据库初始化失败")),
+                player: Arc::new(Mutex::new(AudioPlayer::new())),
+                is_desktop_mode: Arc::new(AtomicBool::new(false)),
+            };
+
             let window = app.get_webview_window("main").unwrap();
 
             if let Some(window_state) = window::load_window_state(&app.app_handle()) {
@@ -284,9 +315,9 @@ pub fn run() {
                         .ok();
                 }
             }
+            app.manage(Arc::new(state));
             Ok(())
         })
-        .manage(Arc::new(state))
         .on_window_event(|window, event| {
             // let window = window();
             let app_handle = window.app_handle();
@@ -330,6 +361,8 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             play_music,
             pause_music,
+            read_app_config,
+            write_app_config,
             resume_music,
             stop_music,
             seek_music,
@@ -346,9 +379,9 @@ pub fn run() {
             set_is_desktop_mode,
             set_always_on_top,
         ])
-        // .plugin(tauri_plugin_window::init())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
 }
 
 fn add_bin_to_path() {
