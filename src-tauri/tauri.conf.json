@@ -28,17 +28,23 @@
   "mainBinaryName": "my-music",
   "version": "0.4.5",
   "identifier": "com.my-music.app",
-  "plugins": {"fs": {}},
+  "plugins": {
+    "fs": {},
+    "asset": {}
+  },
   "app": {
     "security": {
-      "capabilities": ["migrated"],
+      "capabilities": ["main-capability"],
       "assetProtocol": {
+        "enable": true,
         "scope": [
-          "**"
-        ],
-        "enable": true
+          "$HOME/**",
+          "$APP_DATA/**",
+          "$APP_CONFIG/**",
+          "$TEMP/**"
+        ]
       },
-      "csp": "default-src 'self'; media-src *; img-src *; script-src 'self';; connect-src ipc: http://ipc.localhost"
+      "csp": "default-src 'self'; media-src *; img-src 'self' asset: http: https: data:; script-src 'self';; connect-src ipc: http://ipc.localhost"
     },
     "windows": [
       {
@@ -49,7 +55,7 @@
         "decorations": false,
         "resizable": true,
         "transparent": true,
-        "useHttpsScheme": true
+        "useHttpsScheme": false
       }
     ]
   }
