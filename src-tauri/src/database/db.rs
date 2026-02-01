@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 
 use rusqlite::{Connection, Result};
 use tauri::{AppHandle, Manager};
@@ -10,6 +10,8 @@ pub fn init_db(app: &AppHandle) -> Result<Connection> {
         .path()
         .app_config_dir()
         .expect("Failed to get app config dir");
+    fs::create_dir_all(&path).expect("Failed to create app config dir");
+
     path.push("app.db");
     println!("数据库路径：{:?}", path);
 
