@@ -19,14 +19,14 @@ export const SettingList = ({ data, setData }) => {
   const [settingData, setSettingData] = useState({
     isChange: true,
     useMusicCover: settingDataTmp ? settingDataTmpParse.useMusicCover : false,
-    coverImagePath: settingDataTmp ? settingDataTmpParse.coverImagePath : "",
+    coverImagePath: settingDataTmp ? settingDataTmpParse.coverImagePath : "resources/background.png",
     selectedRemeberSize: settingDataTmp
       ? settingDataTmpParse.selectedRemeberSize
       : true,
     selectedDongan: settingDataTmp ? settingDataTmpParse.selectedDongan : false,
     backColor: settingDataTmp
       ? settingDataTmpParse.backColor
-      : "rgba(121, 121, 121, 0.988)",
+      : "rgb(47, 60, 52)",
     backdropFilter: settingDataTmp ? settingDataTmpParse.backdropFilter : 10,
   });
 
@@ -64,13 +64,13 @@ export const SettingList = ({ data, setData }) => {
   useEffect(() => {
     if (settingData.useMusicCover) {
       if (data.coverImagePath === "") {
-        imageUrl = convertFileSrc(settingData.coverImagePath);
+        imageUrl = settingData.coverImagePath;
       } else {
-        imageUrl = convertFileSrc(data.coverImagePath);
+        imageUrl = data.coverImagePath;
       }
       document
         .getElementById("myPlayer")
-        ?.style.setProperty("--cover-bg", `url(${imageUrl})`);
+        ?.style.setProperty("--cover-bg", `url(${convertFileSrc(imageUrl)})`);
     } else {
       document
         .getElementById("myPlayer")
@@ -79,7 +79,7 @@ export const SettingList = ({ data, setData }) => {
           `url(${convertFileSrc(settingData.coverImagePath)})`
         );
     }
-  }, [data.coverImagePath]);
+  }, [data]);
 
   const SettingRef = useRef(null);
 

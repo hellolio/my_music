@@ -1,7 +1,6 @@
 use std::{
     sync::{
-        mpsc::{self, Receiver},
-        Arc, Mutex,
+        mpsc::{self, Receiver}
     },
     thread,
     time::Duration,
@@ -111,6 +110,7 @@ impl AudioPlayer {
     }
 }
 
+
 fn run_player(
     window: Window,
     file_path: String,
@@ -118,6 +118,8 @@ fn run_player(
     volume: f32,
     rx: Receiver<Command>,
 ) -> Result<()> {
+    ensure_ffmpeg_init();
+
     let mut ictx = ffmpeg::format::input(&file_path)?;
 
     let input = ictx
@@ -131,150 +133,152 @@ fn run_player(
         .decoder()
         .audio()?;
 
-
-    let in_rate = decoder.rate();
-    let in_layout = decoder.channel_layout();
-    let in_format = decoder.format();
-
-    let out_rate = 48_000;
-    let out_layout = in_layout; // 一般不改声道
+    // ===== 音频参数 =====
+    let out_rate = 48_000u32;
+    let out_channels = decoder.channels() as u16;
     let out_format = Sample::F32(ffmpeg::format::sample::Type::Packed);
 
     let mut swr = SwrContext::get(
-        in_format,
-        in_layout,
-        in_rate,
+        decoder.format(),
+        decoder.channel_layout(),
+        decoder.rate(),
         out_format,
-        out_layout,
-        out_rate,
+        decoder.channel_layout(),
+        out_rate as u32,
     )?;
 
-
+    // ===== rodio =====
     let (_stream, handle) = OutputStream::try_default()?;
-    let sink = Arc::new(Mutex::new(Sink::try_new(&handle)?));
-    sink.lock().unwrap().set_volume(volume);
+    let sink = Sink::try_new(&handle)?;
+    sink.set_volume(volume);
 
-    // 初始 seek
+    // ===== seek =====
     if skip_secs > 0 {
         seek_and_warmup(&mut ictx, &mut decoder, stream_index, skip_secs)?;
     }
 
+    // ===== PCM accumulator =====
+    let mut pcm_acc: Vec<f32> = Vec::with_capacity(out_rate as usize);
+    let min_prefill_samples = out_rate as usize / 3; // ~300ms
+    let mut prefilled = 0usize;
+
+    // ===== 时间 =====
+    let mut base_ms = skip_secs as i64 * 1000;
     let mut playing = true;
-
-    let mut base_ms: i64 = (skip_secs as i64) * 1000; // seek 基准
-    let mut playing_start: Option<Instant> = Some(Instant::now());
-    let mut accumulated_pause: Duration = Duration::ZERO;
-    let mut pause_start: Option<Instant> = None;
-
+    let mut start = Instant::now();
+    let mut paused_at: Option<Instant> = None;
+    let mut paused_total = Duration::ZERO;
     let mut last_emit = Instant::now();
 
+    // 预缓冲
+    while prefilled < min_prefill_samples {
+        if !decode_once(
+            &mut ictx,
+            &mut decoder,
+            stream_index,
+            &mut swr,
+            &mut pcm_acc,
+            &sink,
+            out_channels,
+            out_rate,
+            &mut prefilled,
+        )? {
+            break;
+        }
+    }
 
+    // 主循环
     loop {
-        // 控制消息
-        match rx.recv_timeout(Duration::from_millis(20)) {
-            Ok(cmd) => {
-                match cmd {
-                    Command::Pause => {
-                        sink.lock().unwrap().pause();
-                        pause_start = Some(Instant::now());
-                        playing = false;
-                        println!("playback Pause");
+        // ===== 控制命令 =====
+        if let Ok(cmd) = rx.try_recv() {
+            match cmd {
+                Command::Pause => {
+                    sink.pause();
+                    paused_at = Some(Instant::now());
+                    playing = false;
+                }
+                Command::Resume(v) => {
+                    sink.set_volume(v);
+                    sink.play();
+                    playing = true;
+                    if let Some(p) = paused_at.take() {
+                        paused_total += Instant::now() - p;
                     }
-                    Command::Resume(v) => {
-                        sink.lock().unwrap().set_volume(v);
-                        sink.lock().unwrap().play();
-                        playing = true;
-                        println!("playback Resume");
-                        if let Some(p) = pause_start.take() {
-                            accumulated_pause += Instant::now() - p;
+                }
+                Command::Volume(v) => {
+                    sink.set_volume(v);
+                }
+                Command::Seek(sec, v) => {
+                    sink.stop();
+
+                    let sink = Sink::try_new(&handle)?;
+                    sink.set_volume(v);
+
+                    seek_and_warmup(&mut ictx, &mut decoder, stream_index, sec)?;
+
+                    pcm_acc.clear();
+                    prefilled = 0;
+                    base_ms = sec as i64 * 1000;
+                    start = Instant::now();
+                    paused_total = Duration::ZERO;
+                    paused_at = None;
+                    playing = true;
+
+                    while prefilled < min_prefill_samples {
+                        if !decode_once(
+                            &mut ictx,
+                            &mut decoder,
+                            stream_index,
+                            &mut swr,
+                            &mut pcm_acc,
+                            &sink,
+                            out_channels,
+                            out_rate,
+                            &mut prefilled,
+                        )? {
+                            break;
                         }
                     }
-                    Command::Volume(v) => {
-                        println!("playback Volume");
-                        sink.lock().unwrap().set_volume(v);
-                    }
-                    Command::Seek(sec, v) => {
-                        println!("playback Seek");
-                        sink.lock().unwrap().clear();
-                        *sink.lock().unwrap() = Sink::try_new(&handle)?;
-                        sink.lock().unwrap().set_volume(v);
-
-                        seek_and_warmup(&mut ictx, &mut decoder, stream_index, sec)?;
-                        playing = true;
-
-                        base_ms = sec as i64 * 1000;
-                        playing_start = Some(Instant::now());
-                        accumulated_pause = Duration::ZERO;
-                        pause_start = None;
-
-                        window.emit("player_progress", base_ms).ok();
-
-                    }
-                    Command::Stop => {
-                        println!("playback pausStoped");
-                        sink.lock().unwrap().clear();
-                        // window.emit("player_progress", -1).ok();
-                        return Ok(());
-                    }
-
+                }
+                Command::Stop => {
+                    sink.stop();
+                    return Ok(());
                 }
             }
-
-            Err(mpsc::RecvTimeoutError::Timeout) => {
-                // 正常播放流程
-            }
-            Err(mpsc::RecvTimeoutError::Disconnected) => {
-                sink.lock().unwrap().clear();
-                window.emit("player_progress", -1).ok();
-                println!("command channel disconnected, stopping playback");
-                return Ok(());
-            }
-
         }
 
         if !playing {
             thread::sleep(Duration::from_millis(200));
             continue;
-        }
+        }else {
+            let alive = decode_once(
+                &mut ictx,
+                &mut decoder,
+                stream_index,
+                &mut swr,
+                &mut pcm_acc,
+                &sink,
+                out_channels,
+                out_rate,
+                &mut prefilled,
+            )?;
 
-        // 读取 packet
-        let mut got_packet = false;
-        for (stream, packet) in ictx.packets() {
-            if stream.index() != stream_index {
-                continue;
-            }
-            got_packet = true;
-
-            if decoder.send_packet(&packet).is_err() {
-                continue;
-            }
-
-            let mut frame = ffmpeg::frame::Audio::empty();
-            while decoder.receive_frame(&mut frame).is_ok() {
-                output_frame_resampled(&sink, &mut swr, &frame)?;
-            }
-            break;
-        }
-
-        if !got_packet {
-            if sink.lock().unwrap().empty() {
+            if !alive && sink.empty() {
                 window.emit("player_progress", -1).ok();
                 break;
             }
-            thread::sleep(Duration::from_millis(100));
         }
 
-        if let Some(start) = playing_start {
-            let now = Instant::now();
-            let played = now - start - accumulated_pause;
-            let milliseconds = base_ms + played.as_millis() as i64;
-
-            if now.duration_since(last_emit).as_millis() >= 500 {
-                window.emit("player_progress", milliseconds).ok();
-                last_emit = now;
-            }
+        // ===== progress =====
+        let now = Instant::now();
+        if now.duration_since(last_emit).as_millis() >= 500 {
+            let played = now - start - paused_total;
+            window.emit(
+                "player_progress",
+                base_ms + played.as_millis() as i64,
+            ).ok();
+            last_emit = now;
         }
-
     }
 
     Ok(())
@@ -312,45 +316,63 @@ fn seek_and_warmup(
     Ok(())
 }
 
-fn output_frame_resampled(
-    sink: &Arc<Mutex<Sink>>,
-    swr: &mut ffmpeg::software::resampling::Context,
-    frame: &ffmpeg::frame::Audio,
-) -> Result<()> {
-    let mut out = ffmpeg::frame::Audio::empty();
+fn decode_once(
+    ictx: &mut ffmpeg::format::context::Input,
+    decoder: &mut ffmpeg::decoder::Audio,
+    stream_index: usize,
+    swr: &mut SwrContext,
+    pcm_acc: &mut Vec<f32>,
+    sink: &Sink,
+    channels: u16,
+    rate: u32,
+    filled: &mut usize,
+) -> Result<bool> {
+    for (stream, packet) in ictx.packets() {
+        if stream.index() != stream_index {
+            continue;
+        }
 
-    // 执行重采样
-    swr.run(frame, &mut out)?;
+        if decoder.send_packet(&packet).is_err() {
+            continue;
+        }
 
-    match out.format() {
-        ffmpeg::format::Sample::F32(ffmpeg::format::sample::Type::Packed) => {
+        let mut frame = ffmpeg::frame::Audio::empty();
+        while decoder.receive_frame(&mut frame).is_ok() {
+            let samples = resample_into(swr, &frame, pcm_acc)?;
+            *filled += samples;
 
-            let channels = out.channels() as usize;
-            let samples_per_channel = out.samples() as usize;
-            let rate = out.rate() as u32;
-
-            let data = out.data(0);
-            let total_floats = samples_per_channel * channels;
-            let mut samples = Vec::<f32>::with_capacity(total_floats);
-
-            unsafe {
-                let src = data.as_ptr() as *const f32;
-                let slice = std::slice::from_raw_parts(src, total_floats);
-                samples.extend_from_slice(slice);
-            }
-
-            sink.lock().unwrap().append(
-                rodio::buffer::SamplesBuffer::new(
-                    channels as u16,
+            // ≥100ms 再 append
+            if pcm_acc.len() >= rate as usize / 10 * channels as usize {
+                sink.append(rodio::buffer::SamplesBuffer::new(
+                    channels,
                     rate,
-                    samples.to_vec(),
-                ),
-            );
+                    std::mem::take(pcm_acc),
+                ));
+            }
         }
-        _ => {
-            // 理论上不会走到这里
-        }
+        return Ok(true);
+    }
+    Ok(false)
+}
+
+
+fn resample_into(
+    swr: &mut SwrContext,
+    frame: &ffmpeg::frame::Audio,
+    out: &mut Vec<f32>,
+) -> Result<usize> {
+    let mut out_frame = ffmpeg::frame::Audio::empty();
+    swr.run(frame, &mut out_frame)?;
+
+    let channels = out_frame.channels() as usize;
+    let samples = out_frame.samples() as usize;
+    let total = channels * samples;
+
+    unsafe {
+        let ptr = out_frame.data(0).as_ptr() as *const f32;
+        let slice = std::slice::from_raw_parts(ptr, total);
+        out.extend_from_slice(slice);
     }
 
-    Ok(())
+    Ok(samples)
 }

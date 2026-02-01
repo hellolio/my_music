@@ -13,7 +13,7 @@ export default function ChangeTheme({
   const [savePath, setSavePath] = useState(settingData.coverImagePath);
   const [selected, setSelected] = useState(settingData.useMusicCover);
 
-  const [backColor, setBackColor] = useState("#505252b8");
+  const [backColor, setBackColor] = useState("#273828fe");
   const [backAlpha, setBackAlpha] = useState(settingData?.backAlpha ?? 0.5);
   const [backdropFilter, setBackdropFilter] = useState(
     settingData?.backdropFilter ?? 10
