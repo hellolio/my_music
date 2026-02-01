@@ -247,7 +247,10 @@ fn run_player(
             }
         }
 
-        if playing {
+        if !playing {
+            thread::sleep(Duration::from_millis(200));
+            continue;
+        }else {
             let alive = decode_once(
                 &mut ictx,
                 &mut decoder,

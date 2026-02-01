@@ -22,7 +22,8 @@
       "icons/icon.icns",
       "icons/icon.ico",
       "icons/icon.png"
-    ]
+    ],
+    "resources": ["resources/*"]
   },
   "productName": "my-music",
   "mainBinaryName": "my-music",
@@ -55,7 +56,8 @@
         "decorations": false,
         "resizable": true,
         "transparent": true,
-        "useHttpsScheme": false
+        "useHttpsScheme": false,
+        "shadow": false
       }
     ]
   }
